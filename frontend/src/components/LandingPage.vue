@@ -1,151 +1,79 @@
 <template>
-  
-   <v-container>
-    <v-row class="text-center">
-      <v-col cols="12">
-        <v-img
-          :src="require('../assets/logo.svg')"
-          class="my-3"
-          contain
-          height="200"
-        />
-      </v-col>
+  <v-app>
+    <v-container>
+      <!-- Elevator Pitch -->
+      <v-card class="elevator-pitch pa-5" color="blue" dark>
+        <v-card-title class="text-h4 font-weight-bold">Miért válassz minket?</v-card-title>
+        <v-card-text class="text-h6">
+          Innovatív megoldásaink segítenek gyorsan és hatékonyan elérni céljaidat. 
+          Egyedi, modern és felhasználóbarát megoldásokat kínálunk!
+        </v-card-text>
+      </v-card>
 
-      <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to the Vuetify 3 Beta
-        </h1>
-
-
-        <p class="subheading font-weight-regular">
-          For help and collaboration with other Vuetify developers,
-          <br>please join our online
-          <a
-            href="https://community.vuetifyjs.com"
-            target="_blank"
-          >Discord Community</a>
-        </p>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-5">
-          What's next?
-        </h2>
-
+      <!-- Termék Bemutató -->
+      <v-container class="product-showcase mt-5">
         <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ next.text }}
-          </a>
+          <v-col cols="12" md="4">
+            <v-card>
+              <v-img src="https://via.placeholder.com/400x250" height="200px" />
+              <v-card-title>Gyors és hatékony</v-card-title>
+              <v-card-text>Termékünk garantálja a gyorsaságot és pontosságot.</v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="4">
+            <v-card>
+              <v-img src="https://via.placeholder.com/400x250" height="200px" />
+              <v-card-title>Modern design</v-card-title>
+              <v-card-text>Elegáns és könnyen kezelhető felhasználói élményt kínál.</v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="4">
+            <v-card>
+              <v-img src="https://via.placeholder.com/400x250" height="200px" />
+              <v-card-title>Ügyfélközpontú</v-card-title>
+              <v-card-text>Minden funkció a felhasználó igényei szerint lett kialakítva.</v-card-text>
+            </v-card>
+          </v-col>
         </v-row>
-      </v-col>
+      </v-container>
 
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-5">
-          Important Links
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(link, i) in importantLinks"
-            :key="i"
-            :href="link.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ link.text }}
-          </a>
+      <!-- Vevői Visszajelzések -->
+      <v-container class="reviews mt-5">
+        <v-row>
+          <v-col v-for="review in reviews" :key="review.name" cols="12" md="4">
+            <v-card class="pa-3">
+              <v-card-title class="text-h6 font-weight-bold">{{ review.name }}</v-card-title>
+              <v-card-text>"{{ review.feedback }}"</v-card-text>
+              <v-rating :value="review.rating" readonly color="yellow darken-2" />
+            </v-card>
+          </v-col>
         </v-row>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-5">
-          Ecosystem
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(eco, i) in ecosystem"
-            :key="i"
-            :href="eco.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ eco.text }}
-          </a>
-        </v-row>
-      </v-col>
-    </v-row>
-  </v-container>
+      </v-container>
+    </v-container>
+  </v-app>
 </template>
 
-<script>
+<script setup>
+import { ref } from "vue";
 
-export default {
-  name: 'LandingPage',
-
-  data: () => ({
-    ecosystem: [
-      {
-        text: 'vuetify-loader',
-        href: 'https://github.com/vuetifyjs/vuetify-loader/tree/next',
-      },
-      {
-        text: 'github',
-        href: 'https://github.com/vuetifyjs/vuetify/tree/next',
-      },
-      {
-        text: 'awesome-vuetify',
-        href: 'https://github.com/vuetifyjs/awesome-vuetify',
-      },
-    ],
-    importantLinks: [
-      {
-        text: 'Chat',
-        href: 'https://community.vuetifyjs.com',
-      },
-      {
-        text: 'Made with Vuetify',
-        href: 'https://madewithvuejs.com/vuetify',
-      },
-      {
-        text: 'Twitter',
-        href: 'https://twitter.com/vuetifyjs',
-      },
-      {
-        text: 'Articles',
-        href: 'https://medium.com/vuetify',
-      },
-    ],
-    whatsNext: [
-      {
-        text: 'Explore components',
-        href: 'https://vuetifyjs.com',
-      },
-      {
-        text: 'Roadmap',
-        href: 'https://vuetifyjs.com/introduction/roadmap/',
-      },
-      {
-        text: 'Frequently Asked Questions',
-        href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions',
-      },
-    ],
-  }),
-}
+const reviews = ref([
+  { name: "Péter", feedback: "Nagyon elégedett vagyok a szolgáltatással!", rating: 5 },
+  { name: "Anna", feedback: "Gyors és pontos, pont amire szükségem volt.", rating: 4 },
+  { name: "Tamás", feedback: "Kiváló ügyfélélmény, modern megoldások!", rating: 5 }
+]);
 </script>
 
+<style scoped>
+.elevator-pitch {
+  text-align: center;
+  border-radius: 10px;
+}
+
+.product-showcase .v-card {
+  text-align: center;
+}
+
+.reviews .v-card {
+  background: #f5f5f5;
+}
+</style>
