@@ -1,40 +1,30 @@
 <template>
-  <footer class="footer">
-    <div class="social-media-links">
-      <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-        <i class="fab fa-facebook"></i> Facebook
-      </a>
-      <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-        <i class="fab fa-twitter"></i> Twitter
-      </a>
-      <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-        <i class="fab fa-instagram"></i> Instagram
-      </a>
-    </div>
-  </footer>
+  <v-footer class="footer">
+    <v-container class="d-flex justify-center">
+      <v-btn v-for="icon in socialIcons" :key="icon.name" :href="icon.link" icon>
+        <v-icon>{{ icon.icon }}</v-icon>
+      </v-btn>
+    </v-container>
+    <v-container class="text-center">
+      <small>&copy; 2025 Márkaneved. Minden jog fenntartva.</small>
+    </v-container>
+  </v-footer>
 </template>
 
-<script>
-export default {
-  name: "MyFooter",
-};
+<script setup>
+const socialIcons = [
+  { name: "Facebook", icon: "mdi-facebook", link: "https://facebook.com" },
+  { name: "Twitter", icon: "mdi-twitter", link: "https://twitter.com" },
+  { name: "Instagram", icon: "mdi-instagram", link: "https://instagram.com" },
+  { name: "LinkedIn", icon: "mdi-linkedin", link: "https://linkedin.com" }
+];
 </script>
 
 <style scoped>
 .footer {
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  padding: 1rem 0;
-}
-
-.social-media-links a {
-  margin: 0 10px;
-  color: #fff;
-  text-decoration: none;
-}
-
-.social-media-links a:hover {
-  color: #1da1f2;
+  background: #2196F3; 
+  color: white;
+  padding: 20px;
+  position: relative; 
 }
 </style>

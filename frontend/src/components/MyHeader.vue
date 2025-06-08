@@ -1,49 +1,42 @@
 <template>
-  <header class="header">
-    <div class="logo">
-<img :src="require('@/assets/MyLogo.png')" alt="Logo">
-      <span class="name">Edith Skills Lab</span>
-    </div>
-    <nav class="nav">
-      <ul>
-        <li @mouseover="toggleDropdown(true)" @mouseleave="toggleDropdown(false)">
-          <a href="#">Menü</a>
-          <ul v-show="dropdownOpen" class="dropdown">
-            <li><a href="#">Kezdőlap</a></li>
-            <li><a href="#">Webdesign</a></li>
-            <li><a href="#">Fejlesztés</a></li>
-            <li><a href="#">Marketing</a></li>
-            <li><a href="#">Kapcsolat</a></li>
-          </ul>
-        </li>
-      </ul>
-    </nav>
-    <button class="subscribe">Feliratkozás</button>
-  </header>
+    <v-app>
+    <v-app-bar app color="blue" dark class="fixed-header">
+        <v-container class="d-flex align-center justify-space-between">
+            <v-img src="/MyLogo.png" max-height="40px"></v-img>
+            <span class="ml-3 text-h6">Edith Skills Lab</span>
+            <v-menu open-on-hover>
+                <template v-slot:activator="{ props }">
+                <v-btn v-bind="props" text>
+                    Szolgáltatások
+                </v-btn>
+                </template>
+                <v-list>
+                    <v-list-item v-for="(item, index) in menuItems" :key="index">
+                        <v-list-item-title>{{ item.name }}</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
+            <v-btn text>Kapcsolat</v-btn>
+            <v-btn color="orange" dark>
+                Feliratkozás
+            </v-btn>
+        </v-container>
+    </v-app-bar>
+    </v-app>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      dropdownOpen: false
-    };
-  },
-  methods: {
-    toggleDropdown(state) {
-      this.dropdownOpen = state;
-    }
-  }
-};
+
+<script setup>
+    import { ref } from "vue";
+    const menuItems = ref([
+        { name: "Blog" },
+        { name: "Oktatások" },
+        { name: "Coaching" },
+    ]);
 </script>
 
-<style scoped>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-}
-
-.header {
+<style>
+.fixed-header {
     position: fixed;
     top: 0;
     width: 100%;
@@ -51,64 +44,6 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 30px;
-    background: #f5eded;
-    color: rgb(10, 10, 10);
     z-index: 1000;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-}
-
-.logo img {
-  height: 40px;
-  margin-right: 10px;
-}
-
-.nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-}
-
-.nav ul li {
-  position: relative;
-  margin: 0 15px;
-}
-
-.nav ul li a {
-    color: black;
-    text-decoration: none;
-    padding: 10px;
-}
-
-.nav ul .dropdown {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: #f5eded;
-  color: black;
-  padding: 10px;
-  list-style: none;
-}
-
-.nav ul li:hover .dropdown {
-  display: block;
-}
-
-.subscribe {
-  background: #ff6600;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.subscribe:hover {
-  background: #ff4500;
 }
 </style>
