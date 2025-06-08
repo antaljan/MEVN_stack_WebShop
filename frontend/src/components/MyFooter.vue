@@ -6,7 +6,7 @@
       </v-btn>
     </v-container>
     <v-container class="text-center">
-      <small>&copy; 2025 Márkaneved. Minden jog fenntartva.</small>
+      <small>&copy; 2025 Edith Skills Lab. Minden jog fenntartva.</small>
     </v-container>
   </v-footer>
 </template>

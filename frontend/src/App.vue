@@ -27,3 +27,9 @@ export default {
   }),
 }
 </script>
+
+<stile>
+  .v-main {
+  margin-top: 4px; 
+}
+</stile>
