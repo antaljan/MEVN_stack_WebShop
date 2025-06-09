@@ -1,10 +1,10 @@
 <template>
   <v-app>
-    <MyHeader />
     <v-main>
+      <MyHeader/>
       <LandingPage/>
+      <MyFooter/>
     </v-main>
-    <MyFooter />
   </v-app>
 </template>
 
@@ -30,6 +30,6 @@ export default {
 
 <stile>
   .v-main {
-  margin-top: 4px; 
+  margin-top: 4px;
 }
 </stile>

@@ -14,7 +14,7 @@
 <script setup>
 const socialIcons = [
   { name: "Facebook", icon: "mdi-facebook", link: "https://facebook.com" },
-  { name: "Twitter", icon: "mdi-twitter", link: "https://twitter.com" },
+  { name: "YouTube", icon: "mdi-youtube", link: "https://youtube.com" },
   { name: "Instagram", icon: "mdi-instagram", link: "https://instagram.com" },
   { name: "LinkedIn", icon: "mdi-linkedin", link: "https://linkedin.com" }
 ];

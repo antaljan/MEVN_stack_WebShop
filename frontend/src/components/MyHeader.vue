@@ -2,17 +2,14 @@
   <v-app>
     <v-app-bar app color="primary" dark class="header">
       <v-container class="d-flex align-center justify-space-between">
-        <!-- Logó és Név -->
-        <v-btn icon>
+        <v-avatar icon>
           <v-img src="/MyLogo.png" max-height="40px"></v-img>
-        </v-btn>
+        </v-avatar>
         <span class="ml-3 text-h6">Edith Skills Lab</span>
-
-        <!-- Navigációs menü -->
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props" text>
-              Szolgáltatások
+              Menü
             </v-btn>
           </template>
           <v-list>
@@ -21,12 +18,9 @@
             </v-list-item>
           </v-list>
         </v-menu>
-
         <v-btn text>Kapcsolat</v-btn>
-
-        <!-- Feliratkozás gomb -->
         <v-btn color="orange" dark>
-          Feliratkozás
+          Bejelentkezés
         </v-btn>
       </v-container>
     </v-app-bar>
