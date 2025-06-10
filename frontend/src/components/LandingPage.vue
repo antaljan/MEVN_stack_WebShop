@@ -1,6 +1,24 @@
 <template>
   <v-app>
-    <v-container>
+    <v-container fluid>
+      <div class="head">
+        <v-row>
+          <v-col cols="6">
+            <div style="position: relative; text-align: center;" class="mt-16">
+              <h1 class="text-black">Hello,</h1>
+              <h1 class="text-black">I'am Edit Antali</h1>
+              <span class="text-black">Psychology & Coach</span><br/>
+              <v-btn title dark class="text-black mt-8" variant="outlined">Contact me</v-btn>
+            </div>
+          </v-col>
+          <v-col cols="6">
+            <div style="position: relative; z-index:9999;" class="mt-16" >
+              <v-img src="AGYE_Profil_white.png" max-height="300"></v-img>
+            </div>
+          </v-col>  
+        </v-row>
+      </div>
+      
       <!-- Elevator Pitch -->
       <v-card class="elevator-pitch pa-5" color="blue" dark>
         <v-card-title class="text-h4 font-weight-bold">Miért válassz minket?</v-card-title>
@@ -9,7 +27,6 @@
           Egyedi, modern és felhasználóbarát megoldásokat kínálunk!
         </v-card-text>
       </v-card>
-
       <!-- Termék Bemutató -->
       <v-container class="product-showcase mt-5">
         <v-row justify="center">
@@ -76,15 +93,24 @@ const reviews = ref([
 </script>
 
 <style scoped>
+.v-container {
+  padding: 6px 0;
+}
+.head {
+  background: url('https://via.placeholder.com/1200x400') no-repeat center center;
+  background-size: cover;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .elevator-pitch {
   text-align: center;
   border-radius: 10px;
 }
-
 .product-showcase .v-card {
   text-align: center;
 }
-
 .reviews .v-card {
   background: #f5f5f5;
 }
