@@ -6,8 +6,8 @@
         <i class="fa fa-bars"></i>
       </a>
       <a href="#home" class="w3-bar-item w3-button">{{ menuButtonHome[selectedLanguage] }}</a>
-      <a href="#about" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-user"></i> RÓLAM</a>
-      <a href="#contact" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-envelope"></i> KAPCSOLAT</a>
+      <a href="#about" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-user"></i> {{menuButtonAbout[selectedLanguage]}}</a>
+      <a href="#contact" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-envelope"></i> {{ menuButtonContact[selectedLanguage] }}</a>
       <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-red">
         <i class="fa fa-search"></i>
       </a>
@@ -33,8 +33,18 @@ import { ref, reactive } from 'vue';
 const selectedLanguage = ref(document.documentElement.lang || 'hu');
 const menuButtonHome = reactive({
   en: 'HOME',
-  hu: 'Kezdőlap',
-  de: 'Startseite'
+  hu: 'KEZDŐLAP',
+  de: 'STARTSEITE'
+});
+const menuButtonAbout = reactive({
+  en: 'ABOUT',
+  hu: 'RÓLAM',
+  de: 'ÜBER MICH'
+});
+const menuButtonContact = reactive({
+  en: 'CONTACT',
+  hu: 'KAPCSOLAT',
+  de: 'KONTAKT'
 });
 
 // Change style of navbar on scroll
