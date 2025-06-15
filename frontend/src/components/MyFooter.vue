@@ -1,7 +1,7 @@
 <template>
   <!-- Footer -->
   <footer class="w3-center w3-black w3-padding-64 w3-opacity w3-hover-opacity-off">
-    <a href="#home" class="w3-button w3-light-grey"><i class="fa fa-arrow-up w3-margin-right"></i>kezdőlap</a>
+    <a href="#home" class="w3-button w3-light-grey"><i class="fa fa-arrow-up w3-margin-right"></i>{{buttonToTop[selectedLanguage]}}</a>
     <div class="w3-xlarge w3-section">
       <a href="https://www.facebook.com/profile.php?id=100064353450604" target="_blank" rel="noopener"><i class="fa fa-facebook-official w3-hover-opacity"></i></a>
       <a href="https://www.instagram.com/antaligyongyiedit/" target="_blank" rel="noopener"><i class="fa fa-instagram w3-hover-opacity"> </i></a>
@@ -12,7 +12,23 @@
 </template>
 
 <script setup>
+import { ref, reactive } from 'vue';
 
+// Reactive state for language change
+const selectedLanguage = ref(document.documentElement.lang || 'hu');
+const buttonToTop = reactive({
+  en: 'HOME',
+  hu: 'KEZDŐLAP',
+  de: 'STARTSEITE'
+});
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.attributeName === "lang") {
+      selectedLanguage.value = document.documentElement.lang;
+    }
+  });
+});
+observer.observe(document.documentElement, { attributes: true });
 </script>
 
 <style>
