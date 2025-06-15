@@ -139,7 +139,6 @@
 </template>
 
 <script setup>
-// Modal Image Gallery
 
 </script>
 
