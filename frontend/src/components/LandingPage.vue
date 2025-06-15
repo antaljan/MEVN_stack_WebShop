@@ -1,117 +1,129 @@
 <template>
-  <v-app>
-    <v-container fluid>
-      <div class="head">
-        <v-row>
-          <v-col cols="6">
-            <div style="position: relative; text-align: center;" class="mt-16">
-              <h1 class="text-black">Hello,</h1>
-              <h1 class="text-black">I'am Edit Antali</h1>
-              <span class="text-black">Psychology & Coach</span><br/>
-              <v-btn title dark class="text-black mt-8" variant="outlined">Contact me</v-btn>
-            </div>
-          </v-col>
-          <v-col cols="6">
-            <div style="position: relative; z-index:9999;" class="mt-16" >
-              <v-img src="AGYE_Profil_white.png" max-height="300"></v-img>
-            </div>
-          </v-col>  
-        </v-row>
-      </div>
-      
-      <!-- Elevator Pitch -->
-      <v-card class="elevator-pitch pa-5" color="blue" dark>
-        <v-card-title class="text-h4 font-weight-bold">Miért válassz minket?</v-card-title>
-        <v-card-text class="text-h6">
-          Innovatív megoldásaink segítenek gyorsan és hatékonyan elérni céljaidat. 
-          Egyedi, modern és felhasználóbarát megoldásokat kínálunk!
-        </v-card-text>
-      </v-card>
-      <!-- Termék Bemutató -->
-      <v-container class="product-showcase mt-5">
-        <v-row justify="center">
-          <v-col cols="12" md="4">
-            <v-card>
-              <v-img src="https://via.placeholder.com/400x250" height="200px" />
-              <v-card-title>Gyors és hatékony</v-card-title>
-              <v-card-text>Termékünk garantálja a gyorsaságot és pontosságot.</v-card-text>
-            </v-card>
-          </v-col>
-          <v-col cols="12" md="4">
-            <v-card>
-              <v-img src="https://via.placeholder.com/400x250" height="200px" />
-              <v-card-title>Modern design</v-card-title>
-              <v-card-text>Elegáns és könnyen kezelhető felhasználói élményt kínál.</v-card-text>
-            </v-card>
-          </v-col>
-          <v-col cols="12" md="4">
-            <v-card>
-              <v-img src="https://via.placeholder.com/400x250" height="200px" />
-              <v-card-title>Ügyfélközpontú</v-card-title>
-              <v-card-text>Minden funkció a felhasználó igényei szerint lett kialakítva.</v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
+<!-- First Parallax Image with Logo Text -->
+<div class="bgimg-1 w3-display-container w3-opacity-min" id="home">
+  <div class="w3-display-middle" style="white-space:nowrap;">
+    <span class="w3-center w3-padding-large w3-black w3-xlarge w3-wide w3-animate-opacity">Edith <span class="w3-hide-small">Skills</span> Lab</span>
+  </div>
+</div>
 
-      <!-- Vevői Visszajelzések -->
-      <v-container class="reviews mt-5">
-        <v-row>
-          <v-col v-for="review in reviews" :key="review.name" cols="12" md="4">
-            <v-card class="pa-3">
-              <v-card-title class="text-h6 font-weight-bold">{{ review.name }}</v-card-title>
-              <v-card-text>"{{ review.feedback }}"</v-card-text>
-              <div class="text-center">
-              <span class="grey--text text--lighten-2 text-caption mr-2">
-                ({{ review.rating }})
-              </span>
-              <v-rating
-                v-model="review.rating"
-                background-color="white"
-                color="indigo lichten-3"
-                dense
-                half-increments
-                hover
-                size="18"
-              ></v-rating>
-              </div>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-container>
-  </v-app>
+<!-- Container (About Section) -->
+<div class="w3-content w3-container w3-padding-64" id="about">
+  <h3 class="w3-center"><i class="fa fa-user w3-margin-right"></i>{{aboutName[selectedLanguage]}}</h3>
+  <p class="w3-center"><em>{{aboutTitle[selectedLanguage]}}</em></p>
+  <p>{{aboutText1[selectedLanguage]}}</p>
+  <div class="w3-row">
+    <div class="w3-col m6 w3-center w3-padding-large">
+      <img src="avatar_hat.jpg" class="w3-round w3-image w3-opacity w3-hover-opacity-off" alt="Photo of Me" width="500" height="333">
+    </div>
+
+    <!-- Hide this text on small devices -->
+    <div class="w3-col m6 w3-hide-small w3-padding-large">
+      <p>{{aboutText2[selectedLanguage]}}</p>
+    </div>
+  </div>
+  
+</div>
+
+<!-- Second Parallax Image with Portfolio Text -->
+<div class="bgimg-2 w3-display-container w3-opacity-min">
+  <div class="w3-display-middle">
+    <span class="w3-xxlarge w3-text-white w3-wide">{{parallaxContact[selectedLanguage]}}</span>
+  </div>
+</div>
+
+<!-- Container (Contact Section) -->
+<div class="w3-content w3-container w3-padding-64" id="contact">
+  <p class="w3-center"><em>{{contactWelcome[selectedLanguage]}}</em></p>
+
+  <div class="w3-row w3-padding-32 w3-section">
+ 
+      <p>{{contactPoen[selectedLanguage]}}</p>
+      <form action="/action_page.php" target="_blank">
+        <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
+          <div class="w3-half">
+            <input class="w3-input w3-border" type="text" :placeholder="contactName[selectedLanguage]" required name="Name">
+          </div>
+          <div class="w3-half">
+            <input class="w3-input w3-border" type="text" :placeholder="contactEmail[selectedLanguage]" required name="Email">
+          </div>
+        </div>
+        <input class="w3-input w3-border" type="text" :placeholder="contactMassege[selectedLanguage]" required name="Message">
+        <button class="w3-button w3-black w3-right w3-section" type="submit">
+          <i class="fa fa-paper-plane"></i> {{contactSendButton[selectedLanguage]}}
+        </button>
+      </form>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-const reviews = ref([
-  { name: "Péter", feedback: "Nagyon elégedett vagyok a szolgáltatással!", rating: 5 },
-  { name: "Anna", feedback: "Gyors és pontos, pont amire szükségem volt.", rating: 4 },
-  { name: "Tamás", feedback: "Kiváló ügyfélélmény, modern megoldások!", rating: 5 }
-]);
+import { ref, reactive } from 'vue';
+// Reactive state for language change
+const selectedLanguage = ref(document.documentElement.lang || 'hu');
+const parallaxContact = reactive({
+  en: 'CONTACT',
+  hu: 'KAPCSOLAT',
+  de: 'KONTAKT'
+});
+const contactWelcome = reactive({
+  en: 'I am very interested in your opinion!',
+  hu: 'Nagyon érdekel a véleményed!',
+  de: 'Eure Meinung interessiert mich sehr!'
+});
+const contactPoen = reactive({
+  en: 'Stop by for a coffee or send a message:',
+  hu: 'Ugorj be egy kávéra, vagy írj egy üzenetet:',
+  de: 'Kommen Sie auf einen Kaffee vorbei oder senden Sie eine Nachricht:'
+});
+const contactName = reactive({
+  en: 'Name',
+  hu: 'Név',
+  de: 'Name'
+});
+const contactEmail = reactive({
+  en: 'Email',
+  hu: 'Email',
+  de: 'Email'
+});
+const contactMassege = reactive({
+  en: 'Message',
+  hu: 'Üzenet',
+  de: 'Nachricht'
+});
+const contactSendButton = reactive({
+  en: 'Send Message',
+  hu: 'Üzenet küldése',
+  de: 'Nachricht senden'
+});
+const aboutName = reactive({
+  en: 'Edit Gyöngyi Antali',
+  hu: 'Antali Gyöngyi Edit',
+  de: 'Edit Gyöngyi Antali'
+});
+const aboutTitle = reactive({
+  en: 'Psychologist, Coach, Lifestyle Consultant and Therapist',
+  hu: 'Pszichológus, Coach, Életmód-tanácsadó és terapeuta',
+  de: 'Psychologe, Coach, Lifestyle-Berater und Therapeutin'
+});
+const aboutText1 = reactive({
+  en: 'I am committed to supporting my clients on their journey of self-discovery and solving their life challenges. My expertise extends to lifestyle counseling and therapy, so I support them with a holistic approach.',
+  hu: 'Elkötelezetten támogatom ügyfeleimet önismereti útjukon és életvezetési kihívásaik megoldásában. Szakértelmem kiterjed az életmód-tanácsadásra és terápiára is, így holisztikus szemlélettel állok mellettük.',
+  de: 'Ich unterstütze meine Klienten auf ihrem Weg der Selbstfindung und der Lösung ihrer Lebensherausforderungen. Meine Expertise umfasst auch Lebensberatung und Therapie, sodass ich sie mit einem ganzheitlichen Ansatz unterstütze.'
+});
+const aboutText2 = reactive({
+  en: 'Antali Gyöngyi Edits clients generally rate her work positively, especially her empathetic approach and effective support. Based on the feedback, many emphasize that she helped them gain deeper self-knowledge and overcome difficult periods in their lives. If you would like to see specific opinions, it is worth visiting her Facebook page, where her clients often share their experiences.',
+  hu: 'Antali Gyöngyi Edit ügyfelei általában pozitívan értékelik a munkáját, különösen az empatikus hozzáállását és hatékony támogatását. A visszajelzések alapján sokan kiemelik, hogy segített nekik mélyebb önismeretre jutni és életük nehéz szakaszain túllendülni. Ha szeretnéd megnézni konkrét véleményeket, érdemes ellátogatni a Facebook oldalára, ahol ügyfelei gyakran osztják meg tapasztalataikat.',
+  de: 'Die Klienten von Antali Gyöngyi Edit bewerten ihre Arbeit im Allgemeinen positiv, insbesondere ihren einfühlsamen Ansatz und ihre effektive Unterstützung. Viele betonen, dass sie ihnen geholfen hat, tiefere Selbsterkenntnis zu erlangen und schwierige Lebensphasen zu überwinden. Für konkrete Meinungen lohnt sich ein Besuch ihrer Facebook-Seite, wo ihre Klienten oft ihre Erfahrungen teilen.'
+});
+
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.attributeName === "lang") {
+      selectedLanguage.value = document.documentElement.lang;
+    }
+  });
+});
+observer.observe(document.documentElement, { attributes: true });
 </script>
 
-<style scoped>
-.v-container {
-  padding: 6px 0;
-}
-.head {
-  background: url('https://via.placeholder.com/1200x400') no-repeat center center;
-  background-size: cover;
-  height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.elevator-pitch {
-  text-align: center;
-  border-radius: 10px;
-}
-.product-showcase .v-card {
-  text-align: center;
-}
-.reviews .v-card {
-  background: #f5f5f5;
-}
-</style>
+
