@@ -10,7 +10,7 @@
 <div class="w3-content w3-container w3-padding-64" id="about">
   <h3 class="w3-center">Rólam</h3>
   <p class="w3-center"><em>Pszichológus, Coach, Életmód-tanácsadó és terapeuta</em></p>
-  <p>Elkötelezetten segítem ügyfeleimet önismereti fejlődésükben és életvezetési kihívásaik megoldásában. Szakértelmem kiterjed az életmód-tanácsadásra és terápiára is, így holisztikus szemlélettel támogatom a hozzám fordulókat.</p>
+  <p>Elkötelezetten támogatom ügyfeleimet önismereti útjukon és életvezetési kihívásaik megoldásában. Szakértelmem kiterjed az életmód-tanácsadásra és terápiára is, így holisztikus szemlélettel állok mellettük.</p>
   <div class="w3-row">
     <div class="w3-col m6 w3-center w3-padding-large">
       <p><b><i class="fa fa-user w3-margin-right"></i>Antali Gyöngyi Edit</b></p><br>
