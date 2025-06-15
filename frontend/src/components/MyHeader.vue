@@ -7,16 +7,19 @@
       </a>
       <a href="#home" class="w3-bar-item w3-button">KEZDŐLAP</a>
       <a href="#about" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-user"></i> RÓLAM</a>
-      <a href="#portfolio" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-th"></i> KÉPZÉSEK</a>
       <a href="#contact" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-envelope"></i> KAPCSOLAT</a>
       <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-red">
         <i class="fa fa-search"></i>
       </a>
+      <select id="langselect" class="w3-bar-item w3-button w3-hide-small w3-right">
+        <option value="en">EN</option>
+        <option value="hu" selected>HU</option>
+        <option value="de">DE</option>
+      </select>
     </div>
     <!-- Navbar on small screens -->
-    <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium">
+    <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium" @change="changeLanguage">
       <a href="#about" class="w3-bar-item w3-button" @click="toggleFunction">RÓLAM</a>
-      <a href="#portfolio" class="w3-bar-item w3-button" @click="toggleFunction">KÉPZÉSEK</a>
       <a href="#contact" class="w3-bar-item w3-button" @click="toggleFunction">KAPCSOLAT</a>
       <a href="#" class="w3-bar-item w3-button">KERESÉS</a>
     </div>
@@ -24,6 +27,9 @@
 </template>
 
 <script setup>
+// get browser languege
+/*const userLanguage = navigator.language || navigator.languages[0];*/
+
 // Change style of navbar on scroll
 window.onscroll = function() {myFunction()};
 function myFunction() {
@@ -42,6 +48,20 @@ function toggleFunction() {
         x.className += " w3-show";
     } else {
         x.className = x.className.replace(" w3-show", "");
+    }
+}
+function changeLanguage() {
+    const selectElement = document.getElementById("langselect");
+    const selectedLanguage = selectElement.value;
+    if (selectedLanguage === 'en') {
+        // Change to English
+        document.documentElement.lang = 'en';
+    } else if (selectedLanguage === 'hu') {
+        // Change to Hungarian
+        document.documentElement.lang = 'hu';
+    } else if (selectedLanguage === 'de') {
+        // Change to German
+        document.documentElement.lang = 'de';
     }
 }
 </script>
