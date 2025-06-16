@@ -7,7 +7,9 @@
       <a href="https://www.instagram.com/antaligyongyiedit/" target="_blank" rel="noopener"><i class="fa fa-instagram w3-hover-opacity"> </i></a>
       <a href="https://www.linkedin.com/in/gy%C3%B6ngyi-edit-antali-09a1aa174/" target="_blank" rel="noopener"><i class="fa fa-linkedin w3-hover-opacity"> </i></a>
     </div>
-    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" rel="noopener" class="w3-hover-text-green">w3.css</a></p>
+    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" rel="noopener" class="w3-hover-text-green">w3.css</a> &
+     <a href="https://vuetifyjs.com/" title="vuetify"  target="_blank" rel="noopener" class="w3-hover-text-green">vuetify</a> &
+     <a href="https://www.linkedin.com/in/janos-antali-29086a70/" title="A_Jani"  target="_blank" rel="noopener" class="w3-hover-text-green">A_Jani</a>.</p>
   </footer>
 </template>
 
