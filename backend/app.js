@@ -34,35 +34,35 @@ app.use(express.json());
 const cors = require('cors');
 app.use(cors());
 
-app.post('/send-email', async (req, res) => {
-  const { email, subject, message } = req.body;
-  //console.log(email, subject, message ); // Alert for debugging purposes
- const transporter = nodemailer.createTransport({
-  host: 'mail.gmx.net',
-  port: 587,
-  secure: false, // true für Port 465, false für 587
-  auth: {
-    user: 'asd0125@gmx.de', // A te GMX e-mail címed
-    pass: 'SgdScrum25' // A te GMX jelszavad
-  },
-  tls: {
-    rejectUnauthorized: false
-  }
-});
 
-module.exports = transporter;
-
-  try {
-    await transporter.sendMail({
-      from: 'asd0125@gmx.de',
-      to: email,
-      subject: subject,
-      text: message
+    const transporter = nodemailer.createTransport({
+        host: 'mail.gmx.net',
+        port: 587,
+        secure: false, // true für Port 465, false für 587
+        auth: {
+            user: 'asd0125@gmx.de', // A te GMX e-mail címed
+            pass: 'SgdScrum25' // A te GMX jelszavad
+        },
+        tls: {
+            rejectUnauthorized: false
+        }
     });
-    res.send('E-mail sikeresen elküldve!');
-  } catch (error) {
-    res.status(500).send('Hiba történt az e-mail küldésekor.');
-  }
+    module.exports = transporter;
+
+app.post('/send-email', async (req, res) => {
+    const { email, subject, message } = req.body;
+    try {
+        await transporter.sendMail({
+            from: 'asd0125@gmx.de',
+            to: 'antali.gyongyi@gmail.com',
+            subject: 'Üzenet a Honlapról!',
+            text: 'Név: '+subject+', email:'+email+', üzenet:'+message,
+        });
+        res.status(200).send('E-Mail gesendet!');
+    } catch (error) {
+        console.error(error); // Fehler in der Konsole anzeigen
+        res.status(500).send(error.message); // Fehler an Client zurückgeben
+    }
 });
 
 // Indítsuk el a szervert
