@@ -38,16 +38,16 @@
   <div class="w3-row w3-padding-32 w3-section">
  
       <p>{{contactPoen[selectedLanguage]}}</p>
-      <form action="/action_page.php" target="_blank">
+      <form @submit.prevent="sendEmail">
         <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
           <div class="w3-half">
-            <input class="w3-input w3-border" type="text" :placeholder="contactName[selectedLanguage]" required name="Name">
+            <input class="w3-input w3-border" type="text" :placeholder="contactName[selectedLanguage]" required name="Name" v-model="subject">
           </div>
           <div class="w3-half">
-            <input class="w3-input w3-border" type="text" :placeholder="contactEmail[selectedLanguage]" required name="Email">
+            <input class="w3-input w3-border" type="email" :placeholder="contactEmail[selectedLanguage]" required name="Email" v-model="email">
           </div>
         </div>
-        <input class="w3-input w3-border" type="text" :placeholder="contactMassege[selectedLanguage]" required name="Message">
+        <input class="w3-input w3-border" type="text" :placeholder="contactMessage[selectedLanguage]" required name="Message" v-model="message">
         <button class="w3-button w3-black w3-right w3-section" type="submit">
           <i class="fa fa-paper-plane"></i> {{contactSendButton[selectedLanguage]}}
         </button>
@@ -85,7 +85,7 @@ const contactEmail = reactive({
   hu: 'Email',
   de: 'Email'
 });
-const contactMassege = reactive({
+const contactMessage = reactive({
   en: 'Message',
   hu: 'Üzenet',
   de: 'Nachricht'
@@ -124,6 +124,28 @@ const observer = new MutationObserver((mutations) => {
   });
 });
 observer.observe(document.documentElement, { attributes: true });
+
+import axios from 'axios';
+
+// Email form state
+const email = ref('');
+const subject = ref('');
+const message = ref('');
+
+// Email sending method
+async function sendEmail() {
+  try {
+    await axios.post('http://localhost:3000/send-email', {
+      email: email.value,
+      subject: subject.value,
+      message: message.value
+    });
+    alert('E-mail sikeresen elküldve!');
+  } catch (error) {
+    alert('Hiba történt: ' + error);
+  }
+}
+
 </script>
 
 
