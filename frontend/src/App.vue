@@ -2,14 +2,13 @@
   <v-app>
     <v-main>
       <MyHeader/>
-      <LandingPage/>
+      <router-view/>
       <MyFooter/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import LandingPage from './view/LandingPage.vue';
 import MyFooter from "./components/MyFooter.vue";
 import MyHeader from "./components/MyHeader.vue";
 
@@ -17,7 +16,6 @@ export default {
   name: 'App',
 
   components: {
-    LandingPage,
     MyFooter,
     MyHeader,
   },
