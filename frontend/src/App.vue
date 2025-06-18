@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import LandingPage from './components/LandingPage.vue';
+import LandingPage from './view/LandingPage.vue';
 import MyFooter from "./components/MyFooter.vue";
 import MyHeader from "./components/MyHeader.vue";
 
