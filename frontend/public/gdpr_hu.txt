@@ -1,0 +1,241 @@
+Adatkezelési tájékoztató
+
+BEVEZETÉS
+Adatkezelőként ebben a dokumentumban (továbbiakban: Tájékoztató) naprakészen dokumentálom az adatkezelésemmel kapcsolatos folyamatokat és szabályokat. Az adatkezelésemmel igyekszem megfelelni a 2018. május 25-től bevezetett szigorúbb adatvédelmi szabályoknak.
+
+Vállalkozásomban rendszeres adatfeldolgozást végzek, így a szabályok értelmében eleget teszek az adatkezelésemről szóló tájékoztatási kötelezettségemnek.
+Jelen Tájékoztató tartalmát magamra nézve kötelezőnek tekintem és kijelentem, hogy jelen Tájékoztató megfelel az adatkezelésre vonatkozó hatályos magyar jogszabályoknak, valamint Európai Unió jogi aktusaiban foglalt szabályoknak.
+
+Fenntartom magamnak a jogot, hogy a jelen Tájékoztatót bármikor egyoldalúan megváltoztassam, melyről az ügyfeleimet kellő időben értesítem.
+
+A vállalkozás neve és elérhetőségi adatai
+Antali Gyöngyi Edit UG(fäftungsbeschrenkt)
+D-02625 Bautzen Muskauer Staraße 20/c
+info@yowayoli.com
++49 174 4780041
+yowayoli.com
+
+ADATTÉRKÉP
+Az adatfeldolgozás indoklása, és az adatalany- és személyesadat-kategóriák ismertetése
+
+A vállalkozásommal kapcsolatban kettő féle személyi körben gyűjtök és tárolok adatot:
+– Érdeklődők
+– Ügyfelek
+
+Az egyes célok esetében vizsgált területek:
+– Definíció
+– (Csatorna)/ Személyes adat jellege és jogalapja
+– Adatok tárolása és további felhasználása
+– Adatok törlése
+– Adatkezelő és adatfeldolgozók
+
+ÉRDEKLŐDŐK
+
+Definíció:
+Érdeklődő az, aki a szolgáltatásommal kapcsolatban felkeres, és/vagy ajánlatot kér bármely elérhetőségemen keresztül.
+
+Csatorna/ Személyes adat jellege és jogalapja:
+Adatok forrása:
+– Weboldal contact form
+– Emailes megkeresés
+– Telefonos megkeresés
+– Facebook/Messenger megkeresés
+
+Kezelt személyes adatok:
+– név
+– email cím
+– telefonszám
+– Facebook profilról elérhető adatok, mely függ attól, hogy az adott Érdeklődő Facebook profilja biztonsági beállításokkal működik (nem ismerősként látható adatok)
+
+Az adatkezelés jogalapja az Érdeklődő önkéntes hozzájárulása, továbbá a GDPR 6. cikk (1) bekezdés f) pontja.
+A hozzájárulást Érdeklődőként a fentiekben megjelölt adatok kezelése tekintetében jelen Tájékoztató előzetes megismerését követően, a fenti módokon történő megkeresésemmel vagy a Tájékoztató kifejezett elfogadásával és a kérdéses adatok önkéntes megadásával adod meg.
+
+Érdeklődőként jogosult vagy arra, hogy hozzájárulásodat bármikor visszavond. A hozzájárulás visszavonása nem érinti a hozzájáruláson alapuló, a visszavonás előtti adatkezelés jogszerűségét. A hozzájárulásod a jelen Tájékoztatóban megadott email címemre küldött email útján vonhatod vissza. Ebben az esetben haladéktalanul törlöm a nyilvántartásából az adataidat.
+
+Az adatkezelés célja a fentiek alapján:
+– Érdeklődő azonosítása, az Érdeklődővel való kapcsolattartás
+– az Érdeklődő külön hozzájárulása esetén reklámozás, kutatás
+– az Érdeklődő jogainak védelme.
+
+Adatok tárolása és további felhasználása:
+Weboldal contact form
+
+Az adatok a webhosting szolgáltató (ionos GmbH - www.ionos.de) európai szerverén egy külön erre a célra létrehozott SQL adatbázisban tárolódnak.
+Az adatok a honlap (www.yowayoli.com) fronten moduljáról egy biztonságos csatornán a backend modulra kerülnek, mely a háttérben futva dolgozza fel ezeket és tárolja az adatbázisban.
+
+Az Emailes, telefonos és Messenger megkeresés megkeresés útján beérkezett adatokat is a fent nevezett módon tárolom.
+
+
+Adatkezelő és adatfeldolgozók
+
+Az érdelődés céljából beérkező adatoknak kizárólag én vagyok az adatkezelője.
+
+A web keresési eredmények optimalizálása (SEO) érdekében történő adatgyűjtést (ez a hirdetési azonosító követése) a Google LLC végzi:
+Google LLC
+1600 Amphitheatre Parkway
+Mountain View, CA 94043
+USA
+ÁSZF: https://policies.google.com/terms?hl=hu
+
+Az adatkezelés időtartama
+Törlöm az Érdeklődő adatait, ha az Érdeklődő kéri, ha az adatkezelés célja megszűnt.
+
+ÜGYFELEK
+Definíció:
+Ügyfél az, akivel munkavégzés céljából szerződést kötök.
+
+Személyes adat jellege és joglapja:
+Adatok forrása:
+– Ügyfél által rendelkezésemre bocsátott adatok
+
+Kezelt személyes adatok:
+– Kapcsolat felvételi űrlaphoz szükséges adatok: név, email cím
+– Vásárláshoz szükséges adatok: név, email cím
+– Számlázáshoz szükséges adatok: számlázási név, cím, email cím, telefonszám
+
+Az adatkezelés jogalapja az Ügyfél önkéntes hozzájárulása, továbbá a GDPR 6. cikk (1) bekezdés f) pontja.
+A hozzájárulást Ügyfélként a fentiekben megjelölt adatok kezelése tekintetében jelen Tájékoztató előzetes megismerését követően a Tájékoztató kifejezett elfogadásával és a kérdéses adatok önkéntes megadásával adod meg.
+
+Ügyfélként jogosult vagy arra, hogy hozzájárulásodat bármikor visszavond. A hozzájárulás visszavonása nem érinti a hozzájáruláson alapuló, a visszavonás előtti adatkezelés jogszerűségét. A hozzájárulásod a jelen Tájékoztatóban megadott email címemre küldött email útján vonhatod vissza. Ebben az esetben haladéktalanul törlöm a nyilvántartásából az adataidat.
+
+Az adatkezelés célja a fentiek alapján:
+– Ügyfél azonosítása, az Ügyféllel való kapcsolattartás
+– az Ügyfél külön hozzájárulása esetén reklámozás, kutatás
+– az Ügyfél jogainak védelme.
+
+Adatok tárolása és további felhasználása:
+
+A megrendeléshez automatikus számlázás kapcsolódik. 
+A számlázási adatokat a fent leírtak alapján tárolom.
+Az ügyfelek adatainak kizárólag én vagyok az adatkezelője.
+
+Az adatkezelés időtartama
+Törlöm az Ügyfél adatait:
+– ha az Ügyfél kéri,
+– ha az adatkezelés célja megszűnt,
+– a kibocsátott számlák az Árt. és az Szmt. előírása alapján 8 évig megőrzési kötelezettség áll fenn.
+
+AZ ADATKEZELÉSI ALAPELVEKNEK VALÓ MEGFELELÉS
+A továbbiakban ismertetem, hogy vállalkozásom adatkezelése hogyan felel meg az egyes alapelveknek.
+
+Célhoz kötöttségi alapelv
+
+A vállalkozásommal kapcsolatban kettő célból gyűjtök és tárolok adatot:
+– Érdeklődők: Érdeklődő az, aki a szolgáltatásommal kapcsolatban felkeres, és/vagy ajánlatot kér.
+– Ügyfelek: Ügyfél az, aki megrendeli valamelyik szolgáltatásomat.
+
+Tájékoztatási kötelezettség
+A weboldalamon és a nyilvános Facebook oldalamon elérhető az Adatvédelmi Tájékoztatóm rövid kivonata, továbbá a teljes dokumentum letöltéséhez szükséges link.
+
+Adattakarékosság elve
+Érdeklődőktől kizárólag azokat az adatokat gyűjtöm, ami feltétlenül kell ahhoz, hogy kérdéseiket megválaszoljam, hogy ajánlatkérésüknek eleget tegyek. Ez alap esetben név és email cím, telefonos egyeztetés esetén a telefonszám.
+
+Az ügyfelektől kizárólag a számlázáshoz szükséges adatokat kérem el alap esetben.
+
+Adatok pontosságára vonatkozó elv
+Az általam kezelt adatokat pontosan, naprakészen kezelem és minden észszerű intézkedést megteszek annak érdekében, hogy az adatkezelés céljai szempontjából pontatlan személyes adatokat haladéktalanul töröljem vagy helyesbítsem.
+
+IT biztonsági alapelv
+A lehetőségeimhez képest a maximális biztonsági óvintézkedéseket megtettem, hogy az általam bekért és tárolt adatok biztonságban legyenek. Erről bővebben lásd a “Adatbiztonság” fejezetben.
+
+Kockázatok
+Az általam kezelt adatok kizárólag abban az esetben kerülhetnek illetéktelen személyek birtokába, amennyiben azt tévesen én vagy az adatfeldolgozók egyike illetéktelen személynek továbbítja, illetőleg abban az esetben, ha valaki az általam használt informatikai védelmi intézkedéseket feltöri.
+
+Adatbiztonság
+Adatkezelőként gondoskodom az adatok biztonságáról, megteszem azokat a technikai és szervezési intézkedéseket és kialakítom azokat az eljárási szabályokat, amelyek az irányadó jogszabályok, adat- és titokvédelmi szabályok érvényre juttatásához szükségesek. Az adatokat megfelelő intézkedésekkel védem a jogosulatlan hozzáférés, megváltoztatás, továbbítás, nyilvánosságra hozatal, törlés vagy megsemmisítés, valamint a véletlen megsemmisülés és sérülés, továbbá az alkalmazott technika megváltozásából fakadó hozzáférhetetlenné válás ellen.
+
+Az általam kezelt adatokat az irányadó jogszabályoknak megfelelően tartom nyilván, biztosítva, hogy az adatokat csak azok a munkavállalók, és egyéb, az érdekkörömben eljáró személyek (adatfeldolgozók) ismerhessék meg, akiknek erre munkakörük, feladatuk ellátása érdekében szükségük van. Az adatokat a cégemen belül csak naplózás mellett lehet megismerni. Egyedi kereséseket, az adatokon egyedi műveleteket csak az Érdeklődő/Ügyfél kérésére végezek, vagy abban az esetben, ha ez a szolgáltatás nyújtása érdekében szükséges.
+
+Az adatok biztonságát szolgáló intézkedések meghatározásakor és alkalmazásakor tekintettel vagyok a technika mindenkori fejlettségére. Több lehetséges adatkezelési megoldás közül azt választom, amely a személyes adatok magasabb szintű védelmét biztosítja, kivéve, ha az aránytalan nehézséget jelentene.
+
+Az informatikai védelemmel kapcsolatos feladataim körében gondoskodom különösen:
+– jogosulatlan hozzáférés elleni védelmet biztosító intézkedésekről, ezen belül a szoftver és hardver eszközök védelméről, illetve a fizikai védelemről
+– adatállományok helyreállításának lehetőségét biztosító intézkedésekről, ezen belül a rendszeres biztonsági mentésről és a másolatok elkülönített, biztonságos kezeléséről
+– adatállományok vírusok elleni védelméről;
+– adatállományok, illetve az azokat hordozó eszközök fizikai védelméről, ezen belül a tűzkár, vízkár, villámcsapás, egyéb elemi kár elleni védelemről, illetve az ilyen események következtében bekövetkező károsodások helyreállíthatóságáról.
+
+Az érdekemben eljáró személyek az általuk használt, vagy birtokukban lévő, személyes adatokat is tartalmazó adathordozókat, függetlenül az adatok rögzítésének módjától, kötelesek biztonságosan őrizni, és védeni a jogosulatlan hozzáférés, megváltoztatás, továbbítás, nyilvánosságra hozatal, törlés vagy megsemmisítés, valamint a véletlen megsemmisülés és sérülés ellen.
+
+Az elektronikus nyilvántartást informatikai program útján üzemeltetem, amely megfelel az adatbiztonság követelményeinek. A program biztosítja, hogy az adatokhoz csak célhoz kötötten, ellenőrzött körülmények között csak azon személyek férjenek hozzá, akiknek a feladataik ellátása érdekében erre szükségük van.
+
+Logikai és fizikai védelem
+A munkavégzéshez egyetlen laptopot használok, amelynek védelme a következő:
+– Jelszóval védett belépés.
+– Tűzfal.
+
+Az adatokat tartalmazó SQL adatbázist egy az ionos GmbH által üzemeltetett szerveren van mentve, melybe való belépés jelszóhoz kötött, továbbá több faktoros belépéssel ellátott (amennyiben nem a saját laptopomról jelentkezem be, megerősítő kódot kér a rendszer, amelyet sms-ben üld ki a telefonomra).
+
+Hozzáférések
+Mind a laptophoz, mind az  ionos fiókhoz kizárólagos hozzáférésem van.
+
+ÉRINTETTEK JOGAI
+1. Az Ügyfelet, mint érintettet az alábbi jogok illetik meg az Adatkezelővel szemben:
+
+a) Tájékoztatáshoz való jog: az Adatkezelő tömör, átlátható, érthető és könnyen hozzáférhető formában, világosan és közérthetően megfogalmazva nyújt tájékoztatást az Ügyfél számára. Az Ügyfél a tájékoztatáshoz való jogot írásban a jelen Tájékoztató IX/3. pontjában meghatározott elérhetőségeken gyakorolhatja, és az általa gyakorolt módon kap tájékoztatást az Adatkezelőtől.
+
+b) Hozzáférés joga: Az Ügyfél jogosult arra, hogy az Adatkezelőtől visszajelzést kapjon arra vonatkozóan, hogy személyes adatainak kezelése folyamatban van-e, és ha ilyen adatkezelés folyamatban van, jogosult arra, hogy a személyes adatokhoz és a rendeletben felsorolt információkhoz hozzáférést kapjon.
+
+c) Helyesbítéshez való jog: Az Ügyfél jogosult arra, hogy kérésére az adatkezelő indokolatlan késedelem nélkül helyesbítse a rá vonatkozó pontatlan személyes adatokat, illetve a hiányos személyes adatokat kiegészítése.
+
+d) Törléshez való jog: Az Ügyfél jogosult arra, hogy kérésére az Adatkezelő indokolatlan késedelem nélkül törölje a rá vonatkozó személyes adatokat, az adatkezelő pedig köteles arra, hogy az Ügyfélre vonatkozó személyes adatokat indokolatlan késedelem nélkül törölje az alábbiakban meghatározott feltételek esetén:
+
+– a személyes adatokra már nincs szükség abból a célból, amelyből azokat gyűjtötték
+vagy más módon kezelték;
+– az Ügyfél visszavonja az adatkezelés alapját képező hozzájárulását, és az adatkezelésnek nincs más jogalapja;
+– az Ügyfél tiltakozik az adatkezelés ellen, és nincs elsőbbséget élvező jogszerű ok az adatkezelésre;
+– a személyes adatokat jogellenesen kezelték;
+– a személyes adatokat az adatkezelőre alkalmazandó uniós vagy tagállami jogban előírt jogi kötelezettség teljesítéséhez törölni kell;
+– a személyes adatok gyűjtésére az információs társadalommal összefüggő szolgáltatások kínálásával kapcsolatosan került sor.
+
+e) Elfeledtetéshez való jog
+
+Ha az Adatkezelő nyilvánosságra hozta a személyes adatot, és azt törölni köteles, az elérhető technológia és a megvalósítás költségeinek figyelembevételével megteszi az ésszerűen elvárható lépéseket – ideértve technikai intézkedéseket – annak érdekében, hogy tájékoztassa az adatokat kezelő Adatkezelőket, hogy az Ügyfél kérelmezte a szóban forgó személyes adatokra mutató linkek vagy e személyes adatok másolatának, illetve másodpéldányának törlését.
+
+f) Adatkezelés korlátozásához való jog
+
+Az Ügyfél jogosult arra, hogy kérésére az Adatkezelő korlátozza az adatkezelést, ha az alábbi feltételek valamelyike teljesül:
+• az Ügyfél vitatja a személyes adatok pontosságát, ez esetben a korlátozás arra az időtartamra vonatkozik, amely lehetővé teszi, hogy az adatkezelő ellenőrizze a személyes adatok pontosságát;
+• az adatkezelés jogellenes, és az Ügyfél ellenzi az adatok törlését, és ehelyett kéri azok felhasználásának korlátozását;
+• az Adatkezelőnek már nincs szüksége a személyes adatokra adatkezelés céljából, de az Ügyfél igényli azokat jogi igények előterjesztéséhez, érvényesítéséhez vagy védelméhez;
+• az Ügyfél tiltakozott az adatkezelés ellen; ez esetben a korlátozás arra az időtartamra vonatkozik, amíg megállapításra nem kerül, hogy az Adatkezelő jogos indokai elsőbbséget élveznek-e az Ügyfél jogos indokaival szemben.
+Ha az adatkezelés korlátozás alá esik, a személyes adatokat a tárolás kivételével csak az Ügyfél hozzájárulásával, vagy jogi igények előterjesztéséhez, érvényesítéséhez vagy védelméhez, vagy más természetes vagy jogi személy jogainak védelme érdekében, vagy az Unió, illetve valamely tagállam fontos közérdekből kezelni.
+Az Adatkezelő az Ügyfelet az adatkezelés korlátozásának feloldásáról előzetesen tájékoztatja.
+
+g) Adathordozhatósághoz való jog: az Ügyfél jogosult arra, hogy a rá vonatkozó, általa az Adatkezelő rendelkezésére bocsátott személyes adatokat tagolt, széles körben használt, géppel olvasható formátumban megkapja, továbbá jogosult arra, hogy ezeket az adatokat egy másik adatkezelőnek továbbítsa.
+
+h) Tiltakozáshoz való jog: az Ügyfél jogosult arra, hogy a saját helyzetével kapcsolatos okokból bármikor tiltakozzon személyes adatainak közérdekű vagy az Adatkezelőre ruházott közhatalmi jogosítvány gyakorlásának keretében végzett feladat végrehajtásához szükséges adatkezelés, vagy az adatkezelő vagy egy harmadik fél jogos érdekeinek érvényesítéséhez szükséges kezelése ellen, ideértve az említett rendelkezéseken alapuló profilalkotást is. Ebben az esetben az Adatkezelő a személyes adatokat nem kezelheti tovább, kivéve, ha az Adatkezelő bizonyítja, hogy az adatkezelést olyan kényszerítő erejű jogos okok indokolják, amelyek elsőbbséget élveznek az Ügyfél érdekeivel, jogaival és szabadságaival szemben, vagy amelyek jogi igények előterjesztéséhez, érvényesítéséhez vagy védelméhez kapcsolódnak.
+Ha a személyes adatok kezelése közvetlen üzletszerzés érdekében történik, az Ügyfél jogosult arra, hogy bármikor tiltakozzon a rá vonatkozó személyes adatok e célból történő kezelése ellen, ideértve a profilalkotást is, amennyiben az a közvetlen üzletszerzéshez kapcsolódik.
+Ha az Ügyfél tiltakozik a személyes adatok közvetlen üzletszerzés érdekében történő kezelése ellen, akkor a személyes adatok a továbbiakban e célból nem kezelhetők.
+
+i) Automatizált döntéshozatal egyedi ügyekben, beleértve a profilalkotást: az Ügyfél jogosult arra, hogy ne terjedjen ki rá az olyan, kizárólag automatizált adatkezelésen – ideértve a profilalkotást is – alapuló döntés hatálya, amely rá nézve joghatással járna vagy őt hasonlóképpen jelentős mértékben érintené.
+Nem alkalmazandó a fenti jogosultság abban az esetben, ha a döntés:
+• az Ügyfél és az Adatkezelő közötti szerződés megkötése vagy teljesítése érdekében szükséges;
+• meghozatalát az adatkezelőre alkalmazandó olyan uniós vagy tagállami jog teszi lehetővé, amely az Ügyfél jogainak és szabadságainak, valamint jogos érdekeinek védelmét szolgáló megfelelő intézkedéseket is megállapít; vagy
+• az Ügyfél kifejezett hozzájárulásán alapul.
+
+j) Visszavonási jog: az Ügyfél jogosult arra, hogy hozzájárulását bármikor visszavonja. A hozzájárulás visszavonása nem érinti a hozzájáruláson alapuló, a visszavonás előtti adatkezelés jogszerűségét.
+
+2. Az Adatkezelő indokolatlan késedelem nélkül, de mindenféleképpen a kérelem beérkezésétől számított egy hónapon belül tájékoztatja az Ügyfelet a GDPR 15–22. cikk szerinti kérelem nyomán hozott intézkedésekről. Szükség esetén, figyelembe véve a kérelem összetettségét és a kérelmek számát, ez a határidő további két hónappal meghosszabbítható. A határidő meghosszabbításáról az adatkezelő a késedelem okainak megjelölésével a kérelem kézhezvételétől számított egy hónapon belül tájékoztatja az Ügyfelet. Ha az Ügyfél elektronikus úton nyújtotta be a kérelmet, a tájékoztatást lehetőség szerint elektronikus úton kell megadni, kivéve, ha az Ügyfél azt másként kéri. Ha az Adatkezelő nem tesz intézkedéseket az Ügyfél kérelme nyomán, késedelem nélkül, de legkésőbb a kérelem beérkezésétől számított egy hónapon belül tájékoztatja az Ügyfelet az intézkedés elmaradásának okairól, valamint arról, hogy az Ügyfél panaszt nyújthat be valamely felügyeleti hatóságnál, és élhet bírósági jogorvoslati jogával.
+
+Az Adatkezelő a kért információkat és a tájékoztatást és intézkedést díjmentesen kell biztosítani. Ha az Ügyfél kérelme egyértelműen megalapozatlan vagy – különösen ismétlődő jellege miatt – túlzó, az adatkezelő, figyelemmel a kért információ vagy tájékoztatás nyújtásával vagy a kért intézkedés meghozatalával járó adminisztratív költségekre:
+a) észszerű összegű díjat számíthat fel, vagy
+b) megtagadhatja a kérelem alapján történő intézkedést.
+
+A kérelem egyértelműen megalapozatlan vagy túlzó jellegének bizonyítása az adatkezelőt terheli.
+
+Az Adatkezelő minden olyan címzettet tájékoztat az általa végzett valamennyi helyesbítésről, törlésről vagy adatkezelés-korlátozásról, akivel, illetve amellyel a személyes adatot közölték, kivéve, ha ez lehetetlennek bizonyul, vagy aránytalanul nagy erőfeszítést igényel. Az Ügyfelet kérésére az Adatkezelő tájékoztatja e címzettekről.
+
+Az Adatkezelő az adatkezelés tárgyát képező személyes adatok másolatát az Ügyfél rendelkezésére bocsátja. Az Ügyfél által kért további másolatokért az Adatkezelő az adminisztratív költségeken alapuló, észszerű mértékű díjat számíthat fel. Ha az Ügyfél elektronikus úton nyújtotta be a kérelmet, az információkat széles körben használt elektronikus formátumban kell rendelkezésre bocsátani, kivéve, ha az Ügyfél másként kéri.
+
+ADATVÉDELMI INCIDENS
+Ha az adatvédelmi incidens valószínűsíthetően magas kockázattal jár a természetes személyek jogaira és szabadságaira nézve, az adatkezelőnek indokolatlan késedelem nélkül tájékoztatnia kell az érintettet az adatvédelmi incidensről.
+
+Az Érdeklődőt vagy Ügyfelet adott tájékoztatásban világosan és közérthetően ismertetem az adatvédelmi incidens jellegét, és amennyiben lehetőség van rá, közlöm az adatvédelmi incidens jellegét, beleértve – ha lehetséges – az érintettek kategóriáit és hozzávetőleges számát, valamint az incidenssel érintett adatok kategóriáit és hozzávetőleges számát; közlöm – amennyiben van – az adatvédelmi tisztviselő vagy a további tájékoztatást nyújtó egyéb kapcsolattartó nevét és elérhetőségeit; ismertetem az adatvédelmi incidensből eredő, valószínűsíthető következményeket.
+
+Adatvédelmi incidens esetén az incidens jellegét, kapcsolattartót, következményeket, intézkedéseket 72 órán belül be kell jelenteni a NAIH felé.
+
+Nemzeti Adatvédelmi és Információszabadság Hatóság
+1125 Budapest, Szilágyi Erzsébet fasor 22/C.
+Levelezési cím: 1530 Budapest, Postafiók: 5.
+Telefon: +36 -1-391-1400
+E-mail: ugyfelszolgalat@naih.hu
