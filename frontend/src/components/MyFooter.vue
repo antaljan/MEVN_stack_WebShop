@@ -1,27 +1,114 @@
 <template>
   <!-- Footer -->
   <footer class="w3-center w3-black w3-padding-64 w3-opacity w3-hover-opacity-off">
-    <a href="/#home" class="w3-button w3-light-grey"><i class="fa fa-arrow-up w3-margin-right"></i>{{buttonToTop[selectedLanguage]}}</a>
+<!-- newsletter abo -->
+    <v-container>
+      <v-btn color="primary" @click="dialog = true">{{ aboButton[selectedLanguage] }}</v-btn>
+      <v-dialog v-model="dialog" max-width="500">
+        <v-card>
+         <v-card-title class="headline">{{ aboButton[selectedLanguage] }}</v-card-title>
+          <v-card-text>
+            <v-form ref="form" v-model="valid">
+              <v-text-field
+                v-model="firstname"
+                :label="aboFirstName[selectedLanguage]"
+                :rules="[v => !!v || aboError1[selectedLanguage]]"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="name"
+                :label="aboName[selectedLanguage]"
+                :rules="[v => !!v || aboError1[selectedLanguage]]"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="email"
+                :label="aboEmail[selectedLanguage]"
+                :rules="[v => /.+@.+\..+/.test(v) || aboError2[selectedLanguage]]"
+                required
+              ></v-text-field>
+              <v-checkbox
+                v-model="gdpr"
+                :rules="[v => !!v || aboError3[selectedLanguage]]"
+                :label="aboGdpr[selectedLanguage]"
+                required
+              ></v-checkbox>
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green" text @click="submit">{{ aboButtonSend[selectedLanguage] }}</v-btn>
+            <v-btn color="grey" text @click="dialog = false">{{ aboButtonCancel[selectedLanguage] }}</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-container>
+<!-- Social Media Links -->
     <div class="w3-xlarge w3-section">
       <a href="https://www.facebook.com/profile.php?id=100064353450604" target="_blank" rel="noopener"><i class="fa fa-facebook-official w3-hover-opacity"></i></a>
       <a href="https://www.instagram.com/antaligyongyiedit/" target="_blank" rel="noopener"><i class="fa fa-instagram w3-hover-opacity"> </i></a>
       <a href="https://www.linkedin.com/in/gy%C3%B6ngyi-edit-antali-09a1aa174/" target="_blank" rel="noopener"><i class="fa fa-linkedin w3-hover-opacity"> </i></a>
     </div>
+<!--powered by-->
     <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" rel="noopener" class="w3-hover-text-green">w3.css</a> &
-     <a href="https://vuetifyjs.com/" title="vuetify"  target="_blank" rel="noopener" class="w3-hover-text-green">vuetify</a> &
-     <a href="https://www.linkedin.com/in/janos-antali-29086a70/" title="A_Jani"  target="_blank" rel="noopener" class="w3-hover-text-green">A_Jani</a>.</p>
+      <a href="https://vuetifyjs.com/" title="vuetify"  target="_blank" rel="noopener" class="w3-hover-text-green">vuetify</a> &
+      <a href="https://www.linkedin.com/in/janos-antali-29086a70/" title="A_Jani"  target="_blank" rel="noopener" class="w3-hover-text-green">A_Jani</a>.
+    </p>
   </footer>
 </template>
-
 <script setup>
 import { ref, reactive } from 'vue';
-
 // Reactive state for language change
 const selectedLanguage = ref(document.documentElement.lang || 'hu');
-const buttonToTop = reactive({
-  en: 'HOME',
-  hu: 'KEZDŐLAP',
-  de: 'STARTSEITE'
+const aboButton = reactive({
+  en: 'NEWSLETTER SUBSCRIPTION',
+  hu: 'HÍRLEVÉL FELIRATKOZÁS',
+  de: 'NEWSLETTER ABONNIEREN'
+});
+const aboFirstName = reactive({
+  en: 'first name',
+  hu: 'keresztnév',
+  de: 'Vorname'
+});
+const aboName = reactive({
+  en: 'name',
+  hu: 'vezetéknév',
+  de: 'Familienname'
+});
+const aboEmail = reactive({
+  en: 'EMAIL',
+  hu: 'EMAIL',
+  de: 'EMAIL'
+});
+const aboGdpr = reactive({
+  en: 'I accept the privacy policy.',
+  hu: 'Elfogadom az adatvédelmi nyilatkozatot.',
+  de: 'Ich stimme der Datenschutzerklärung zu.'
+});
+const aboError1 = reactive({
+  en: 'Name is required',
+  hu: 'név kötelező',
+  de: 'Name ist erforderlich'
+});
+const aboError2 = reactive({
+  en: 'please enter a valid email address!',
+  hu: 'Kérjük, adjon meg egy érvényes e-mail címet!',
+  de: 'Bitte gültige E-Mail angeben!'
+});
+const aboError3 = reactive({
+  en: 'Please accept the privacy policy!',
+  hu: 'Kérjük, fogadja el az adatvédelmi nyilatkozatot!',
+  de: 'Bitte stimme der Datenschutzerklärung zu!'
+});
+const aboButtonSend = reactive({
+  en: 'SEND',
+  hu: 'ELKÜLDÉS',
+  de: 'ABSCHICKEN'
+});
+const aboButtonCancel = reactive({
+  en: 'CANCEL',
+  hu: 'MÉGSE',
+  de: 'ABBRECHEN'
 });
 const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
@@ -32,9 +119,40 @@ const observer = new MutationObserver((mutations) => {
 });
 observer.observe(document.documentElement, { attributes: true });
 </script>
-
 <style>
 .w3-xlarge i {
   margin-right: 10px; /* 10px távolság minden ikon között */
 }
 </style>
+<script>
+export default {
+  data() {
+    return {
+      dialog: false,
+      valid: false,
+      firstname: '',
+      name: '',
+      email: '',
+      gdpr: false,
+      textOut: ''
+    }
+  },
+  methods: {
+    submit() {
+      if (this.$refs.form.validate()) {
+        this.textOut = 'Vorname: ' + this.firstname + '\n';
+        this.textOut += 'Name: ' + this.name + '\n';
+        this.textOut += 'E-Mail: ' + this.email + '\n';
+        this.textOut += 'GDPR zugestimmt: ' + (this.gdpr ? 'Ja' : 'Nein');
+        alert(this.textOut)
+        // Hier könntest du die Daten an dein Backend senden
+        this.dialog = false
+        this.firstname = ''
+        this.name = ''
+        this.email = ''
+        this.gdpr = false
+      }
+    }
+  }
+}
+</script>
