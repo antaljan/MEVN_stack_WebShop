@@ -89,9 +89,9 @@ const aboGdpr1 = reactive({
   de: 'Ich stimme der '
 });
 const aboGdpr2 = reactive({
-  en: 'privacy policy.',
-  hu: 'adatvédelmi nyilatkozatot.',
-  de: 'Datenschutzerklärung zu.'
+  en: '_ privacy policy.',
+  hu: '_ adatvédelmi nyilatkozatot.',
+  de: '_ Datenschutzerklärung zu.'
 });
 const aboError1 = reactive({
   en: 'Name is required',
