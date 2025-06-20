@@ -5,13 +5,13 @@
       <a class="w3-bar-item w3-button w3-hover-black w3-hide-medium w3-hide-large w3-right" href="javascript:void(0);" @click="toggleFunction" title="Toggle Navigation Menu">
         <i class="fa fa-bars"></i>
       </a>
-      <a href="#home" class="w3-bar-item w3-button">{{ menuButtonHome[selectedLanguage] }}</a>
-      <a href="#about" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-user"></i> {{menuButtonAbout[selectedLanguage]}}</a>
-      <a href="#contact" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-envelope"></i> {{ menuButtonContact[selectedLanguage] }}</a>
-      <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-red">
-        <i class="fa fa-search"></i>
+      <a href="/#home" class="w3-bar-item w3-button">{{ menuButtonHome[selectedLanguage] }}</a>
+      <a href="/#about" class="w3-bar-item w3-button w3-hide-small"> {{menuButtonAbout[selectedLanguage]}}</a>
+      <a href="/#contact" class="w3-bar-item w3-button w3-hide-small"> {{ menuButtonContact[selectedLanguage] }}</a>
+      <a href="/#" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-red">
+        <i class="fa fa-user"></i>
       </a>
-      <select id="langselect" class="w3-bar-item w3-button w3-hide-small w3-right" @change="changeLanguage">
+      <select id="langselect" class="w3-bar-item w3-button w3-right" @change="changeLanguage">
         <option value="en">EN</option>
         <option value="hu" selected>HU</option>
         <option value="de">DE</option>
@@ -19,9 +19,8 @@
     </div>
     <!-- Navbar on small screens -->
     <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium" @change="changeLanguage">
-      <a href="#about" class="w3-bar-item w3-button" @click="toggleFunction">RÓLAM</a>
-      <a href="#contact" class="w3-bar-item w3-button" @click="toggleFunction">KAPCSOLAT</a>
-      <a href="#" class="w3-bar-item w3-button">KERESÉS</a>
+      <a href="/#about" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonAbout[selectedLanguage]}}</a>
+      <a href="/#contact" class="w3-bar-item w3-button" @click="toggleFunction">{{ menuButtonContact[selectedLanguage] }}</a>
     </div>
   </div>
 </template>
