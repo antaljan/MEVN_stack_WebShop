@@ -30,9 +30,15 @@
               <v-checkbox
                 v-model="gdpr"
                 :rules="[v => !!v || aboError3[selectedLanguage]]"
-                :label="aboGdpr[selectedLanguage]"
                 required
-              ></v-checkbox>
+              >
+                <template v-slot:label>
+                  {{ aboGdpr1[selectedLanguage] }}
+                  <a href="/gdpr" target="_blank" rel="noopener">
+                    {{ aboGdpr2[selectedLanguage] }}
+                  </a>
+                </template>
+              </v-checkbox>
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -49,11 +55,8 @@
       <a href="https://www.instagram.com/antaligyongyiedit/" target="_blank" rel="noopener"><i class="fa fa-instagram w3-hover-opacity"> </i></a>
       <a href="https://www.linkedin.com/in/gy%C3%B6ngyi-edit-antali-09a1aa174/" target="_blank" rel="noopener"><i class="fa fa-linkedin w3-hover-opacity"> </i></a>
     </div>
-<!--powered by-->
-    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" rel="noopener" class="w3-hover-text-green">w3.css</a> &
-      <a href="https://vuetifyjs.com/" title="vuetify"  target="_blank" rel="noopener" class="w3-hover-text-green">vuetify</a> &
-      <a href="https://www.linkedin.com/in/janos-antali-29086a70/" title="A_Jani"  target="_blank" rel="noopener" class="w3-hover-text-green">A_Jani</a>.
-    </p>
+<!--copyright-->
+    <p>&copy; {{ new Date().getFullYear() }} Antali Gyöngyi Edit. All rights reserved.</p>
   </footer>
 </template>
 <script setup>
@@ -80,10 +83,15 @@ const aboEmail = reactive({
   hu: 'EMAIL',
   de: 'EMAIL'
 });
-const aboGdpr = reactive({
-  en: 'I accept the privacy policy.',
-  hu: 'Elfogadom az adatvédelmi nyilatkozatot.',
-  de: 'Ich stimme der Datenschutzerklärung zu.'
+const aboGdpr1 = reactive({
+  en: 'I accept the ',
+  hu: 'Elfogadom az ',
+  de: 'Ich stimme der '
+});
+const aboGdpr2 = reactive({
+  en: 'privacy policy.',
+  hu: 'adatvédelmi nyilatkozatot.',
+  de: 'Datenschutzerklärung zu.'
 });
 const aboError1 = reactive({
   en: 'Name is required',
