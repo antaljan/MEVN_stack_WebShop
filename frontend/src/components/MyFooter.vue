@@ -3,7 +3,7 @@
   <footer class="w3-center w3-black w3-padding-64 w3-opacity w3-hover-opacity-off">
 <!-- newsletter abo -->
     <v-container>
-      <v-btn color="primary" @click="dialog = true">{{ aboButton[selectedLanguage] }}</v-btn>
+      <v-btn color="primary" class="text" @click="dialog = true">{{ aboButton[selectedLanguage] }}</v-btn>
       <v-dialog v-model="dialog" max-width="500">
         <v-card>
          <v-card-title class="headline">{{ aboButton[selectedLanguage] }}</v-card-title>
