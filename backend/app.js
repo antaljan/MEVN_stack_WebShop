@@ -1,6 +1,7 @@
 /**
  * NODE Express application for Backend functionality.
  * for sending emails using Nodemailer and GMX SMTP service.
+ * It connects to a MongoDB database and provides an endpoint like CRUD API.
  */
 
 const express = require('express');
@@ -29,7 +30,6 @@ const client = new MongoClient(uri, {
   }
 });
 
-// Nur EINMAL deklarieren!
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());

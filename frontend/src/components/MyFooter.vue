@@ -62,7 +62,6 @@
 
 <script setup>
 import { ref, reactive } from 'vue';
-import axios from 'axios';
 
 // Reactive state for language change
 const selectedLanguage = ref(document.documentElement.lang || 'hu');
@@ -139,37 +138,33 @@ const email = ref('');
 const gdpr = ref(false);
 const form = ref(null);
 
-// Email sending method
-async function sendEmail(email, subject, message ) {
-  alert('E-mail küldése folyamatban...'+ email+' '+ subject+' '+ message+' adatokkal.');
-  try {
-    await axios.post('http://localhost:3000/send-email', {
-      email: email,
-      subject: subject,
-      message: message
-    });
-    alert('E-mail sikeresen elküldve!');
-  } catch (error) {
-    alert('Hiba történt: ' + error);
-  }
-}
+// import { sendEmail } from '@/services/emailService';
+import { sendEmail } from '@/services/emailService';
 
-// Submit handler function
-function submit() {
-  if (form.value && form.value.validate()) {
-    // Optionally, show the form data
-    // let textOut = 'Vorname: ' + firstname.value + '\n';
-    // textOut += 'Name: ' + name.value + '\n';
-    // textOut += 'E-Mail: ' + email.value + '\n';
-    // textOut += 'GDPR zugestimmt: ' + (gdpr.value ? 'Ja' : 'Nein');
-    // alert(textOut)
-    sendEmail(email.value, 'newsletter abo', firstname.value + ' ' + name.value);
-    dialog.value = false;
-    firstname.value = '';
-    name.value = '';
-    email.value = '';
-    gdpr.value = false;
-    form.value.resetValidation();
+// Submit handler function --> this function is called when the user clicks the "SEND" button
+// It checks if the form is valid and sends the email if it is.
+async function submit() {
+  if (form.value && await form.value.validate()) {
+    try {
+      const result = await sendEmail({
+        email: email.value,
+        subject: firstname.value + ' ' + name.value,
+        message:'newsletter abo'
+    });
+      if (result && result.success) {
+        alert('Successful E-mail sending!');
+      } else {
+        alert('Error by Email sending: ' + (result && result.error ? result.error : 'Unknown error'));
+      }
+      dialog.value = false;
+      firstname.value = '';
+      name.value = '';
+      email.value = '';
+      gdpr.value = false;
+      form.value.resetValidation();
+    } catch (error) {
+      alert('Error by Email sending: ' + error.message);
+    }
   }
 }
 </script>
