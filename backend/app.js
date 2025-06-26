@@ -5,12 +5,23 @@
 
 const express = require('express');
 const nodemailer = require('nodemailer');
+const bodyParser = require("body-parser")
+const cors = require('cors');
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://antalijanos76:CI02XvAiYdSlbujN@ajcluster.rtpdpvk.mongodb.net/?retryWrites=true&w=majority&appName=AjCluster";
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
 
 // Create an Express application
 const app = express();
 app.use(express.json());
-const cors = require('cors');
 app.use(cors());
+app.use(bodyParser.json())
 
 // Nodemailer configuration for GMX SMTP service
 const transporter = nodemailer.createTransport({
@@ -26,6 +37,21 @@ const transporter = nodemailer.createTransport({
     }
 });
 module.exports = transporter;
+
+// Connect to MongoDB 
+async function run() {
+  try {
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
+}
+run().catch(console.dir);
 
 /**
  * POST /send-email
