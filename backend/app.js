@@ -5,27 +5,60 @@
 
 const express = require('express');
 const nodemailer = require('nodemailer');
-
-// Create an Express application
-const app = express();
-app.use(express.json());
+const bodyParser = require("body-parser")
 const cors = require('cors');
-app.use(cors());
+const { MongoClient, ServerApiVersion } = require('mongodb');
+require('dotenv').config();
+const uri = process.env.MONGODB_URI;
+const gmxUser = process.env.GMX_USER;
+const gmxPass = process.env.GMX_PASS;
 
-// Nodemailer configuration for GMX SMTP service
+if (!uri) {
+  console.error("Error: MONGODB_URI environment variable is not set.");
+  process.exit(1);
+}
+if (!gmxUser || !gmxPass) {
+  console.error("Error: GMX_USER and/or GMX_PASS environment variables are not set.");
+  process.exit(1);
+}
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+
+// Nur EINMAL deklarieren!
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+
 const transporter = nodemailer.createTransport({
     host: 'mail.gmx.net',
     port: 587,
     secure: false, // true für Port 465, false für 587
     auth: {
-        user: 'asd0125@gmx.de', // GMX e-mail accont
-        pass: 'SgdScrum25' // Passwort für das GMX-Konto
+        user: gmxUser,
+        pass: gmxPass
     },
     tls: {
         rejectUnauthorized: false
     }
 });
-module.exports = transporter;
+
+// Connect to MongoDB once and keep the connection open for app usage
+async function connectToMongoDB() {
+  try {
+    await client.connect();
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } catch (err) {
+    console.error("Failed to connect to MongoDB", err);
+    process.exit(1);
+  }
+}
+connectToMongoDB();
 
 /**
  * POST /send-email
