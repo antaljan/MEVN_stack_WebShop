@@ -59,8 +59,11 @@
     <p>&copy; {{ new Date().getFullYear() }} Antali Gyöngyi Edit. All rights reserved.</p>
   </footer>
 </template>
+
 <script setup>
 import { ref, reactive } from 'vue';
+import axios from 'axios';
+
 // Reactive state for language change
 const selectedLanguage = ref(document.documentElement.lang || 'hu');
 const aboButton = reactive({
@@ -126,41 +129,47 @@ const observer = new MutationObserver((mutations) => {
   });
 });
 observer.observe(document.documentElement, { attributes: true });
-</script>
-<style>
-.w3-xlarge i {
-  margin-right: 10px; /* 10px távolság minden ikon között */
+
+// Form state
+const dialog = ref(false);
+const valid = ref(false);
+const firstname = ref('');
+const name = ref('');
+const email = ref('');
+const gdpr = ref(false);
+const form = ref(null);
+
+// Email sending method
+async function sendEmail(email, subject, message ) {
+  alert('E-mail küldése folyamatban...'+ email+' '+ subject+' '+ message+' adatokkal.');
+  try {
+    await axios.post('http://localhost:3000/send-email', {
+      email: email,
+      subject: subject,
+      message: message
+    });
+    alert('E-mail sikeresen elküldve!');
+  } catch (error) {
+    alert('Hiba történt: ' + error);
+  }
 }
-</style>
-<script>
-export default {
-  data() {
-    return {
-      dialog: false,
-      valid: false,
-      firstname: '',
-      name: '',
-      email: '',
-      gdpr: false,
-      textOut: ''
-    }
-  },
-  methods: {
-    submit() {
-      if (this.$refs.form.validate()) {
-        this.textOut = 'Vorname: ' + this.firstname + '\n';
-        this.textOut += 'Name: ' + this.name + '\n';
-        this.textOut += 'E-Mail: ' + this.email + '\n';
-        this.textOut += 'GDPR zugestimmt: ' + (this.gdpr ? 'Ja' : 'Nein');
-        alert(this.textOut)
-        // Hier könntest du die Daten an dein Backend senden
-        this.dialog = false
-        this.firstname = ''
-        this.name = ''
-        this.email = ''
-        this.gdpr = false
-      }
-    }
+
+// Submit handler function
+function submit() {
+  if (form.value && form.value.validate()) {
+    // Optionally, show the form data
+    // let textOut = 'Vorname: ' + firstname.value + '\n';
+    // textOut += 'Name: ' + name.value + '\n';
+    // textOut += 'E-Mail: ' + email.value + '\n';
+    // textOut += 'GDPR zugestimmt: ' + (gdpr.value ? 'Ja' : 'Nein');
+    // alert(textOut)
+    sendEmail(email.value, 'newsletter abo', firstname.value + ' ' + name.value);
+    dialog.value = false;
+    firstname.value = '';
+    name.value = '';
+    email.value = '';
+    gdpr.value = false;
+    form.value.resetValidation();
   }
 }
 </script>
