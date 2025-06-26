@@ -51,9 +51,9 @@
     </v-container>
 <!-- Social Media Links -->
     <div class="w3-xlarge w3-section">
-      <a href="https://www.facebook.com/profile.php?id=100064353450604" target="_blank" rel="noopener"><i class="fa fa-facebook-official w3-hover-opacity"></i></a>
-      <a href="https://www.instagram.com/antaligyongyiedit/" target="_blank" rel="noopener"><i class="fa fa-instagram w3-hover-opacity"> </i></a>
-      <a href="https://www.linkedin.com/in/gy%C3%B6ngyi-edit-antali-09a1aa174/" target="_blank" rel="noopener"><i class="fa fa-linkedin w3-hover-opacity"> </i></a>
+      <a href="https://www.facebook.com/profile.php?id=100064353450604" target="_blank" rel="noopener" class="w3-padding-large"><i class="fa fa-facebook-official w3-hover-opacity"></i></a>
+      <a href="https://www.instagram.com/antaligyongyiedit/" target="_blank" rel="noopener" class="w3-padding-large"><i class="fa fa-instagram w3-hover-opacity"> </i></a>
+      <a href="https://www.linkedin.com/in/gy%C3%B6ngyi-edit-antali-09a1aa174/" target="_blank" rel="noopener" class="w3-padding-large"><i class="fa fa-linkedin w3-hover-opacity"> </i></a>
     </div>
 <!--copyright-->
     <p>&copy; {{ new Date().getFullYear() }} Antali Gyöngyi Edit. All rights reserved.</p>
