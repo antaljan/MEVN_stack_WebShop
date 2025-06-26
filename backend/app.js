@@ -8,7 +8,19 @@ const nodemailer = require('nodemailer');
 const bodyParser = require("body-parser")
 const cors = require('cors');
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://antalijanos76:CI02XvAiYdSlbujN@ajcluster.rtpdpvk.mongodb.net/?retryWrites=true&w=majority&appName=AjCluster";
+require('dotenv').config();
+const uri = process.env.MONGODB_URI;
+const gmxUser = process.env.GMX_USER;
+const gmxPass = process.env.GMX_PASS;
+
+if (!uri) {
+  console.error("Error: MONGODB_URI environment variable is not set.");
+  process.exit(1);
+}
+if (!gmxUser || !gmxPass) {
+  console.error("Error: GMX_USER and/or GMX_PASS environment variables are not set.");
+  process.exit(1);
+}
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -17,41 +29,36 @@ const client = new MongoClient(uri, {
   }
 });
 
-// Create an Express application
+// Nur EINMAL deklarieren!
 const app = express();
-app.use(express.json());
 app.use(cors());
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
-// Nodemailer configuration for GMX SMTP service
 const transporter = nodemailer.createTransport({
     host: 'mail.gmx.net',
     port: 587,
     secure: false, // true für Port 465, false für 587
     auth: {
-        user: 'asd0125@gmx.de', // GMX e-mail accont
-        pass: 'SgdScrum25' // Passwort für das GMX-Konto
+        user: gmxUser,
+        pass: gmxPass
     },
     tls: {
         rejectUnauthorized: false
     }
 });
-module.exports = transporter;
 
-// Connect to MongoDB 
-async function run() {
+// Connect to MongoDB once and keep the connection open for app usage
+async function connectToMongoDB() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+  } catch (err) {
+    console.error("Failed to connect to MongoDB", err);
+    process.exit(1);
   }
 }
-run().catch(console.dir);
+connectToMongoDB();
 
 /**
  * POST /send-email
