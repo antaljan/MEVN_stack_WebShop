@@ -22,11 +22,18 @@
           <v-form ref="form" v-model="valid">
             <v-text-field
               v-if="!isLogin"
+              v-model="firstname"
+              label="First Name"
+              :rules="[v => !!v || 'Name ist erforderlich']"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-if="!isLogin"
               v-model="name"
               label="Name"
               :rules="[v => !!v || 'Name ist erforderlich']"
               required
-            ></v-text-field>
+            ></v-text-field>            
             <v-text-field
               v-model="email"
               label="E-Mail"
@@ -130,6 +137,7 @@ function changeLanguage(event) {
 }
 </script>
 <script>
+import axios from 'axios';
 export default {
   data() {
     return {
@@ -137,6 +145,7 @@ export default {
       valid: false,
       isLogin: true,
       name: '',
+      firstname: '',
       email: '',
       password: '',
       gdpr: false
@@ -147,14 +156,29 @@ export default {
       this.isLogin = !this.isLogin
       this.$refs.form.resetValidation()
     },
-    submit() {
+    async submit() {
       if (this.$refs.form.validate()) {
         if (this.isLogin) {
           console.log('Login:', this.email, this.password)
         } else {
-          console.log('Registrierung:', this.name, this.email, this.password, 'GDPR:', this.gdpr)
+          console.log('Registrierung:', this.firstname, this.name, this.email, this.password, 'GDPR:', this.gdpr)
+            try {
+              await axios.post('http://localhost:3000/create-user', {
+                firstname:this.firstname,
+                name:this.name,
+                email:this.email,
+                phone:'',
+                rolle:'user',
+                adress:'',
+                psw : this.password,
+              });
+              return { success: true };
+            } catch (error) {
+              return { success: false, error };
+            }
         }
         this.dialog = false
+        this.firstname = ''
         this.name = ''
         this.email = ''
         this.password = ''

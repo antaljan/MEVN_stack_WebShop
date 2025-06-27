@@ -8,7 +8,7 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const bodyParser = require("body-parser")
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 // Load environment variables from .env file
 require('dotenv').config();
 const uri = process.env.MONGODB_URI;
@@ -76,6 +76,71 @@ app.post('/send-email', async (req, res) => {
     } catch (error) {
         console.error(error); // Failure loggen
         res.status(500).send(error.message); // give back the error message for Frontend
+    }
+});
+// Create user in datenbank
+app.post('/create-user', async (req, res) => {
+    const { firstname, name, email, phone, rolle, adress, psw } = req.body;
+    console.log('Registrierung:', firstname, name, email, psw, phone, rolle, adress);
+    // Check if all required fields are provided
+    try {
+        const database = client.db('yowayoli');
+        const collection = database.collection('users');
+        const result = await collection.insertOne({ firstname, name, email, phone, rolle, adress, psw });
+        console.log('User created:', result);
+        res.status(201).send(`User created with ID: ${result.insertedId}`);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error.message);
+    }
+});
+// Read all users from datenbank
+app.post('/get-users', async (req, res) => {
+    try {
+        const database = client.db('yowayoli');
+        const collection = database.collection('users');
+        const users = await collection.find({}).toArray();
+        res.status(200).json(users);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error.message);
+    }
+});
+// Update user in datenbank
+app.post('/update-user', async (req, res) => {
+    const { id, firstname, name, email, phone, rolle, adress, psw } = req.body;  // Expecting an ID and user data in the request body
+    try {
+        const database = client.db('yowayoli');
+        const collection = database.collection('users');
+        const result = await collection.updateOne(
+            { _id: new ObjectId(String(id)) }, // Filter by ID
+            { $set: { firstname, name, email, phone, rolle, adress, psw } } // Update the user data
+        );
+        if (result.matchedCount === 1) {
+            res.status(200).send(`User with ID ${id} updated successfully.`);
+        } else {
+            res.status(404).send(`User with ID ${id} not found.`);
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error.message);
+    }
+});
+// Delete user from datenbank
+app.post('/delete-user', async (req, res) => {
+    const { id } = req.body;  // Expecting an ID in the request body  
+    try {
+        const database = client.db('yowayoli');
+        const collection = database.collection('users');
+        const result = await collection.deleteOne({ _id: new ObjectId(String(id)) });
+        if (result.deletedCount === 1) {
+            res.status(200).send(`User with ID ${id} deleted successfully.`);
+        } else {
+            res.status(404).send(`User with ID ${id} not found.`);
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error.message);
     }
 });
 // Start of the server
