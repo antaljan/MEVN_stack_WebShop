@@ -8,39 +8,46 @@
       <a href="/#home" class="w3-bar-item w3-button w3-hide-small">{{ menuButtonHome[selectedLanguage] }}</a>
       <a href="/#about" class="w3-bar-item w3-button w3-hide-small"> {{menuButtonAbout[selectedLanguage]}}</a>
       <a href="/#contact" class="w3-bar-item w3-button w3-hide-small"> {{ menuButtonContact[selectedLanguage] }}</a>
-<!-- login -->
+      <a
+        v-if="userRolle === 'admin' "
+        href="/#admin"
+        class="w3-bar-item w3-button w3-hover-black w3-hide-small"
+        >Admin</a>
       <v-container class="w3-bar-item w3-button w3-right">
       <p  @click="dialog = true">
+        <span> {{userFirstname}}</span>
         <v-icon name="loginIcon" color="black">mdi-login</v-icon>
       </p>
       <v-dialog v-model="dialog" max-width="500">
         <v-card>
         <v-card-title class="headline">
-          {{ isLogin ? 'Login' : 'Registrieren' }}
+          {{ loggedIn ? 'Logout' : (isLogin ? 'Login' : 'Registrieren') }}
         </v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="valid">
             <v-text-field
-              v-if="!isLogin"
+              v-if="!isLogin && !loggedIn"
               v-model="firstname"
               label="First Name"
               :rules="[v => !!v || 'Name ist erforderlich']"
               required
             ></v-text-field>
             <v-text-field
-              v-if="!isLogin"
+              v-if="!isLogin && !loggedIn"
               v-model="name"
               label="Name"
               :rules="[v => !!v || 'Name ist erforderlich']"
               required
             ></v-text-field>            
             <v-text-field
+              v-if="!loggedIn"
               v-model="email"
               label="E-Mail"
               :rules="[v => /.+@.+\..+/.test(v) || 'Gültige E-Mail angeben']"
               required
             ></v-text-field>
             <v-text-field
+              v-if="!loggedIn"
               v-model="password"
               label="Passwort"
               :rules="[v => !!v || 'Passwort ist erforderlich']"
@@ -48,7 +55,7 @@
               required
             ></v-text-field>
             <v-checkbox
-              v-if="!isLogin"
+              v-if="!isLogin && !loggedIn"
               v-model="gdpr"
               :rules="[v => !!v || 'Bitte stimme der Datenschutzerklärung zu']"
               label="Ich stimme der Datenschutzerklärung zu"
@@ -59,14 +66,14 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="green" text @click="submit">
-            {{ isLogin ? 'Einloggen' : 'Registrieren' }}
+            {{ loggedIn ? 'Logout' : (isLogin ? 'Einloggen' : 'Registrieren') }}
           </v-btn>
           <v-btn color="grey" text @click="dialog = false">Abbrechen</v-btn>
         </v-card-actions>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click="toggleForm">
-            {{ isLogin ? 'Noch kein Konto? Jetzt registrieren' : 'Schon registriert? Jetzt einloggen' }}
+            {{ loggedIn ? '' : (isLogin ? 'Noch kein Konto? Jetzt registrieren' : 'Schon registriert? Jetzt einloggen') }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -90,8 +97,22 @@
 
 <script setup>
 import { ref, reactive } from 'vue';
+import axios from 'axios';
 
-// Reactive state
+// States
+const dialog = ref(false);
+const valid = ref(false);
+const isLogin = ref(true);
+const loggedIn = ref(false);
+const name = ref('');
+const firstname = ref('');
+const email = ref('');
+const password = ref('');
+const gdpr = ref(false);
+const userFirstname = ref('');
+const userRolle = ref('');
+
+// Sprachen
 const selectedLanguage = ref(document.documentElement.lang || 'hu');
 const menuButtonHome = reactive({
   en: 'HOME',
@@ -109,82 +130,85 @@ const menuButtonContact = reactive({
   de: 'KONTAKT'
 });
 
-// Change style of navbar on scroll
-window.onscroll = function() { myFunction(); };
-function myFunction() {
-  var navbar = document.getElementById("myNavbar");
-  if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-    navbar.className = "w3-bar w3-card w3-animate-top w3-white";
+// Methoden
+function toggleForm() {
+  isLogin.value = !isLogin.value;
+  // ggf. Validierung zurücksetzen
+}
+
+async function submit() {
+  // Validierung ggf. selbst implementieren
+  if (loggedIn.value) {
+    // Logout
+    try {
+      const response = await axios.post('http://localhost:3000/logout');
+      if (response.data.success) {
+        loggedIn.value = false;
+        userFirstname.value = '';
+        userRolle.value = '';
+        dialog.value = false;
+        return { success: true };
+      } else {
+        alert('Logout fehlgeschlagen!');
+        return { success: false };
+      }
+    } catch (error) {
+      alert('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.');
+      return { success: false, error };
+    }
+  } else if (isLogin.value) {
+    // Login
+    try {
+      const response = await axios.post('http://localhost:3000/login', {
+        email: email.value,
+        psw: password.value
+      });
+      if (response.data.success) {
+        userFirstname.value = response.data.user.firstname;
+        loggedIn.value = true;
+        userRolle.value = response.data.user.rolle;
+        dialog.value = false;
+        return { success: true };
+      } else {
+        alert('Login fehlgeschlagen! Bitte überprüfen Sie Ihre Anmeldedaten.');
+        return { success: false };
+      }
+    } catch (error) {
+      alert('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.');
+      return { success: false, error };
+    }
   } else {
-    navbar.className = "w3-bar";
+    // Registrierung
+    try {
+      await axios.post('http://localhost:3000/create-user', {
+        firstname: firstname.value,
+        name: name.value,
+        email: email.value,
+        phone: '',
+        rolle: 'user',
+        adress: '',
+        psw: password.value,
+      });
+      alert('Registrierung erfolgreich! Please check your EMAIL for confirmation.');
+      dialog.value = false;
+      return { success: true };
+    } catch (error) {
+      return { success: false, error };
+    }
   }
 }
 
-// Used to toggle the menu on small screens when clicking on the menu button
+function changeLanguage(event) {
+  selectedLanguage.value = event.target.value;
+  document.documentElement.lang = selectedLanguage.value;
+}
+
 function toggleFunction() {
   var x = document.getElementById("navDemo");
   if (x.className.indexOf("w3-show") == -1) {
     x.className += " w3-show";
   } else {
     x.className = x.className.replace(" w3-show", "");
-  }
-}
-
-// Language change handler
-function changeLanguage(event) {
-  selectedLanguage.value = event.target.value;
-  document.documentElement.lang = selectedLanguage.value;
-}
-</script>
-<script>
-import axios from 'axios';
-export default {
-  data() {
-    return {
-      dialog: false,
-      valid: false,
-      isLogin: true,
-      name: '',
-      firstname: '',
-      email: '',
-      password: '',
-      gdpr: false
-    }
-  },
-  methods: {
-    toggleForm() {
-      this.isLogin = !this.isLogin
-      this.$refs.form.resetValidation()
-    },
-    async submit() {
-      if (this.$refs.form.validate()) {
-        if (this.isLogin) {
-          console.log('Login:', this.email, this.password)
-        } else {
-          console.log('Registrierung:', this.firstname, this.name, this.email, this.password, 'GDPR:', this.gdpr)
-            try {
-              await axios.post('http://localhost:3000/create-user', {
-                firstname:this.firstname,
-                name:this.name,
-                email:this.email,
-                phone:'',
-                rolle:'user',
-                adress:'',
-                psw : this.password,
-              });
-              return { success: true };
-            } catch (error) {
-              return { success: false, error };
-            }
-        }
-        this.dialog = false
-        this.firstname = ''
-        this.name = ''
-        this.email = ''
-        this.password = ''
-        this.gdpr = false
-      }
-    }
   }
 }
 </script>

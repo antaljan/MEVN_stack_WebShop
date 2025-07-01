@@ -81,17 +81,29 @@ app.post('/send-email', async (req, res) => {
 // Create user in datenbank
 app.post('/create-user', async (req, res) => {
     const { firstname, name, email, phone, rolle, adress, psw } = req.body;
-    console.log('Registrierung:', firstname, name, email, psw, phone, rolle, adress);
-    // Check if all required fields are provided
     try {
         const database = client.db('yowayoli');
         const collection = database.collection('users');
         const result = await collection.insertOne({ firstname, name, email, phone, rolle, adress, psw });
-        console.log('User created:', result);
-        res.status(201).send(`User created with ID: ${result.insertedId}`);
+        if (result.acknowledged) {
+            try {
+                await transporter.sendMail({
+                    from: 'info@yowayoli.com', // sender E-Mail, !!same like defined in tansporter!!
+                    to: email, // receiver E-Mail, the mailaddress of admin
+                    subject: 'Registration on yowayoli.com', // Subject of the email
+                    text: 'Dear '+firstname+', you have sucsesfull registred on yowayoli.com!', //  plain text body
+                });
+            } catch (error) {
+                console.error(error); // Failure loggen
+                res.status(500).send(error.message); // give back the error message for Frontend
+            }
+            res.status(201).json({ ok: true, insertedId: result.insertedId });
+        } else {
+            res.status(500).json({ ok: false, error: "Insert failed" });
+        }
     } catch (error) {
         console.error(error);
-        res.status(500).send(error.message);
+        res.status(500).json({ ok: false, error: error.message });
     }
 });
 // Read all users from datenbank
@@ -118,6 +130,7 @@ app.post('/update-user', async (req, res) => {
         );
         if (result.matchedCount === 1) {
             res.status(200).send(`User with ID ${id} updated successfully.`);
+
         } else {
             res.status(404).send(`User with ID ${id} not found.`);
         }
@@ -143,5 +156,31 @@ app.post('/delete-user', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
+// Login user
+app.post('/login', async (req, res) => {
+    const { email, psw } = req.body;  // Expecting email and password in the request body
+    console.log('Login attempt for email:', email); // Log the login attempt
+    try {
+        const database = client.db('yowayoli');
+        const collection = database.collection('users');
+        const user = await collection.findOne({ email: email, psw: psw });
+        if (user) {
+            console.log('Login successful for email:', email); // Log successful login
+            res.status(200).json({ success: true, user }); 
+        } else {
+            console.log('Login failed for email:', email); // Log failed login
+            res.status(404).send('User not found or incorrect password.');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error.message);
+    }
+});
+// Logout user
+app.post('/logout', (req, res) => {
+    console.log('User logged out');
+    res.status(200).json({ success: true });
+});
+
 // Start of the server
 app.listen(3000, () => console.log('Server is running on port:3000 http://localhost:3000'));
