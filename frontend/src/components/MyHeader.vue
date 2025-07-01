@@ -146,6 +146,8 @@ async function submit() {
         loggedIn.value = false;
         userFirstname.value = '';
         userRolle.value = '';
+        email.value = '',
+        password.value = '',
         dialog.value = false;
         return { success: true };
       } else {
@@ -190,6 +192,15 @@ async function submit() {
         psw: password.value,
       });
       alert('Registrierung erfolgreich! Please check your EMAIL for confirmation.');
+      firstname.value = '',
+      name.value = '',
+      email.value = '',
+      password.value = '',
+      loggedIn.value = false;
+      userFirstname.value = '';
+      userRolle.value = '';
+      isLogin.value = true; // Zurück zum Login-Formular
+      gdpr.value = false;
       dialog.value = false;
       return { success: true };
     } catch (error) {
