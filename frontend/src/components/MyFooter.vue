@@ -3,7 +3,7 @@
   <footer class="w3-center w3-black w3-padding-64 w3-opacity w3-hover-opacity-off">
 <!-- newsletter abo -->
     <v-container>
-      <v-btn color="primary" class="text" @click="dialog = true">{{ aboButton[selectedLanguage] }}</v-btn>
+      <v-btn color="primary" class="w3-center w3-button w3-round-xlarge" @click="dialog = true">{{ aboButton[selectedLanguage] }}</v-btn>
       <v-dialog v-model="dialog" max-width="500">
         <v-card>
          <v-card-title class="headline">{{ aboButton[selectedLanguage] }}</v-card-title>
@@ -51,16 +51,18 @@
     </v-container>
 <!-- Social Media Links -->
     <div class="w3-xlarge w3-section">
-      <a href="https://www.facebook.com/profile.php?id=100064353450604" target="_blank" rel="noopener"><i class="fa fa-facebook-official w3-hover-opacity"></i></a>
-      <a href="https://www.instagram.com/antaligyongyiedit/" target="_blank" rel="noopener"><i class="fa fa-instagram w3-hover-opacity"> </i></a>
-      <a href="https://www.linkedin.com/in/gy%C3%B6ngyi-edit-antali-09a1aa174/" target="_blank" rel="noopener"><i class="fa fa-linkedin w3-hover-opacity"> </i></a>
+      <a href="https://www.facebook.com/profile.php?id=100064353450604" target="_blank" rel="noopener" class="w3-padding-large"><i class="fa fa-facebook-official w3-hover-opacity"></i></a>
+      <a href="https://www.instagram.com/antaligyongyiedit/" target="_blank" rel="noopener" class="w3-padding-large"><i class="fa fa-instagram w3-hover-opacity"> </i></a>
+      <a href="https://www.linkedin.com/in/gy%C3%B6ngyi-edit-antali-09a1aa174/" target="_blank" rel="noopener" class="w3-padding-large"><i class="fa fa-linkedin w3-hover-opacity"> </i></a>
     </div>
 <!--copyright-->
     <p>&copy; {{ new Date().getFullYear() }} Antali Gyöngyi Edit. All rights reserved.</p>
   </footer>
 </template>
+
 <script setup>
 import { ref, reactive } from 'vue';
+
 // Reactive state for language change
 const selectedLanguage = ref(document.documentElement.lang || 'hu');
 const aboButton = reactive({
@@ -126,40 +128,42 @@ const observer = new MutationObserver((mutations) => {
   });
 });
 observer.observe(document.documentElement, { attributes: true });
-</script>
-<style>
-.w3-xlarge i {
-  margin-right: 10px; /* 10px távolság minden ikon között */
-}
-</style>
-<script>
-export default {
-  data() {
-    return {
-      dialog: false,
-      valid: false,
-      firstname: '',
-      name: '',
-      email: '',
-      gdpr: false,
-      textOut: ''
-    }
-  },
-  methods: {
-    submit() {
-      if (this.$refs.form.validate()) {
-        this.textOut = 'Vorname: ' + this.firstname + '\n';
-        this.textOut += 'Name: ' + this.name + '\n';
-        this.textOut += 'E-Mail: ' + this.email + '\n';
-        this.textOut += 'GDPR zugestimmt: ' + (this.gdpr ? 'Ja' : 'Nein');
-        alert(this.textOut)
-        // Hier könntest du die Daten an dein Backend senden
-        this.dialog = false
-        this.firstname = ''
-        this.name = ''
-        this.email = ''
-        this.gdpr = false
+
+// Form state
+const dialog = ref(false);
+const valid = ref(false);
+const firstname = ref('');
+const name = ref('');
+const email = ref('');
+const gdpr = ref(false);
+const form = ref(null);
+
+// import { sendEmail } from '@/services/emailService';
+import { sendEmail } from '@/services/emailService';
+
+// Submit handler function --> this function is called when the user clicks the "SEND" button
+// It checks if the form is valid and sends the email if it is.
+async function submit() {
+  if (form.value && await form.value.validate()) {
+    try {
+      const result = await sendEmail({
+        email: email.value,
+        subject: firstname.value + ' ' + name.value,
+        message:'newsletter abo'
+    });
+      if (result && result.success) {
+        alert('Successful E-mail sending!');
+      } else {
+        alert('Error by Email sending: ' + (result && result.error ? result.error : 'Unknown error'));
       }
+      dialog.value = false;
+      firstname.value = '';
+      name.value = '';
+      email.value = '';
+      gdpr.value = false;
+      form.value.resetValidation();
+    } catch (error) {
+      alert('Error by Email sending: ' + error.message);
     }
   }
 }

@@ -10,7 +10,7 @@
 <div class="w3-content w3-container w3-padding-64" id="contact">
   <div class="w3-row w3-padding-32 w3-section">
       <p>{{contactPoen[selectedLanguage]}}</p>
-      <form @submit.prevent="sendEmail">
+      <form @submit.prevent="handleSendEmail">
         <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
           <div class="w3-half">
             <input class="w3-input w3-border" type="text" :placeholder="contactName[selectedLanguage]" required name="Name" v-model="subject">
@@ -89,22 +89,24 @@ const observer = new MutationObserver((mutations) => {
 });
 observer.observe(document.documentElement, { attributes: true });
 
-import axios from 'axios';
-// Email form state
+// import { sendEmail } from '@/services/emailService';
+import { sendEmail } from '@/services/emailService';
+
+// Define refs for form fields
 const email = ref('');
 const subject = ref('');
 const message = ref('');
-// Email sending method
-async function sendEmail() {
-  try {
-    await axios.post('http://localhost:3000/send-email', {
-      email: email.value,
-      subject: subject.value,
-      message: message.value
-    });
-    alert('E-mail sikeresen elküldve!');
-  } catch (error) {
-    alert('Hiba történt: ' + error);
+
+async function handleSendEmail() {
+  const result = await sendEmail({
+    email: email.value,
+    subject: subject.value,
+    message: message.value
+  });
+  if (result.success) {
+    alert('succsesluff E-mail sending!');
+  } else {
+    alert('Error by Email sending: ' + result.error);
   }
 }
 </script>
