@@ -1,25 +1,25 @@
 <template>
   <v-app>
     <v-main>
-      <MyHeader/>
+
       <router-view/>
-      <MyFooter/>
+
     </v-main>
   </v-app>
 </template>
 
 <script>
-import MyFooter from "./components/MyFooter.vue";
-import MyHeader from "./components/MyHeader.vue";
+//import MyFooter from "./components/MyFooter.vue";
+//import MyHeader from "./components/MyHeader.vue";
 
 export default {
   name: 'App',
-
+/*
   components: {
     MyFooter,
     MyHeader,
   },
-
+*/
   data: () => ({
     //
   }),
