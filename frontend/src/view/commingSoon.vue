@@ -11,7 +11,6 @@
       </div>
       <div class="w3-display-bottomleft w3-padding-large">
         Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a>
-        Photo by <a href="https://unsplash.com/@nck?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Nick Scheerbart</a> on <a href="https://unsplash.com/photos/aerial-photography-of-hanging-bridge-near-trees-xFjAftU8lMY?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
       </div>
     </div>
   </div>
