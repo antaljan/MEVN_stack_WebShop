@@ -5,7 +5,7 @@
         YOWAYOLI.COM
       </div>
       <div class="w3-display-middle">
-        <h1 class="coming-title">COMING SOON</h1>
+        <h1 class="coming-title">COMMING SOON</h1>
         <hr class="w3-border-grey" style="margin:auto;width:40%">
         <p class="coming-subtitle">Your way is your life!</p>
       </div>
