@@ -141,7 +141,7 @@ async function submit() {
   if (loggedIn.value) {
     // Logout
     try {
-      const response = await axios.post('http://localhost:3000/logout');
+      const response = await axios.post('https://yowayoli.com/api/logout');
       if (response.data.success) {
         loggedIn.value = false;
         userFirstname.value = '';
@@ -161,7 +161,7 @@ async function submit() {
   } else if (isLogin.value) {
     // Login
     try {
-      const response = await axios.post('http://localhost:3000/login', {
+      const response = await axios.post('https://yowayoli.com/api/login', {
         email: email.value,
         psw: password.value
       });
@@ -182,7 +182,7 @@ async function submit() {
   } else {
     // Registrierung
     try {
-      await axios.post('http://localhost:3000/create-user', {
+      await axios.post('https://yowayoli.com/api/create-user', {
         firstname: firstname.value,
         name: name.value,
         email: email.value,
