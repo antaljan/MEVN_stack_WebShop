@@ -63,7 +63,7 @@ connectToMongoDB();
  * POST /send-email
  * Endpoint to send an email using the provided email, subject, and message in the request body.
  */
-app.post('/send-email', async (req, res) => {
+app.post('/api/send-email', async (req, res) => {
     const { email, subject, message } = req.body;
     try {
         await transporter.sendMail({
@@ -79,7 +79,7 @@ app.post('/send-email', async (req, res) => {
     }
 });
 // Create user in datenbank
-app.post('/create-user', async (req, res) => {
+app.post('/api/create-user', async (req, res) => {
     const { firstname, name, email, phone, rolle, adress, psw } = req.body;
     try {
         const database = client.db('yowayoli');
@@ -107,7 +107,7 @@ app.post('/create-user', async (req, res) => {
     }
 });
 // Read all users from datenbank
-app.post('/get-users', async (req, res) => {
+app.post('/api/get-users', async (req, res) => {
     try {
         const database = client.db('yowayoli');
         const collection = database.collection('users');
@@ -119,7 +119,7 @@ app.post('/get-users', async (req, res) => {
     }
 });
 // Update user in datenbank
-app.post('/update-user', async (req, res) => {
+app.post('/api/update-user', async (req, res) => {
     const { id, firstname, name, email, phone, rolle, adress, psw } = req.body;  // Expecting an ID and user data in the request body
     try {
         const database = client.db('yowayoli');
@@ -140,7 +140,7 @@ app.post('/update-user', async (req, res) => {
     }
 });
 // Delete user from datenbank
-app.post('/delete-user', async (req, res) => {
+app.post('/api/delete-user', async (req, res) => {
     const { id } = req.body;  // Expecting an ID in the request body  
     try {
         const database = client.db('yowayoli');
@@ -157,7 +157,7 @@ app.post('/delete-user', async (req, res) => {
     }
 });
 // Login user
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
     const { email, psw } = req.body;  // Expecting email and password in the request body
     console.log('Login attempt for email:', email); // Log the login attempt
     try {
@@ -177,7 +177,7 @@ app.post('/login', async (req, res) => {
     }
 });
 // Logout user
-app.post('/logout', (req, res) => {
+app.post('/api/logout', (req, res) => {
     console.log('User logged out');
     res.status(200).json({ success: true });
 });
