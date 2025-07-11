@@ -91,6 +91,11 @@
       <a href="/#home" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonHome[selectedLanguage]}}</a>
       <a href="/#about" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonAbout[selectedLanguage]}}</a>
       <a href="/#contact" class="w3-bar-item w3-button" @click="toggleFunction">{{ menuButtonContact[selectedLanguage] }}</a>
+      <a
+        v-if="userRolle === 'admin' "
+        href="/#admin"
+        class="w3-bar-item w3-button w3-hover-black w3-hide-large w3-hide-medium"
+        >Admin</a>
     </div>
   </div>
 </template>
