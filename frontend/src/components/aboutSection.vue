@@ -6,7 +6,7 @@
         <p>{{aboutText1[selectedLanguage]}}</p>
         <div class="w3-row">
             <div class="w3-col m6 w3-center w3-padding-large">
-                <img src="avatar_hat.jpg" class="w3-round w3-image w3-opacity w3-hover-opacity-off" alt="Photo of Me" width="500" height="333">
+                <img src="https://yowayoli.com/avatar_hat.jpg" class="w3-round w3-image w3-opacity w3-hover-opacity-off" alt="Photo of Me" width="500" height="333">
             </div>
             <!-- Hide this text on small devices -->
             <div class="w3-col m6 w3-hide-small w3-padding-large">
