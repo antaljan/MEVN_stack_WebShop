@@ -5,7 +5,7 @@ import axios from 'axios';
 
 export async function sendEmail({ email, subject, message }) {
     try {
-        await axios.post('http://yowayoli.com/api/send-email', {
+        await axios.post('https://yowayoli.com/api/send-email', {
             email,
             subject,
             message
