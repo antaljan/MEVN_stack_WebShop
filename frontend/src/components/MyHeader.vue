@@ -1,6 +1,7 @@
 <template>
 <!-- Navbar (sit on top) -->
   <div class="w3-top">
+    <!-- Navbar  -->
     <div class="w3-bar" id="myNavbar">
       <a class="w3-bar-item w3-button w3-hover-black w3-hide-medium w3-hide-large w3-left" href="javascript:void(0);" @click="toggleFunction" title="Toggle Navigation Menu">
         <i class="fa fa-bars"></i>
@@ -13,6 +14,7 @@
         href="/#admin"
         class="w3-bar-item w3-button w3-hover-black w3-hide-small"
         >Admin</a>
+      <!-- Login button and popup dialog -->
       <v-container class="w3-bar-item w3-button w3-right">
       <p  @click="dialog = true">
         <span> {{userFirstname}}</span>
