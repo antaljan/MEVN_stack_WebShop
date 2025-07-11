@@ -1,27 +1,27 @@
 <template>
         <!-- Slideshow container -->
-        <div class="slideshow-container">
+        <div class="slideshow-container" id="blog">
             <h2 class="w3-center">Blog</h2>
             <p class="w3-center">Click on the image to navigate through the images.</p>
             <!-- Full-width images with number and caption text -->
             <div class="mySlides fade">
                 <div class="numbertext">1 / 4</div>
-                <img src="img1.jpg" style="width:100%">
+                <img src="https://yowayoli.com/img1.jpg" style="width:100%">
                 <div class="text">Caption One</div>
             </div>
             <div class="mySlides fade">
                 <div class="numbertext">2 / 4</div>
-                <img src="img2.jpg" style="width:100%">
+                <img src="https://yowayoli.com/img2.jpg" style="width:100%">
                 <div class="text">Caption Two</div>
             </div>
             <div class="mySlides fade">
                 <div class="numbertext">3 / 4</div>
-                <img src="img3.jpg" style="width:100%">
+                <img src="https://yowayoli.com/img3.jpg" style="width:100%">
                 <div class="text">Caption Three</div>
             </div>
             <div class="mySlides fade">
                 <div class="numbertext">4 / 4</div>
-                <img src="img4.jpg" style="width:100%">
+                <img src="https://yowayoli.com/img4.jpg" style="width:100%">
                 <div class="text">Caption Four</div>
             </div>
             <!-- Next and previous buttons -->
