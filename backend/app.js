@@ -204,7 +204,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Blogpost anlegen (Create)
-app.post('/api/newpost', upload.single('image'), async (req, res) => {
+app.post('/newpost', upload.single('image'), async (req, res) => {
   try {
     const { language, title, subtitle, author, date, content } = req.body;
     let imageUrl = '';
@@ -221,7 +221,6 @@ app.post('/api/newpost', upload.single('image'), async (req, res) => {
       date,
       content,
       image: imageUrl,
-      createdAt: new Date()
     });
     res.status(201).json({ success: true, insertedId: result.insertedId });
   } catch (error) {
@@ -231,7 +230,7 @@ app.post('/api/newpost', upload.single('image'), async (req, res) => {
 });
 
 // Blogposts abrufen (Read, alle)
-app.get('/api/posts', async (req, res) => {
+app.get('/posts', async (req, res) => {
   try {
     const database = client.db('yowayoli');
     const collection = database.collection('blogposts');
@@ -244,7 +243,7 @@ app.get('/api/posts', async (req, res) => {
 });
 
 // Einzelnen Blogpost abrufen (Read, einer)
-app.get('/api/posts/:id', async (req, res) => {
+app.get('/posts/:id', async (req, res) => {
   try {
     const database = client.db('yowayoli');
     const collection = database.collection('blogposts');
@@ -261,7 +260,7 @@ app.get('/api/posts/:id', async (req, res) => {
 });
 
 // Blogpost aktualisieren (Update)
-app.put('/api/posts/:id', upload.single('image'), async (req, res) => {
+app.put('/posts/:id', upload.single('image'), async (req, res) => {
   try {
     const { title, subtitle, author, date, content } = req.body;
     let updateData = { title, subtitle, author, date, content };
@@ -286,7 +285,7 @@ app.put('/api/posts/:id', upload.single('image'), async (req, res) => {
 });
 
 // Blogpost löschen (Delete)
-app.delete('/api/posts/:id', async (req, res) => {
+app.delete('/posts/:id', async (req, res) => {
   try {
     const database = client.db('yowayoli');
     const collection = database.collection('blogposts');
