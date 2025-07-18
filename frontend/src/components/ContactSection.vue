@@ -9,7 +9,6 @@
 <!-- Container (Contact Section) -->
 <div class="w3-content w3-container w3-padding-64" id="contact">
   <div class="w3-row w3-padding-32 w3-section">
-      <p>{{contactPoen[selectedLanguage]}}</p>
       <form @submit.prevent="handleSendEmail">
         <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
           <div class="w3-half">
@@ -20,7 +19,7 @@
           </div>
         </div>
         <input class="w3-input w3-border" type="text" :placeholder="contactMessage[selectedLanguage]" required name="Message" v-model="message">
-        <input class="w3-check w3-padding-24" type="checkbox" checked="checked">
+        <input class="w3-check w3-padding-24" type="checkbox">
         <label>{{gdprReading1[selectedLanguage]}}<a href="gdpr"   target="_blank" rel="noopener"  class="w3-hover-text-red">{{gdprReading2[selectedLanguage]}}</a>{{gdprReading3[selectedLanguage]}}</label>
         <button class="w3-button w3-black w3-right w3-section" type="submit">
           <i class="fa fa-paper-plane"></i> {{contactSendButton[selectedLanguage]}}
@@ -34,11 +33,6 @@
 import { ref, reactive } from 'vue';
 // Reactive state for language change
 const selectedLanguage = ref(document.documentElement.lang || 'hu');
-const contactPoen = reactive({
-  en: 'Stop by for a coffee or send a message:',
-  hu: 'Ugorj be egy kávéra, vagy írj egy üzenetet:',
-  de: 'Kommen Sie auf einen Kaffee vorbei oder senden Sie eine Nachricht:'
-});
 const contactName = reactive({
   en: 'Name',
   hu: 'Név',
