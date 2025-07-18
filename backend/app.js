@@ -182,6 +182,129 @@ app.post('/logout', (req, res) => {
     res.status(200).json({ success: true });
 });
 
+// Für Datei-Uploads (z.B. Blog-Bilder)
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Speicherort und Dateiname für hochgeladene Bilder
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage: storage });
+
+// Blogpost anlegen (Create)
+app.post('/api/newpost', upload.single('image'), async (req, res) => {
+  try {
+    const { language, title, subtitle, author, date, content } = req.body;
+    let imageUrl = '';
+    if (req.file) {
+      imageUrl = '/uploads/' + req.file.filename;
+    }
+    const database = client.db('yowayoli');
+    const collection = database.collection('blogposts');
+    const result = await collection.insertOne({
+      language,
+      title,
+      subtitle,
+      author,
+      date,
+      content,
+      image: imageUrl,
+      createdAt: new Date()
+    });
+    res.status(201).json({ success: true, insertedId: result.insertedId });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Blogposts abrufen (Read, alle)
+app.get('/api/posts', async (req, res) => {
+  try {
+    const database = client.db('yowayoli');
+    const collection = database.collection('blogposts');
+    const posts = await collection.find({}).sort({ createdAt: -1 }).toArray();
+    res.status(200).json(posts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Einzelnen Blogpost abrufen (Read, einer)
+app.get('/api/posts/:id', async (req, res) => {
+  try {
+    const database = client.db('yowayoli');
+    const collection = database.collection('blogposts');
+    const post = await collection.findOne({ _id: new ObjectId(req.params.id) });
+    if (post) {
+      res.status(200).json(post);
+    } else {
+      res.status(404).json({ success: false, error: "Post not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Blogpost aktualisieren (Update)
+app.put('/api/posts/:id', upload.single('image'), async (req, res) => {
+  try {
+    const { title, subtitle, author, date, content } = req.body;
+    let updateData = { title, subtitle, author, date, content };
+    if (req.file) {
+      updateData.image = '/uploads/' + req.file.filename;
+    }
+    const database = client.db('yowayoli');
+    const collection = database.collection('blogposts');
+    const result = await collection.updateOne(
+      { _id: new ObjectId(req.params.id) },
+      { $set: updateData }
+    );
+    if (result.matchedCount === 1) {
+      res.status(200).json({ success: true });
+    } else {
+      res.status(404).json({ success: false, error: "Post not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Blogpost löschen (Delete)
+app.delete('/api/posts/:id', async (req, res) => {
+  try {
+    const database = client.db('yowayoli');
+    const collection = database.collection('blogposts');
+    const result = await collection.deleteOne({ _id: new ObjectId(req.params.id) });
+    if (result.deletedCount === 1) {
+      res.status(200).json({ success: true });
+    } else {
+      res.status(404).json({ success: false, error: "Post not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Statische Bereitstellung der Uploads (damit Bilder erreichbar sind)
+app.use('/uploads', express.static(uploadDir));
+
 // Start of the server
 app.listen(3000, '0.0.0.0', () => {
   console.log('Server is running on port:3000 http://localhost:3000');
