@@ -8,6 +8,9 @@
                 </v-col>
                 <v-col cols="12" md="8">
                     <v-card-title>{{ post.title }}</v-card-title>
+                    <v-card-subtitle v-if="post.subtitle">
+                        <v-icon small class="mr-1">mdi-format-quote-close</v-icon> {{ post.subtitle }}
+                    </v-card-subtitle>
                     <v-card-subtitle>
                         <v-icon small class="mr-1">mdi-account</v-icon> {{ post.author }}
                         <v-icon small class="ml-4 mr-1">mdi-calendar</v-icon> {{ formattedDate }}
@@ -16,7 +19,7 @@
                         {{ post.content }}
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn text color="primary" @click="$emit('readMore', post.id)">
+                        <v-btn text color="primary" @click="$emit('readMore', post._id)">
                             Weiterlesen
                         </v-btn>
                     </v-card-actions>
@@ -28,22 +31,41 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
+import { useRoute } from 'vue-router';
 import MyFooter from "../components/MyFooter.vue";
 import MyHeader from "../components/MyHeader.vue";
 
-// Post-Objekt manuell belegen
+// Leeres Post-Objekt initialisieren
 const post = ref({
-  id: 1,
-  title: "Mein erster Blogpost",
-  author: "Max Mustermann",
-  createdAt: "2024-07-18T12:00:00Z",
-  image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
-  content: "Das ist der Inhalt meines ersten Blogposts. Hier kannst du beliebigen Text einfügen."
+  _id: "",
+  title: "",
+  subtitle: "",
+  author: "",
+  createdAt: "",
+  image: "",
+  content: ""
+});
+
+// Hole die Post-ID aus der Route (z.B. /blog/123)
+const route = useRoute();
+const postId = route.params.id;
+
+// Lade den Blogpost vom Backend
+onMounted(async () => {
+  try {
+    const response = await axios.get(`https://yowayoli.com/api/posts/${postId}`);
+    post.value = response.data;
+  } catch (error) {
+    console.error("Fehler beim Laden des Blogposts:", error);
+  }
 });
 
 const formattedDate = computed(() => {
-  return new Date(post.value.createdAt).toLocaleDateString();
+  return post.value.createdAt
+    ? new Date(post.value.createdAt).toLocaleDateString()
+    : "";
 });
 </script>
 
