@@ -1,8 +1,6 @@
 <template>
-<!-- Navbar (sit on top) -->
-  <div class="w3-top">
     <!-- Navbar  -->
-    <div class="w3-bar" id="myNavbar">
+    <div class="w3-bar w3-top" id="myNavbar">
       <a class="w3-bar-item w3-button w3-hover-black w3-hide-medium w3-hide-large w3-left" href="javascript:void(0);" @click="toggleFunction" title="Navigation Menu">
         <i class="fa fa-bars"></i>
       </a>
@@ -101,7 +99,6 @@
           class="w3-bar-item w3-button w3-hover-black w3-hide-large w3-hide-medium"
           >Admin</a>
       </div>
-  </div>
 </template>
 
 <script setup>

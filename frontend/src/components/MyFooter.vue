@@ -1,6 +1,6 @@
 <template>
   <!-- Footer -->
-  <footer class="w3-center w3-black w3-padding-64 w3-opacity w3-hover-opacity-off">
+  <footer class="w3-center w3-black w3-padding-32 w3-margin-top">
 <!-- newsletter abo -->
     <v-container>
       <v-btn color="primary" class="w3-center w3-button w3-round-xlarge" @click="dialog = true">{{ aboButton[selectedLanguage] }}</v-btn>

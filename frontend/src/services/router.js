@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LandingPage from '../view/LandingPage.vue' 
 import gdpr from '../view/gdprStatement.vue' 
 import commingSoon from '../view/commingSoon.vue'
+import blog from '../view/blogRead.vue'
 
 const routes = [
     {
@@ -19,7 +20,11 @@ const routes = [
         name: 'gdpr',
         component: gdpr
     },
-    // Weitere Routen hier...
+    {
+        path: '/blog',
+        name: 'blog',
+        component: blog
+    },
 ]
 
 const router = createRouter({
