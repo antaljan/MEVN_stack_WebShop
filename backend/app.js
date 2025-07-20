@@ -86,20 +86,22 @@ app.post('/create-user', async (req, res) => {
         const collection = database.collection('users');
         const result = await collection.insertOne({ firstname, name, email, phone, rolle, adress, psw });
         if (result.acknowledged) {
+            let mailError = null;
             try {
                 await transporter.sendMail({
-                    from: 'info@yowayoli.com', // sender E-Mail, !!same like defined in tansporter!!
-                    to: email, // receiver E-Mail, the mailaddress of admin
-                    subject: 'Registration on yowayoli.com', // Subject of the email
-                    text: 'Dear '+firstname+', you have sucsesfull registred on yowayoli.com!', //  plain text body
+                    from: 'info@yowayoli.com',
+                    to: email,
+                    subject: 'Registration on yowayoli.com',
+                    text: 'Dear '+firstname+', you have sucsesfull registred on yowayoli.com!',
                 });
             } catch (error) {
-                console.error(error); // Failure loggen
-                res.status(500).send(error.message); // give back the error message for Frontend
+                console.error('E-Mail konnte nicht gesendet werden:', error);
+                mailError = error.message;
+                // NICHT res.status(500).send() hier!
             }
-            res.status(201).json({ ok: true, insertedId: result.insertedId });
+            res.status(201).json({ ok: true, insertedId: result.insertedId, mailError });
         } else {
-            res.status(500).json({ ok: false, error: "Insert failed" });
+            res.status(500).json({ ok: false, error: "User could not be created" });
         }
     } catch (error) {
         console.error(error);
@@ -206,11 +208,7 @@ const upload = multer({ storage: storage });
 // Blogpost anlegen (Create)
 app.post('/newpost', upload.single('image'), async (req, res) => {
   try {
-    const { language, title, subtitle, author, date, content } = req.body;
-    let imageUrl = '';
-    if (req.file) {
-      imageUrl = '/uploads/' + req.file.filename;
-    }
+    const { language, title, subtitle, author, date, content , image } = req.body;
     const database = client.db('yowayoli');
     const collection = database.collection('blogposts');
     const result = await collection.insertOne({
@@ -220,7 +218,7 @@ app.post('/newpost', upload.single('image'), async (req, res) => {
       author,
       date,
       content,
-      image: imageUrl,
+      image,
     });
     res.status(201).json({ success: true, insertedId: result.insertedId });
   } catch (error) {
