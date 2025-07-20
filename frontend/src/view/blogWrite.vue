@@ -5,21 +5,11 @@
       <v-form @submit.prevent="submitPost">
         <v-row>
           <v-col cols="12" md="4" class="d-flex align-center">
-            <v-img
-              v-if="imagePreview"
-              :src="imagePreview"
-              height="200px"
-              class="blog-image"
-            ></v-img>
-            <v-file-input
-              v-model="imageFile"
-              accept="image/*"
-              label="Bild hochladen"
-              prepend-icon="mdi-image"
-              @change="onImageChange"
-              outlined
-              dense
-            ></v-file-input>
+            <div>
+              <input type="file" @change="handleFileChange" accept="image/*" />
+              <img v-if="previewUrl" :src="previewUrl" alt="Bild-Vorschau" />
+              <button @click="uploadImage">Bild hochladen</button>
+            </div>
           </v-col>
           <v-col cols="12" md="8">
             <v-text-field
@@ -83,51 +73,71 @@ const post = ref({
   image: ""
 });
 
-// imageFile ist ein Array!
-const imageFile = ref([]);
-const imagePreview = ref("");
+// 🔧 Reaktive Variablen
+const imageFile = ref(null)
+const previewUrl = ref(null)
 
-function onImageChange(files) {
-  const file = Array.isArray(files) ? files[0] : files;
-  if (file && file instanceof File) {
-    const reader = new FileReader();
-    reader.onload = e => {
-      imagePreview.value = e.target.result;
-    };
-    reader.readAsDataURL(file);
-    // imageFile.value bleibt ein Array!
-  } else {
-    imagePreview.value = "";
+// 📸 Datei-Auswahlhandler
+function handleFileChange(event) {
+  const file = event.target.files[0]
+  if (file && file.type.startsWith('image/')) {
+    imageFile.value = file
+    previewUrl.value = URL.createObjectURL(file)
   }
 }
 
-async function submitPost() {
-        try {
-        await axios.get('https://yowayoli.com/api/newpost', {
-          language: post.value.language,
-          title: post.value.title,
-          subtitle: post.value.subtitle,
-          author: post.value.author,
-          date: post.value.date,
-          content: post.value.content,
-          image: post.value.image  ,
-        });
-        alert('Registrierung erfolgreich! Please check your EMAIL for confirmation.');
-        // Zurücksetzen der Eingabefelder
-        post.value = {
-          title: "",
-          subtitle: "",
-          author: "",
-          date: "",
-          content: "",
-          image: ""
-        };
-        imageFile.value = [];
-        imagePreview.value = "";
-        return { success: true };
-      } catch (error) {
-        return { success: false, error };
+// 🚀 Upload-Funktion (optional auf Button-Klick etc.)
+async function uploadImage() {
+  if (!imageFile.value) return
+
+  const formData = new FormData()
+  formData.append('image', imageFile.value)
+
+  try {
+    await axios.post('https://yowayoli.com/api/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
       }
+    })
+    console.log('Bild erfolgreich hochgeladen!')
+  } catch (error) {
+    console.error('Fehler beim Upload:', error)
+  }
+}
+
+// 📝 Blogeintrag absenden
+async function submitPost() {
+  try {
+    const formData = new FormData();
+    formData.append('language', post.value.language);
+    formData.append('title', post.value.title);
+    formData.append('subtitle', post.value.subtitle);
+    formData.append('author', post.value.author);
+    formData.append('date', post.value.date);
+    formData.append('content', post.value.content);
+    if (imageFile.value && imageFile.value[0]) {
+      formData.append('image', imageFile.value[0]);
+    }
+
+    await axios.post('https://yowayoli.com/api/newpost', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    alert('Blogeintrag erfolgreich erstellt!');
+    post.value = {
+      language: "",
+      title: "",
+      subtitle: "",
+      author: "",
+      date: "",
+      content: "",
+      image: ""
+    };
+    //imageFile.value = [];
+    //imagePreview.value = "";
+    return { success: true };
+  } catch (error) {
+    return { success: false, error };
+  }
 }
 </script>
 
