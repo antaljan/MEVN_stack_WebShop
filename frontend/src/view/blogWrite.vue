@@ -102,34 +102,32 @@ function onImageChange(files) {
 }
 
 async function submitPost() {
-  try {
-    const formData = new FormData();
-    formData.append('language', document.documentElement.lang);
-    formData.append('title', post.value.title);
-    formData.append('subtitle', post.value.subtitle);
-    formData.append('author', post.value.author);
-    formData.append('date', post.value.date);
-    formData.append('content', post.value.content);
-    // Immer das erste Element aus dem Array nehmen!
-    if (imageFile.value && imageFile.value[0]) {
-      formData.append('image', imageFile.value[0]);
-    }
-
-    const response = await axios.post('https://yowayoli.com/api/newpost', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    });
-
-    if (response.data.success) {
-      alert('Blogeintrag erfolgreich erstellt!');
-      post.value = { title: "", subtitle: "", author: "", date: "", content: "", image: "" };
-      imageFile.value = [];
-      imagePreview.value = "";
-    } else {
-      alert('Fehler beim Erstellen des Blogeintrags.');
-    }
-  } catch (error) {
-    alert('Fehler beim Senden: ' + error);
-  }
+        try {
+        await axios.get('https://yowayoli.com/api/newpost', {
+          language: post.value.language,
+          title: post.value.title,
+          subtitle: post.value.subtitle,
+          author: post.value.author,
+          date: post.value.date,
+          content: post.value.content,
+          image: post.value.image  ,
+        });
+        alert('Registrierung erfolgreich! Please check your EMAIL for confirmation.');
+        // Zurücksetzen der Eingabefelder
+        post.value = {
+          title: "",
+          subtitle: "",
+          author: "",
+          date: "",
+          content: "",
+          image: ""
+        };
+        imageFile.value = [];
+        imagePreview.value = "";
+        return { success: true };
+      } catch (error) {
+        return { success: false, error };
+      }
 }
 </script>
 

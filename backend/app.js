@@ -86,20 +86,22 @@ app.post('/create-user', async (req, res) => {
         const collection = database.collection('users');
         const result = await collection.insertOne({ firstname, name, email, phone, rolle, adress, psw });
         if (result.acknowledged) {
+            let mailError = null;
             try {
                 await transporter.sendMail({
-                    from: 'info@yowayoli.com', // sender E-Mail, !!same like defined in tansporter!!
-                    to: email, // receiver E-Mail, the mailaddress of admin
-                    subject: 'Registration on yowayoli.com', // Subject of the email
-                    text: 'Dear '+firstname+', you have sucsesfull registred on yowayoli.com!', //  plain text body
+                    from: 'info@yowayoli.com',
+                    to: email,
+                    subject: 'Registration on yowayoli.com',
+                    text: 'Dear '+firstname+', you have sucsesfull registred on yowayoli.com!',
                 });
             } catch (error) {
-                console.error(error); // Failure loggen
-                res.status(500).send(error.message); // give back the error message for Frontend
+                console.error('E-Mail konnte nicht gesendet werden:', error);
+                mailError = error.message;
+                // NICHT res.status(500).send() hier!
             }
-            res.status(201).json({ ok: true, insertedId: result.insertedId });
+            res.status(201).json({ ok: true, insertedId: result.insertedId, mailError });
         } else {
-            res.status(500).json({ ok: false, error: "Insert failed" });
+            res.status(500).json({ ok: false, error: "User could not be created" });
         }
     } catch (error) {
         console.error(error);
@@ -204,13 +206,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Blogpost anlegen (Create)
-app.post('/api/newpost', upload.single('image'), async (req, res) => {
+app.post('/newpost', upload.single('image'), async (req, res) => {
   try {
-    const { language, title, subtitle, author, date, content } = req.body;
-    let imageUrl = '';
-    if (req.file) {
-      imageUrl = '/uploads/' + req.file.filename;
-    }
+    const { language, title, subtitle, author, date, content , image } = req.body;
     const database = client.db('yowayoli');
     const collection = database.collection('blogposts');
     const result = await collection.insertOne({
@@ -220,8 +218,7 @@ app.post('/api/newpost', upload.single('image'), async (req, res) => {
       author,
       date,
       content,
-      image: imageUrl,
-      createdAt: new Date()
+      image,
     });
     res.status(201).json({ success: true, insertedId: result.insertedId });
   } catch (error) {
@@ -231,7 +228,7 @@ app.post('/api/newpost', upload.single('image'), async (req, res) => {
 });
 
 // Blogposts abrufen (Read, alle)
-app.get('/api/posts', async (req, res) => {
+app.get('/posts', async (req, res) => {
   try {
     const database = client.db('yowayoli');
     const collection = database.collection('blogposts');
@@ -244,7 +241,7 @@ app.get('/api/posts', async (req, res) => {
 });
 
 // Einzelnen Blogpost abrufen (Read, einer)
-app.get('/api/posts/:id', async (req, res) => {
+app.get('/posts/:id', async (req, res) => {
   try {
     const database = client.db('yowayoli');
     const collection = database.collection('blogposts');
@@ -261,7 +258,7 @@ app.get('/api/posts/:id', async (req, res) => {
 });
 
 // Blogpost aktualisieren (Update)
-app.put('/api/posts/:id', upload.single('image'), async (req, res) => {
+app.put('/posts/:id', upload.single('image'), async (req, res) => {
   try {
     const { title, subtitle, author, date, content } = req.body;
     let updateData = { title, subtitle, author, date, content };
@@ -286,7 +283,7 @@ app.put('/api/posts/:id', upload.single('image'), async (req, res) => {
 });
 
 // Blogpost löschen (Delete)
-app.delete('/api/posts/:id', async (req, res) => {
+app.delete('/posts/:id', async (req, res) => {
   try {
     const database = client.db('yowayoli');
     const collection = database.collection('blogposts');
