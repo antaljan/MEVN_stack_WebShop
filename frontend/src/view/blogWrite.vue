@@ -8,6 +8,7 @@
             <div>
               <input type="file" @change="handleFileChange" accept="image/*" />
               <img v-if="previewUrl" :src="previewUrl" alt="Bild-Vorschau" />
+              <button @click="uploadImage">Bild hochladen</button>
             </div>
           </v-col>
           <v-col cols="12" md="8">
@@ -85,7 +86,7 @@ function handleFileChange(event) {
   }
 }
 
-/* 🚀 Upload-Funktion (optional auf Button-Klick etc.)
+// 🚀 Upload-Funktion (optional auf Button-Klick etc.)
 async function uploadImage() {
   if (!imageFile.value) return
 
@@ -103,7 +104,7 @@ async function uploadImage() {
     console.error('Fehler beim Upload:', error)
   }
 }
-*/
+
 // 📝 Blogeintrag absenden
 async function submitPost() {
   try {
