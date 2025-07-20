@@ -97,7 +97,9 @@ app.post('/create-user', async (req, res) => {
             } catch (error) {
                 console.error('E-Mail konnte nicht gesendet werden:', error);
                 mailError = error.message;
-                // NICHT res.status(500).send() hier!
+                const deleteThis = await collection.findone({ _id: result.insertedId });
+                const result = await collection.deleteOne({ _id: new ObjectId(String(deleteThis._id)) });
+                res.status(500).send(`User could not be created because email could not be sent: ${mailError}`);   
             }
             res.status(201).json({ ok: true, insertedId: result.insertedId, mailError });
         } else {
@@ -205,8 +207,8 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Blogpost anlegen (Create)
-app.post('/newpost', upload.single('image'), async (req, res) => {
+// Create Blogpost
+app.post('/newpost',  async (req, res) => {
   try {
     const { language, title, subtitle, author, date, content , image } = req.body;
     const database = client.db('yowayoli');
