@@ -94,7 +94,7 @@ async function uploadImage() {
   formData.append('image', imageFile.value)
 
   try {
-    await axios.post('/api/upload', formData, {
+    await axios.post('https://yowayoli.com/api/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
