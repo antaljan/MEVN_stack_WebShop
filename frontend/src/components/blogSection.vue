@@ -1,156 +1,77 @@
 <template>
-        <!-- Slideshow container -->
-        <div class="slideshow-container" id="blog">
-            <h2 class="w3-center">Blog</h2>
-            <p class="w3-center">Click on the image to navigate through the images.</p>
-            <!-- Full-width images with number and caption text -->
-            <div class="mySlides fade">
-                <div class="numbertext">1 / 4</div>
-                <img src="https://yowayoli.com/img1.jpg" style="width:100%">
-                <div class="text">Caption One</div>
-            </div>
-            <div class="mySlides fade">
-                <div class="numbertext">2 / 4</div>
-                <img src="https://yowayoli.com/img2.jpg" style="width:100%">
-                <div class="text">Caption Two</div>
-            </div>
-            <div class="mySlides fade">
-                <div class="numbertext">3 / 4</div>
-                <img src="https://yowayoli.com/img3.jpg" style="width:100%">
-                <div class="text">Caption Three</div>
-            </div>
-            <div class="mySlides fade">
-                <div class="numbertext">4 / 4</div>
-                <img src="https://yowayoli.com/img4.jpg" style="width:100%">
-                <div class="text">Caption Four</div>
-            </div>
-            <!-- Next and previous buttons -->
-            <a class="prev" @click="plusSlides(-1)">&#10094;</a>
-            <a class="next" @click="plusSlides(1)">&#10095;</a>
-        </div>
-        <br>
-        <!-- The dots/circles -->
-        <div style="text-align:center">
-            <span class="dot" @click="currentSlide(1)"></span>
-            <span class="dot" @click="currentSlide(2)"></span>
-            <span class="dot" @click="currentSlide(3)"></span>
-            <span class="dot" @click="currentSlide(4)"></span>
-        </div>
-
+  <div class="blog-section">
+    <h2>Latest Blog Posts</h2>
+    <v-row>
+      <v-col
+        v-for="post in posts"
+        :key="post._id"
+        cols="12"
+        md="6"
+        lg="4"
+      >
+        <v-card class="ma-2" outlined>
+          <v-img
+            v-if="post.image"
+            :src="post.image"
+            height="180px"
+            class="blog-image"
+          ></v-img>
+          <v-card-title>{{ post.title }}</v-card-title>
+          <v-card-subtitle v-if="post.subtitle">
+            <v-icon small class="mr-1">mdi-format-quote-close</v-icon>
+            {{ post.subtitle }}
+          </v-card-subtitle>
+          <v-card-subtitle>
+            <v-icon small class="mr-1">mdi-account</v-icon> {{ post.author }}
+            <v-icon small class="ml-4 mr-1">mdi-calendar</v-icon> {{ formatDate(post.date || post.createdAt) }}
+          </v-card-subtitle>
+          <v-card-text>
+            {{ post.content?.slice(0, 120) }}...
+          </v-card-text>
+          <v-card-actions>
+            <v-btn :to="`/blog/${post._id}`" color="primary" text>Weiterlesen</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-btn @click="loadMore" color="primary" class="mt-4">Mehr laden</v-btn>
+  </div>
 </template>
 
-<script>
-export default {
-    data() {
-        return {
-            slideIndex: 1
-        }
-    },
-    mounted() {
-        this.showSlides(this.slideIndex);
-    },
-    methods: {
-        plusSlides(n) {
-            this.showSlides(this.slideIndex += n);
-        },
-        currentSlide(n) {
-            this.showSlides(this.slideIndex = n);
-        },
-        showSlides(n) {
-            let slides = document.getElementsByClassName("mySlides");
-            let dots = document.getElementsByClassName("dot");
-            if (n > slides.length) { this.slideIndex = 1 }
-            if (n < 1) { this.slideIndex = slides.length }
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-            for (let i = 0; i < dots.length; i++) {
-                dots[i].className = dots[i].className.replace(" active", "");
-            }
-            if (slides.length > 0 && dots.length > 0) {
-                slides[this.slideIndex - 1].style.display = "block";
-                dots[this.slideIndex - 1].className += " active";
-            }
-        }
+<script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
+const posts = ref([]);
+const page = ref(1);
+const pageSize = 6;
+
+async function fetchPosts() {
+  try {
+    const response = await axios.get(`https://yowayoli.com/api/posts?page=${page.value}&limit=${pageSize}`);
+    if (Array.isArray(response.data)) {
+      posts.value.push(...response.data);
     }
+  } catch (error) {
+    console.error('Fehler beim Laden der Blogposts:', error);
+  }
 }
+
+function loadMore() {
+  page.value += 1;
+  fetchPosts();
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  return new Date(dateStr).toLocaleDateString();
+}
+
+onMounted(() => {
+  fetchPosts();
+});
 </script>
 
 <style>
-* {box-sizing:border-box}
-/* Slideshow container */
-.slideshow-container {
-  max-width: 1000px;
-  position: relative;
-  margin: auto;
-}
-/* Hide the images by default */
-.mySlides {
- display: none; 
-}
-/* Next & previous buttons */
-.prev, .next {
-  cursor: pointer;
-  position: absolute;
-  top: 50%;
-  width: auto;
-  margin-top: -22px;
-  padding: 16px;
-  color: white;
-  font-weight: bold;
-  font-size: 18px;
-  transition: 0.6s ease;
-  border-radius: 0 3px 3px 0;
-  user-select: none;
-}
-/* Position the "next button" to the right */
-.next {
-  right: 0;
-  border-radius: 3px 0 0 3px;
-}
-/* On hover, add a black background color with a little bit see-through */
-.prev:hover, .next:hover {
-  background-color: rgba(0,0,0,0.8);
-}
-/* Caption text */
-.text {
-  color: #f2f2f2;
-  font-size: 15px;
-  padding: 8px 12px;
-  position: absolute;
-  bottom: 8px;
-  width: 100%;
-  text-align: center;
-}
-/* Number text (1/3 etc) */
-.numbertext {
-  color: #f2f2f2;
-  font-size: 12px;
-  padding: 8px 12px;
-  position: absolute;
-  top: 0;
-}
-/* The dots/bullets/indicators */
-.dot {
-  cursor: pointer;
-  height: 15px;
-  width: 15px;
-  margin: 0 2px;
-  background-color: #bbb;
-  border-radius: 50%;
-  display: inline-block;
-  transition: background-color 0.6s ease;
-}
-.active, .dot:hover {
-  background-color: #717171;
-}
-/* Fading animation */
-.fade {
-  animation-name: fade;
-  animation-duration: 1.5s;
-}
-@keyframes fade {
-  from {opacity: .4}
-  to {opacity: 1}
-}
+
 </style>
