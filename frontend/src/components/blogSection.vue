@@ -1,15 +1,17 @@
 <template>
   <div class="blog-section">
     <h2>Latest Blog Posts</h2>
-    <v-row>
-      <v-col
+    <v-carousel
+      hide-delimiter-background
+      height="350"
+      show-arrows
+      cycle
+    >
+      <v-carousel-item
         v-for="post in posts"
         :key="post._id"
-        cols="12"
-        md="6"
-        lg="4"
       >
-        <v-card class="ma-2" outlined>
+        <v-card class="ma-4 blog-card" outlined>
           <v-img
             v-if="post.image"
             :src="post.image"
@@ -32,9 +34,8 @@
             <v-btn :to="`/blog/${post._id}`" color="primary" text>Weiterlesen</v-btn>
           </v-card-actions>
         </v-card>
-      </v-col>
-    </v-row>
-    <v-btn @click="loadMore" color="primary" class="mt-4">Mehr laden</v-btn>
+      </v-carousel-item>
+    </v-carousel>
   </div>
 </template>
 
@@ -43,23 +44,16 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 const posts = ref([]);
-const page = ref(1);
-const pageSize = 6;
 
 async function fetchPosts() {
   try {
-    const response = await axios.get(`https://yowayoli.com/api/posts?page=${page.value}&limit=${pageSize}`);
+    const response = await axios.get('https://yowayoli.com/api/posts');
     if (Array.isArray(response.data)) {
-      posts.value.push(...response.data);
+      posts.value = response.data;
     }
   } catch (error) {
     console.error('Fehler beim Laden der Blogposts:', error);
   }
-}
-
-function loadMore() {
-  page.value += 1;
-  fetchPosts();
 }
 
 function formatDate(dateStr) {
@@ -72,6 +66,15 @@ onMounted(() => {
 });
 </script>
 
-<style>
-
+<style scoped>
+.blog-image {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 4px 4px 0 0;
+}
+.blog-card {
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
 </style>
