@@ -8,7 +8,6 @@
             <div>
               <input type="file" @change="handleFileChange" accept="image/*" />
               <img v-if="previewUrl" :src="previewUrl" alt="Bild-Vorschau" />
-              <button @click="uploadImage">Bild hochladen</button>
             </div>
           </v-col>
           <v-col cols="12" md="8">
@@ -86,54 +85,42 @@ function handleFileChange(event) {
   }
 }
 
-// 🚀 Upload-Funktion (optional auf Button-Klick etc.)
-async function uploadImage() {
-  if (!imageFile.value) return
-
-  const formData = new FormData()
-  formData.append('image', imageFile.value)
-
-  try {
-    await axios.post('https://yowayoli.com/api/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-    console.log('Bild erfolgreich hochgeladen!')
-  } catch (error) {
-    console.error('Fehler beim Upload:', error)
-  }
-}
-
 // 📝 Blogeintrag absenden
 async function submitPost() {
-  try {
-    const formData = new FormData();
-    formData.append('language', post.value.language);
-    formData.append('title', post.value.title);
-    formData.append('subtitle', post.value.subtitle);
-    formData.append('author', post.value.author);
-    formData.append('date', post.value.date);
-    formData.append('content', post.value.content);
-    if (imageFile.value && imageFile.value[0]) {
-      formData.append('image', imageFile.value[0]);
+  // Erst Bild hochladen, falls vorhanden
+  let uploadedFileName = '';
+  if (imageFile.value) {
+    const formDataImg = new FormData();
+    formDataImg.append('image', imageFile.value);
+    try {
+      const response = await axios.post('https://yowayoli.com/api/upload', formDataImg, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      uploadedFileName = response.data && response.data.filename ? response.data.filename : imageFile.value.name;
+      post.value.image = uploadedFileName;
+      //alert('Bild hochgeladen: ' + uploadedFileName);
+    } catch (error) {
+      alert('Fehler beim Bild-Upload: ' + error);
+      return;
     }
-
-    await axios.post('https://yowayoli.com/api/newpost', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+  }
+  // Validierung der Eingabefelder
+  if (!post.value.title || !post.value.author || !post.value.date || !post .value.content) {
+    alert('Bitte füllen Sie alle erforderlichen Felder aus.');
+    return;
+  }
+  // Blogeintrag absenden
+  try {
+    await axios.post('https://yowayoli.com/api/newpost', {
+      'language': document.documentElement.lang,
+      'title': post.value.title,
+      'subtitle': post.value.subtitle,
+      'author': post.value.author,
+      'date': post.value.date,
+      'content': post.value.content,
+      'image': 'https://yowayoli.com/api/uploads/' + uploadedFileName
     });
     alert('Blogeintrag erfolgreich erstellt!');
-    post.value = {
-      language: "",
-      title: "",
-      subtitle: "",
-      author: "",
-      date: "",
-      content: "",
-      image: ""
-    };
-    //imageFile.value = [];
-    //imagePreview.value = "";
     return { success: true };
   } catch (error) {
     return { success: false, error };
