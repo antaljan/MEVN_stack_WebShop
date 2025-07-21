@@ -3,44 +3,53 @@
     <h2>Latest Blog Posts</h2>
     <v-carousel
       hide-delimiter-background
-      height="350"
+      height="400"
       show-arrows
       cycle
     >
       <v-carousel-item
-        v-for="post in posts"
-        :key="post._id"
+        v-for="(group, idx) in groupedPosts"
+        :key="idx"
       >
-        <v-card class="ma-4 blog-card" outlined>
-          <v-img
-            v-if="post.image"
-            :src="post.image"
-            height="180px"
-            class="blog-image"
-          ></v-img>
-          <v-card-title>{{ post.title }}</v-card-title>
-          <v-card-subtitle v-if="post.subtitle">
-            <v-icon small class="mr-1">mdi-format-quote-close</v-icon>
-            {{ post.subtitle }}
-          </v-card-subtitle>
-          <v-card-subtitle>
-            <v-icon small class="mr-1">mdi-account</v-icon> {{ post.author }}
-            <v-icon small class="ml-4 mr-1">mdi-calendar</v-icon> {{ formatDate(post.date || post.createdAt) }}
-          </v-card-subtitle>
-          <v-card-text>
-            {{ post.content?.slice(0, 120) }}...
-          </v-card-text>
-          <v-card-actions>
-            <v-btn :to="`/blog/${post._id}`" color="primary" text>Weiterlesen</v-btn>
-          </v-card-actions>
-        </v-card>
+        <v-row justify="center" align="stretch">
+          <v-col
+            v-for="post in group"
+            :key="post._id"
+            cols="12"
+            md="4"
+          >
+            <v-card class="ma-4 blog-card" outlined>
+              <v-img
+                v-if="post.image"
+                :src="post.image"
+                height="180px"
+                class="blog-image"
+              ></v-img>
+              <v-card-title>{{ post.title }}</v-card-title>
+              <v-card-subtitle v-if="post.subtitle">
+                <v-icon small class="mr-1">mdi-format-quote-close</v-icon>
+                {{ post.subtitle }}
+              </v-card-subtitle>
+              <v-card-subtitle>
+                <v-icon small class="mr-1">mdi-account</v-icon> {{ post.author }}
+                <v-icon small class="ml-4 mr-1">mdi-calendar</v-icon> {{ formatDate(post.date || post.createdAt) }}
+              </v-card-subtitle>
+              <v-card-text>
+                {{ post.content?.slice(0, 120) }}...
+              </v-card-text>
+              <v-card-actions>
+                <v-btn :to="`/blog/${post._id}`" color="primary" text>Weiterlesen</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
       </v-carousel-item>
     </v-carousel>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 
 const posts = ref([]);
@@ -55,6 +64,16 @@ async function fetchPosts() {
     console.error('Fehler beim Laden der Blogposts:', error);
   }
 }
+
+// Hilfsfunktion: Teilt die Posts in Gruppen zu je 3
+const groupedPosts = computed(() => {
+  const chunkSize = 3;
+  const result = [];
+  for (let i = 0; i < posts.value.length; i += chunkSize) {
+    result.push(posts.value.slice(i, i + chunkSize));
+  }
+  return result;
+});
 
 function formatDate(dateStr) {
   if (!dateStr) return '';
