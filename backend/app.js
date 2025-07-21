@@ -226,7 +226,7 @@ const upload = multer({
 })
 
 //  Route für Datei-Upload
-app.post('/upload', upload.single('image'), (req, res) => {
+app.post('/upload', upload.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'Keine Datei hochgeladen' })
   }
