@@ -7,7 +7,11 @@
           <v-col cols="12" md="4" class="d-flex align-center">
             <div>
               <input type="file" @change="handleFileChange" accept="image/*" />
-              <img v-if="previewUrl" :src="previewUrl" alt="Bild-Vorschau" />
+              <v-img
+                v-if="previewUrl"
+                :src="previewUrl"
+                class="blog-image"
+              />
             </div>
           </v-col>
           <v-col cols="12" md="8">
@@ -134,7 +138,9 @@ async function submitPost() {
 }
 .blog-image {
   width: 100%;
-  object-fit: cover;
+  max-width: 300px;   /* oder gewünschte feste Breite */
+  height: 200px;      /* feste Höhe */
+  object-fit: cover;  /* Bild wird zugeschnitten, bleibt aber immer gleich groß */
   border-radius: 4px 4px 0 0;
   margin-bottom: 16px;
 }
