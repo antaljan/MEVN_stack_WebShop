@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-section">
+  <div class="blog-section" id="blog">
     <h2>{{ blogSectionCaption[selectedLanguage] }}</h2>
     <v-carousel
       hide-delimiter-background
@@ -39,7 +39,7 @@
                 <v-icon small class="ml-4 mr-1">mdi-calendar</v-icon> {{ formatDate(post.date || post.createdAt) }}
               </v-card-subtitle>
               <v-card-text>
-                {{ getFirstWords(post.content, 5) }}...
+                {{ getFirstWords(post.content, 5) }}...<br/>
                 <a href="#" @click.prevent="navigateToPost(post)">
                   {{ blogSectionOpen[selectedLanguage] }}
                 </a>
@@ -118,7 +118,6 @@ watch(selectedLanguage, () => {
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const navigateToPost = (post) => {
-  alert(`Navigating to post: ${post.title}`);
   router.push(`/blog/${post._id}`)
 }
 </script>

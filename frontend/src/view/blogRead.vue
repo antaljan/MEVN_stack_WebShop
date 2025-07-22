@@ -25,8 +25,8 @@
             {{ post.content }}
           </v-card-text>
           <v-card-actions>
-            <v-btn :to="`/blog/${post._id}`" color="primary" text>
-              Weiterlesen
+            <v-btn :to="'/landing/#blog'" color="primary" text>
+              {{ backToBlogSection[selectedLanguage] }}
             </v-btn>
           </v-card-actions>
         </v-col>
@@ -45,18 +45,16 @@ import axios from 'axios';
 import { useRoute } from 'vue-router';
 import MyFooter from "../components/MyFooter.vue";
 import MyHeader from "../components/MyHeader.vue";
-
 const post = ref(null);
-
 const route = useRoute();
 const postId = route.params.id;
-
+// Function to format the date
 const formattedDate = computed(() => {
   if (!post.value) return "";
   const date = post.value.date || post.value.createdAt;
   return date ? new Date(date).toLocaleDateString() : "";
 });
-
+// Function to fetch the blog post by ID
 onMounted(async () => {
   try {
     const response = await axios.get(`https://yowayoli.com/api/posts/${postId}`);
@@ -64,6 +62,24 @@ onMounted(async () => {
   } catch (error) {
     post.value = null;
     console.error("Fehler beim Laden des Blogposts:", error);
+  }
+});
+// language selection
+const selectedLanguage = ref(document.documentElement.lang || 'hu');
+const backToBlogSection = {
+  en: 'back to blog section',
+  hu: 'vissza a blog szekcióhoz',
+  de: 'zurück zum Blogbereich'
+};
+// Language change handler
+onMounted(() => {
+  const langSelect = document.getElementById('langselect');
+  if (langSelect) {
+    langSelect.value = selectedLanguage.value;
+    langSelect.addEventListener('change', (e) => {
+      selectedLanguage.value = e.target.value;
+      document.documentElement.lang = selectedLanguage.value;
+    });
   }
 });
 </script>
