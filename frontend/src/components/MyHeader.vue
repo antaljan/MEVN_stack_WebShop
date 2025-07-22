@@ -1,6 +1,7 @@
 <template>
     <!-- Navbar  -->
     <div class="w3-bar w3-top" id="myNavbar">
+      <!-- Navbar for medium and large sreen -->
       <a class="w3-bar-item w3-button w3-hover-black w3-hide-medium w3-hide-large w3-left" href="javascript:void(0);" @click="toggleFunction" title="Navigation Menu">
         <i class="fa fa-bars"></i>
       </a>
@@ -8,15 +9,27 @@
       <a href="/landing/#about" class="w3-bar-item w3-button w3-hide-small"> {{menuButtonAbout[selectedLanguage]}}</a>
       <a href="/landing/#blog" class="w3-bar-item w3-button w3-hide-small"> {{menuButtonBlog[selectedLanguage]}}</a>
       <a href="/landing/#contact" class="w3-bar-item w3-button w3-hide-small"> {{ menuButtonContact[selectedLanguage] }}</a>
-      <a
-        v-if="userRolle === 'admin' "
-        href="/#admin"
-        class="w3-bar-item w3-button w3-hover-black w3-hide-small"
-        >Admin</a>
+      <a v-if="userStore.role === 'admin'"
+        href="/newblog"
+        class="w3-bar-item w3-button w3-hover-black w3-hide-small">
+        {{ menuButtonNewPost[selectedLanguage] }}
+      </a>
+      <!-- Navbar on small screens -->
+      <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium" @change="changeLanguage">
+        <a href="/landing/#home" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonHome[selectedLanguage]}}</a>
+        <a href="/landing/#about" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonAbout[selectedLanguage]}}</a>
+        <a href="/landing/#blog" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonBlog[selectedLanguage]}}</a>
+        <a href="/landing/#contact" class="w3-bar-item w3-button" @click="toggleFunction">{{ menuButtonContact[selectedLanguage] }}</a>
+      <a v-if="userStore.role === 'admin'"
+        href="/newblog"
+        class="w3-bar-item w3-button w3-hover-black w3-hide-small">
+        {{ menuButtonNewPost[selectedLanguage] }}
+      </a>
+      </div>
       <!-- Login button and popup dialog -->
       <v-container class="w3-bar-item w3-button w3-right">
         <p  @click="dialog = true">
-          <span> {{userFirstname}}</span>
+          <span> {{userStore.name}}</span>
           <v-icon name="loginIcon" color="black">mdi-login</v-icon>
         </p>
         <v-dialog v-model="dialog" max-width="500">
@@ -87,23 +100,30 @@
         <option value="de">DE</option>
       </select>
     </div>
-      <!-- Navbar on small screens -->
-      <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium" @change="changeLanguage">
-        <a href="/landing/#home" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonHome[selectedLanguage]}}</a>
-        <a href="/landing/#about" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonAbout[selectedLanguage]}}</a>
-        <a href="/landing/#blog" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonBlog[selectedLanguage]}}</a>
-        <a href="/landing/#contact" class="w3-bar-item w3-button" @click="toggleFunction">{{ menuButtonContact[selectedLanguage] }}</a>
-        <a
-          v-if="userRolle === 'admin' "
-          href="/#admin"
-          class="w3-bar-item w3-button w3-hover-black w3-hide-large w3-hide-medium"
-          >Admin</a>
-      </div>
+ 
 </template>
 
 <script setup>
-  import { ref, reactive } from 'vue';
-  import axios from 'axios';
+import { ref, reactive } from 'vue';
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/services/userStore'
+
+const router = useRouter()
+const userStore = useUserStore() // 🔥 Ez legyen kívül
+
+const api = axios.create({
+  baseURL: 'https://yowayoli.com/api'
+})
+
+api.interceptors.request.use(config => {
+  if (userStore.token) {
+    config.headers.Authorization = `Bearer ${userStore.token}`
+  }
+  return config
+})
+
+
   // States
   const dialog = ref(false);
   const valid = ref(false);
@@ -114,8 +134,6 @@
   const email = ref('');
   const password = ref('');
   const gdpr = ref(false);
-  const userFirstname = ref('');
-  const userRolle = ref('');
   // Sprachen
   import { onMounted } from 'vue';
   const selectedLanguage = ref(document.documentElement.lang || 'hu');
@@ -145,33 +163,25 @@
     hu: 'KAPCSOLAT',
     de: 'KONTAKT'
   });
+  const menuButtonNewPost = reactive({
+    en: 'Create Post',
+    hu: 'Új blog bejegyzés',
+    de: 'Neuen Blog Beitrag erstellen'
+  });
   // toggleFunction login
   function toggleForm() {
     isLogin.value = !isLogin.value;
-    // ggf. Validierung zurücksetzen
   }
   async function submit() {
     // Validierung ggf. selbst implementieren
     if (loggedIn.value) {
       // Logout
-      try {
-        const response = await axios.post('https://yowayoli.com/api/logout');
-        if (response.data.success) {
-          loggedIn.value = false;
-          userFirstname.value = '';
-          userRolle.value = '';
-          email.value = '',
-          password.value = '',
-          dialog.value = false;
-          return { success: true };
-        } else {
-          alert('Logout fehlgeschlagen!');
-          return { success: false };
-        }
-      } catch (error) {
-        alert('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.');
-        return { success: false, error };
-      }
+      loggedIn.value = false;
+      email.value = '';
+      password.value = '';
+      dialog.value = false;
+      userStore.logout();
+      router.push('/');
     } else if (isLogin.value) {
       // Login
       try {
@@ -180,10 +190,10 @@
           psw: password.value
         });
         if (response.data.success) {
-          userFirstname.value = response.data.user.firstname;
+          userStore.setUser(response.data.user, response.data.token);
           loggedIn.value = true;
-          userRolle.value = response.data.user.rolle;
           dialog.value = false;
+          alert('Login erfolgreich! ' + userStore.name + '/'+ userStore.role);
           return { success: true };
         } else {
           alert('Login fehlgeschlagen! Bitte überprüfen Sie Ihre Anmeldedaten.');
@@ -198,7 +208,7 @@
       try {
         await axios.post('https://yowayoli.com/api/create-user', {
           firstname: firstname.value,
-            name: name.value,
+          name: name.value,
           email: email.value,
           phone: '',
           rolle: 'user',
@@ -211,8 +221,8 @@
         email.value = '',
         password.value = '',
         loggedIn.value = false;
-        userFirstname.value = '';
-        userRolle.value = '';
+        this.$user.name.value = '';
+        this.$user.role.value = '';
         isLogin.value = true; // Zurück zum Login-Formular
         gdpr.value = false;
         dialog.value = false;

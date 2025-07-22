@@ -14,6 +14,7 @@ require('dotenv').config();
 const uri = process.env.MONGODB_URI;
 const gmxUser = process.env.GMX_USER;
 const gmxPass = process.env.GMX_PASS;
+const jwt = require('jsonwebtoken')
 // Check if the required environment variables are set
 if (!uri) {
   console.error("Error: MONGODB_URI environment variable is not set.");
@@ -162,24 +163,42 @@ app.post('/delete-user', async (req, res) => {
 });
 // Login user
 app.post('/login', async (req, res) => {
-    const { email, psw } = req.body;  // Expecting email and password in the request body
-    console.log('Login attempt for email:', email); // Log the login attempt
-    try {
-        const database = client.db('yowayoli');
-        const collection = database.collection('users');
-        const user = await collection.findOne({ email: email, psw: psw });
-        if (user) {
-            console.log('Login successful for email:', email); // Log successful login
-            res.status(200).json({ success: true, user }); 
-        } else {
-            console.log('Login failed for email:', email); // Log failed login
-            res.status(404).send('User not found or incorrect password.');
+  const { email, psw } = req.body
+  console.log('Login attempt for email:', email)
+  try {
+    const database = client.db('yowayoli')
+    const collection = database.collection('users')
+    const user = await collection.findOne({ email, psw })
+    if (user) {
+      console.log('Login successful for email:', email)
+      // Token generálása
+      const token = jwt.sign(
+        {
+          id: user._id,
+          name: user.firstname,
+          role: user.rolle
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      )
+      res.status(200).json({
+        success: true,
+        token,
+        user: {
+          firstname: user.firstname,
+          rolle: user.rolle
         }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send(error.message);
+      })
+    } else {
+      console.log('Login failed for email:', email)
+      res.status(401).json({ success: false, message: 'Invalid credentials' })
     }
-});
+  } catch (error) {
+    console.error(error)
+    res.status(500).send(error.message)
+  }
+})
+
 // Logout user
 app.post('/logout', (req, res) => {
     console.log('User logged out');
@@ -334,6 +353,23 @@ app.delete('/posts/:id', async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
+// route to protected resource
+app.get('/protected', authenticateToken, (req, res) => {
+  res.json({ message: `Üdv, ${req.user.name}!`, role: req.user.role })
+})
+
+// Middleware to authenticate JWT tokens
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
+  if (!token) return res.sendStatus(401)
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403)
+    req.user = user
+    next()
+  })
+}
 
 // Start of the server
 app.listen(3000, '0.0.0.0', () => {
