@@ -185,8 +185,8 @@ app.post('/login', async (req, res) => {
         success: true,
         token,
         user: {
-          firstname: user.firstname,
-          rolle: user.rolle
+          name: user.firstname,
+          role: user.rolle
         }
       })
     } else {
