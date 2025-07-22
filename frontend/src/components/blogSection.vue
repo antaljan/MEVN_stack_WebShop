@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-section">
+  <div class="blog-section" id="blog">
     <h2>{{ blogSectionCaption[selectedLanguage] }}</h2>
     <v-carousel
       hide-delimiter-background
@@ -19,6 +19,7 @@
             md="4"
             class="blog-col"
           >
+            <v-app>
             <v-card class="ma-4 blog-card" outlined>
               <div class="blog-image-wrapper">
                 <v-img
@@ -38,12 +39,13 @@
                 <v-icon small class="ml-4 mr-1">mdi-calendar</v-icon> {{ formatDate(post.date || post.createdAt) }}
               </v-card-subtitle>
               <v-card-text>
-                {{ getFirstWords(post.content, 5) }}...
+                {{ getFirstWords(post.content, 5) }}...<br/>
+                <a href="#" @click.prevent="navigateToPost(post)">
+                  {{ blogSectionOpen[selectedLanguage] }}
+                </a>
               </v-card-text>
-              <a :href="`/blog/${post._id}`" class="w3-button w3-blue w3-hover-blue">
-                 {{ blogSectionOpen[selectedLanguage] }}
-              </a>
             </v-card>
+            </v-app>
           </v-col>
         </v-row>
       </v-carousel-item>
@@ -54,10 +56,9 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import axios from 'axios';
-
+// language selection
 const posts = ref([]);
 const selectedLanguage = ref(document.documentElement.lang || 'hu');
-
 const blogSectionCaption = {
   en: 'Latest Blog Posts',
   hu: 'Legfrissebb Blogbejegyzések',
@@ -68,45 +69,7 @@ const blogSectionOpen = {
   hu: 'Tovább olvasom',
   de: 'Weiterlesen'
 };
-
-async function fetchPosts() {
-  try {
-    const response = await axios.get(`https://yowayoli.com/api/posts?lang=${selectedLanguage.value}`);
-    if (Array.isArray(response.data)) {
-      posts.value = response.data;
-    }
-  } catch (error) {
-    console.error('Fehler beim Laden der Blogposts:', error);
-  }
-}
-
-const groupedPosts = computed(() => {
-  const chunkSize = 3;
-  const result = [];
-  for (let i = 0; i < posts.value.length; i += chunkSize) {
-    result.push(posts.value.slice(i, i + chunkSize));
-  }
-  return result;
-});
-
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  return new Date(dateStr).toLocaleDateString();
-}
-
-function getFirstWords(text, n) {
-  if (!text) return '';
-  return text.split(' ').slice(0, n).join(' ');
-}
-
-onMounted(() => {
-  fetchPosts();
-});
-
-watch(selectedLanguage, () => {
-  fetchPosts();
-});
-
+// Language change handler
 onMounted(() => {
   const langSelect = document.getElementById('langselect');
   if (langSelect) {
@@ -117,6 +80,46 @@ onMounted(() => {
     });
   }
 });
+
+// Fetch posts from the API
+async function fetchPosts() {
+  try {
+    const response = await axios.get(`https://yowayoli.com/api/posts?lang=${selectedLanguage.value}`);
+    if (Array.isArray(response.data)) {
+      posts.value = response.data;
+    }
+  } catch (error) {
+    console.error('Fehler beim Laden der Blogposts:', error);
+  }
+}
+const groupedPosts = computed(() => {
+  const chunkSize = 3;
+  const result = [];
+  for (let i = 0; i < posts.value.length; i += chunkSize) {
+    result.push(posts.value.slice(i, i + chunkSize));
+  }
+  return result;
+});
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  return new Date(dateStr).toLocaleDateString();
+}
+function getFirstWords(text, n) {
+  if (!text) return '';
+  return text.split(' ').slice(0, n).join(' ');
+}
+onMounted(() => {
+  fetchPosts();
+});
+watch(selectedLanguage, () => {
+  fetchPosts();
+});
+// Importing router for navigation
+import { useRouter } from 'vue-router'
+const router = useRouter()
+const navigateToPost = (post) => {
+  router.push(`/blog/${post._id}`)
+}
 </script>
 
 <style scoped>

@@ -22,7 +22,7 @@ const routes = [
         component: gdpr
     },
     {
-        path: '/blog',
+        path: '/blog/:id',
         name: 'blog',
         component: blog
     },

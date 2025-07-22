@@ -193,7 +193,7 @@ api.interceptors.request.use(config => {
           userStore.setUser(response.data.user, response.data.token);
           loggedIn.value = true;
           dialog.value = false;
-          alert('Login erfolgreich! ' + userStore.name + '/'+ userStore.role);
+          //alert('Login erfolgreich! ' + userStore.name + '/'+ userStore.role);
           return { success: true };
         } else {
           alert('Login fehlgeschlagen! Bitte überprüfen Sie Ihre Anmeldedaten.');
