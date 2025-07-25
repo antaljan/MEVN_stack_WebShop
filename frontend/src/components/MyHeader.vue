@@ -99,7 +99,7 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '@/services/userStore'
 
 const router = useRouter()
-const userStore = useUserStore() // 🔥 Ez legyen kívül
+const userStore = useUserStore()
 
 const api = axios.create({
   baseURL: 'https://yowayoli.com/api'
@@ -162,7 +162,7 @@ api.interceptors.request.use(config => {
     isLogin.value = !isLogin.value;
   }
   async function submit() {
-    // Validierung ggf. selbst implementieren
+    // check if form is valid
     if (loggedIn.value) {
       // Logout
       loggedIn.value = false;

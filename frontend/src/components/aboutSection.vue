@@ -8,11 +8,30 @@
             <div class="w3-col m6 w3-center w3-padding-large">
                 <img src="https://yowayoli.com/avatar_hat.jpg" class="w3-round w3-image w3-opacity w3-hover-opacity-off" alt="Photo of Me" width="500" height="333">
             </div>
-            <div class="w3-col m6 w3-padding-large" v-html="aboutText2"></div>
+            <div v-if="userStore.role !== 'admin'"
+                class="w3-col m6 w3-padding-large"
+                v-html="aboutText2">
+            </div>
+            <div class="w3-col m6 w3-padding-large">
+            <textarea v-if="userStore.role === 'admin'"
+                v-model="aboutText2"
+                rows="10" 
+                cols="80">
+            </textarea> 
+            <v-button v-if="userStore.role === 'admin'"
+                class="w3-button w3-black w3-margin-top"
+                @click="saveAboutText2">save
+            </v-button>
+            </div>
         </div>
     </div>
 </template>
 <script setup>
+// Import userStore for user role and name
+import { useUserStore } from '@/services/userStore'
+const userStore = useUserStore()
+
+// Reactive state for selected language and about section texts
 import { ref, reactive } from 'vue';
 // Reactive state for language change
 const selectedLanguage = ref(document.documentElement.lang || 'hu');
