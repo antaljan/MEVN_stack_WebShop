@@ -1,30 +1,19 @@
 <template>
     <!-- Navbar  -->
     <div class="w3-bar w3-top" id="myNavbar">
-      <!-- Navbar for medium and large sreen -->
-      <a class="w3-bar-item w3-button w3-hover-black w3-hide-medium w3-hide-large w3-left" href="javascript:void(0);" @click="toggleFunction" title="Navigation Menu">
+      <a class="w3-bar-item w3-button w3-hover-black w3-left" href="javascript:void(0);" @click="toggleFunction" title="Navigation Menu">
         <i class="fa fa-bars"></i>
       </a>
-      <a href="/landing/#home" class="w3-bar-item w3-button w3-hide-small">{{ menuButtonHome[selectedLanguage] }}</a>
-      <a href="/landing/#about" class="w3-bar-item w3-button w3-hide-small"> {{menuButtonAbout[selectedLanguage]}}</a>
-      <a href="/landing/#blog" class="w3-bar-item w3-button w3-hide-small"> {{menuButtonBlog[selectedLanguage]}}</a>
-      <a href="/landing/#contact" class="w3-bar-item w3-button w3-hide-small"> {{ menuButtonContact[selectedLanguage] }}</a>
-      <a v-if="userStore.role === 'admin'"
-        href="/newblog"
-        class="w3-bar-item w3-button w3-hover-black w3-hide-small">
-        {{ menuButtonNewPost[selectedLanguage] }}
-      </a>
-      <!-- Navbar on small screens -->
-      <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium" @change="changeLanguage">
+      <div id="navDemo" class="w3-bar-block w3-white w3-hide" @change="changeLanguage">
         <a href="/landing/#home" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonHome[selectedLanguage]}}</a>
         <a href="/landing/#about" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonAbout[selectedLanguage]}}</a>
         <a href="/landing/#blog" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonBlog[selectedLanguage]}}</a>
         <a href="/landing/#contact" class="w3-bar-item w3-button" @click="toggleFunction">{{ menuButtonContact[selectedLanguage] }}</a>
-      <a v-if="userStore.role === 'admin'"
-        href="/newblog"
-        class="w3-bar-item w3-button w3-hover-black w3-hide-small">
-        {{ menuButtonNewPost[selectedLanguage] }}
-      </a>
+        <a v-if="userStore.role === 'admin'"
+          href="/newblog"
+          class="w3-bar-item w3-button w3-hover-black w3-hide-small">
+          {{ menuButtonNewPost[selectedLanguage] }}
+        </a>
       </div>
       <!-- Login button and popup dialog -->
       <v-container class="w3-bar-item w3-button w3-right">
