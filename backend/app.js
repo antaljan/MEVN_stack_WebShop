@@ -234,6 +234,7 @@ app.post('/logout', (req, res) => {
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const { error } = require('console');
 
 // Ordner zum Speichern von Bildern
 const uploadDir = path.join(__dirname, 'uploads')
@@ -257,7 +258,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // max 5MB
+    fileSize: 7 * 1024 * 1024 // max 5MB
   },
   fileFilter: (req, file, cb) => {
     // Nur Bilder erlauben
@@ -379,10 +380,32 @@ app.delete('/posts/:id', async (req, res) => {
   }
 });
 
-// route to protected resource
-app.get('/protected', authenticateToken, (req, res) => {
-  res.json({ message: `Üdv, ${req.user.name}!`, role: req.user.role })
-})
+// save About2 text protected with JWT
+app.post('/saveabout', authenticateToken, async (req, res) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+
+  const { aboutText2 } = req.body;
+  if (!aboutText2) {
+    return res.status(400).json({ error: 'aboutText2 is required' });
+  }
+
+  try {
+    const dirPath = path.join(__dirname, 'texts');
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath);
+    }
+
+    const filePath = path.join(dirPath, `aboutText2_${req.user.language}.html`);
+    fs.writeFileSync(filePath, aboutText2);
+    res.status(200).json({ success: true, message: 'Text gespeichert' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 
 // Middleware to authenticate JWT tokens
 function authenticateToken(req, res, next) {
