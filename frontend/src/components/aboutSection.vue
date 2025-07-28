@@ -80,16 +80,20 @@ const selectedLanguage = ref(document.documentElement.lang || 'hu');
     });
     // Save aboutText2
     const saveAboutText2 = async () => {
-        const aboutText2 = aboutText2.value;
+        const text2send = aboutText2.value;
         const jwtToken = localStorage.getItem('jwt');
+        if (!jwtToken) {
+            alert('❗ JWT Token is missing. Please log in again.');
+            return;
+        }
         try {
-            const response = await fetch('/saveabout', {
+            const response = await fetch('https://yowayoli.com/api/saveabout', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${jwtToken}`
                 },
-                body: JSON.stringify({ aboutText2 })
+                body: JSON.stringify({ text2send })
                 });
             const result = await response.json();
             if (response.ok) {
