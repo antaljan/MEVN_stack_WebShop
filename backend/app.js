@@ -382,15 +382,16 @@ app.delete('/posts/:id', async (req, res) => {
 
 // save About2 text protected with JWT
 app.post('/saveabout', authenticateToken, async (req, res) => {
+  console.log('saveabout called with user:', req.user);
   if (req.user.role !== 'admin') {
+    console.log('Access denied for user:', req.user.name);
     return res.status(403).json({ error: 'Access denied' });
   }
-
   const { aboutText2 } = req.body;
   if (!aboutText2) {
+    console.log('aboutText2 is required');
     return res.status(400).json({ error: 'aboutText2 is required' });
   }
-
   try {
     const dirPath = path.join(__dirname, 'texts');
     if (!fs.existsSync(dirPath)) {
@@ -399,6 +400,7 @@ app.post('/saveabout', authenticateToken, async (req, res) => {
 
     const filePath = path.join(dirPath, `aboutText2_${req.user.language}.html`);
     fs.writeFileSync(filePath, aboutText2);
+    console.log(`Text saved to ${filePath}`);
     res.status(200).json({ success: true, message: 'Text gespeichert' });
   } catch (error) {
     console.error(error);
