@@ -4,6 +4,7 @@ import gdpr from '../view/gdprStatement.vue'
 import commingSoon from '../view/commingSoon.vue'
 import blog from '../view/blogRead.vue'
 import newblog from '../view/blogWrite.vue'
+import { useUserStore } from '@/services/userStore'
 
 const routes = [
     {
@@ -27,9 +28,22 @@ const routes = [
         component: blog
     },
     {
-        path: '/newblog',
-        name: 'newblog',
-        component: newblog
+    path: '/newblog',
+    name: 'newblog',
+    component: newblog,
+    beforeEnter: (to, from, next) => {
+        const token = localStorage.getItem('jwt');
+        const userStore = useUserStore()
+        if (!token) {
+            alert('no authentication found, redirecting to home');
+            next('/landing'); // Weiterleitung, wenn kein Token
+        } else if (userStore.role !== 'admin') {
+            alert('You do not have permission to access this page.');
+            next('/landing'); // Falls Rolle nicht ausreicht
+        } else {
+            next(); // Alles ok, Zugang erlaubt
+        }
+    }
     },
 ]
 

@@ -198,7 +198,32 @@ app.post('/login', async (req, res) => {
     res.status(500).send(error.message)
   }
 })
-
+// Restore user
+app.post('/restoreuser', async (req, res) => {
+  const { email } = req.body
+  console.log('RestoreUser attempt for email:', email)
+  try {
+    const database = client.db('yowayoli')
+    const collection = database.collection('users')
+    const user = await collection.findOne({ email })
+    if (user) {
+      console.log('User found successful for email:', email)
+      res.status(200).json({
+        success: true,
+        user: {
+          name: user.firstname,
+          role: user.rolle
+        }
+      })
+    } else {
+      console.log('User dosent for email:', email)
+      res.status(401).json({ success: false, message: 'Invalid credentials' })
+    }
+  } catch (error) {
+    console.error(error)
+    res.status(500).send(error.message)
+  }
+})
 // Logout user
 app.post('/logout', (req, res) => {
     console.log('User logged out');
