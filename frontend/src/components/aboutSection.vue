@@ -20,7 +20,7 @@
             </textarea> 
             <v-button v-if="userStore.role === 'admin'"
                 class="w3-button w3-black w3-margin-top"
-                @click="saveAboutText2">save
+                @click="saveAboutText2">{{aboutSave[selectedLanguage]}}
             </v-button>
             </div>
         </div>
@@ -31,9 +31,8 @@
 import { useUserStore } from '@/services/userStore'
 const userStore = useUserStore()
 
-// Reactive state for selected language and about section texts
+// language change
 import { ref, reactive } from 'vue';
-// Reactive state for language change
 const selectedLanguage = ref(document.documentElement.lang || 'hu');
     const aboutName = reactive({
         en: 'Edit Gyöngyi Antali',
@@ -50,6 +49,11 @@ const selectedLanguage = ref(document.documentElement.lang || 'hu');
         hu: 'Elkötelezetten támogatom ügyfeleimet önismereti útjukon és életvezetési kihívásaik megoldásában. Szakértelmem kiterjed az életmód-tanácsadásra és terápiára is, így holisztikus szemlélettel állok mellettük.',
         de: 'Ich unterstütze meine Klienten auf ihrem Weg der Selbstfindung und der Lösung ihrer Lebensherausforderungen. Meine Expertise umfasst auch Lebensberatung und Therapie, sodass ich sie mit einem ganzheitlichen Ansatz unterstütze.'
     });
+    const aboutSave = reactive({
+        en: 'save',
+        hu: 'mentés',
+        de: 'speichern'
+    });
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (mutation.attributeName === "lang") {
@@ -58,10 +62,9 @@ const selectedLanguage = ref(document.documentElement.lang || 'hu');
         });
     });
     observer.observe(document.documentElement, { attributes: true });
-
+    // loading aboutText2
     import { onMounted, watch } from 'vue';
     const aboutText2 = ref('');
-    // Betöltés függvény
     const loadAboutText2 = async () => {
         try {
             const response = await fetch(`/texts/aboutText2_${selectedLanguage.value}.html`);
@@ -70,10 +73,32 @@ const selectedLanguage = ref(document.documentElement.lang || 'hu');
         } catch (error) {
             aboutText2.value = 'Error loading text.';
         }
-    };
-    // Betöltés indítása
+    }
     onMounted(loadAboutText2);
     watch(selectedLanguage, () => {
         loadAboutText2();
     });
+    // Save aboutText2
+    const saveAboutText2 = async () => {
+        const aboutText2 = aboutText2.value;
+        const jwtToken = localStorage.getItem('jwt');
+        try {
+            const response = await fetch('/saveabout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${jwtToken}`
+                },
+                body: JSON.stringify({ aboutText2 })
+                });
+            const result = await response.json();
+            if (response.ok) {
+                console.log('✅ Text erfolgreich gespeichert:', result.message);
+            } else {
+                console.error('❌ Fehler beim Speichern:', result.error);
+            }
+        } catch (error) {
+            console.error('❗ Netzwerkfehler:', error);
+        }
+    };
 </script>
