@@ -67,7 +67,7 @@ const selectedLanguage = ref(document.documentElement.lang || 'hu');
     const aboutText2 = ref('');
     const loadAboutText2 = async () => {
         try {
-            const response = await fetch(`/texts/aboutText2_${selectedLanguage.value}.html`);
+            const response = await fetch(`https://yowayoli.com/api/upload/texts/aboutText2_${selectedLanguage.value}.html`);
             const text = await response.text();
             aboutText2.value = text;
         } catch (error) {
