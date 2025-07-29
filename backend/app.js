@@ -393,7 +393,7 @@ app.post('/saveabout', authenticateToken, async (req, res) => {
     return res.status(400).json({ error: 'aboutText2 is required' });
   }
   try {
-    const dirPath = path.join(__dirname, 'uploads/texts');
+    const dirPath = path.join(__dirname, 'uploads');
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath);
     }
