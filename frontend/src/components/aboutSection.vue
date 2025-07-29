@@ -81,7 +81,7 @@ const selectedLanguage = ref(document.documentElement.lang || 'hu');
     // Save aboutText2
     const saveAboutText2 = async () => {
         const text2send = aboutText2.value;
-        alert('📝 Saving text...' + text2send);
+        const textlanguage = selectedLanguage.value;
         const jwtToken = localStorage.getItem('jwt');
         if (!jwtToken) {
             alert('❗ JWT Token is missing. Please log in again.');
@@ -94,16 +94,19 @@ const selectedLanguage = ref(document.documentElement.lang || 'hu');
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${jwtToken}`
                 },
-                body: JSON.stringify({ aboutText2: text2send })
-                });
+                body: JSON.stringify({
+                    aboutText2: text2send,
+                    textlanguage: textlanguage
+            })
+            });
             const result = await response.json();
             if (response.ok) {
-                console.log('✅ Text erfolgreich gespeichert:', result.message);
+                console.log('✅ Text sucsessfull saved:', result.message);
             } else {
-                console.error('❌ Fehler beim Speichern:', result.error);
+                console.error('❌ Failure by saveing:', result.error);
             }
         } catch (error) {
-            console.error('❗ Netzwerkfehler:', error);
+            console.error('❗ Networkfailute:', error);
         }
     };
 </script>

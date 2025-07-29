@@ -387,9 +387,7 @@ app.post('/saveabout', authenticateToken, async (req, res) => {
     console.log('Access denied for user:', req.user.name);
     return res.status(403).json({ error: 'Access denied' });
   }
-  console.log('Body:', req.body);
-  const { aboutText2 } = req.body;
-  console.log('text:', aboutText2);
+  const { aboutText2, textlanguage } = req.body;
   if (!aboutText2) {
     console.log('aboutText2 is required');
     return res.status(400).json({ error: 'aboutText2 is required' });
@@ -399,7 +397,7 @@ app.post('/saveabout', authenticateToken, async (req, res) => {
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath);
     }
-    const filePath = path.join(dirPath, `aboutText2_${req.user.language}.html`);
+    const filePath = path.join(dirPath, `aboutText2_${textlanguage}.html`);
     fs.writeFileSync(filePath, aboutText2);
     console.log(`Text saved to ${filePath}`);
     res.status(200).json({ success: true, message: 'Text gespeichert' });
