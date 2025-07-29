@@ -3,7 +3,7 @@
     <div class="w3-content w3-container w3-padding-64" id="about">
         <h3 class="w3-center"><i class="fa fa-user w3-margin-right"></i>{{aboutName[selectedLanguage]}}</h3>
         <p class="w3-center"><em>{{aboutTitle[selectedLanguage]}}</em></p>
-        <p>{{aboutText1[selectedLanguage]}}</p>
+        <!--<p>{{aboutText1[selectedLanguage]}}</p>-->
         <div class="w3-row">
             <div class="w3-col m6 w3-center w3-padding-large">
                 <img src="https://yowayoli.com/avatar_hat.jpg" class="w3-round w3-image w3-opacity w3-hover-opacity-off" alt="Photo of Me" width="500" height="333">
@@ -44,11 +44,11 @@ const selectedLanguage = ref(document.documentElement.lang || 'hu');
         hu: 'Pszichológus, Coach, Életmód-tanácsadó és terapeuta',
         de: 'Psychologe, Coach, Lifestyle-Berater und Therapeutin'
     });
-    const aboutText1 = reactive({
+    /*const aboutText1 = reactive({
         en: 'I am committed to supporting my clients on their journey of self-discovery and solving their life challenges. My expertise extends to lifestyle counseling and therapy, so I support them with a holistic approach.',
         hu: 'Elkötelezetten támogatom ügyfeleimet önismereti útjukon és életvezetési kihívásaik megoldásában. Szakértelmem kiterjed az életmód-tanácsadásra és terápiára is, így holisztikus szemlélettel állok mellettük.',
         de: 'Ich unterstütze meine Klienten auf ihrem Weg der Selbstfindung und der Lösung ihrer Lebensherausforderungen. Meine Expertise umfasst auch Lebensberatung und Therapie, sodass ich sie mit einem ganzheitlichen Ansatz unterstütze.'
-    });
+    });*/
     const aboutSave = reactive({
         en: 'save',
         hu: 'mentés',
