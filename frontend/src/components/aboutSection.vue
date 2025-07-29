@@ -81,6 +81,7 @@ const selectedLanguage = ref(document.documentElement.lang || 'hu');
     // Save aboutText2
     const saveAboutText2 = async () => {
         const text2send = aboutText2.value;
+        alert('📝 Saving text...' + text2send);
         const jwtToken = localStorage.getItem('jwt');
         if (!jwtToken) {
             alert('❗ JWT Token is missing. Please log in again.');
@@ -93,7 +94,7 @@ const selectedLanguage = ref(document.documentElement.lang || 'hu');
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${jwtToken}`
                 },
-                body: JSON.stringify({ text2send })
+                body: JSON.stringify({ aboutText2: text2send })
                 });
             const result = await response.json();
             if (response.ok) {
