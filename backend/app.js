@@ -387,6 +387,7 @@ app.post('/saveabout', authenticateToken, async (req, res) => {
     console.log('Access denied for user:', req.user.name);
     return res.status(403).json({ error: 'Access denied' });
   }
+  console.log('Body:', req.body);
   const { aboutText2 } = req.body;
   console.log('text:', aboutText2);
   if (!aboutText2) {
@@ -398,7 +399,6 @@ app.post('/saveabout', authenticateToken, async (req, res) => {
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath);
     }
-
     const filePath = path.join(dirPath, `aboutText2_${req.user.language}.html`);
     fs.writeFileSync(filePath, aboutText2);
     console.log(`Text saved to ${filePath}`);
