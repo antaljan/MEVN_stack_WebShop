@@ -388,6 +388,7 @@ app.post('/saveabout', authenticateToken, async (req, res) => {
     return res.status(403).json({ error: 'Access denied' });
   }
   const { aboutText2 } = req.body;
+  console.log('text:', aboutText2);
   if (!aboutText2) {
     console.log('aboutText2 is required');
     return res.status(400).json({ error: 'aboutText2 is required' });
