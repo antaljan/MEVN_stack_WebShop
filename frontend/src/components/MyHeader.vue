@@ -170,7 +170,7 @@ api.interceptors.request.use(config => {
       password.value = '';
       dialog.value = false;
       userStore.logout();
-      router.push('/');
+      router.push('/landing');
     } else if (isLogin.value) {
       // Login
       try {
