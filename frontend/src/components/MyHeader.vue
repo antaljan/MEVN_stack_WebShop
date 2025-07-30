@@ -4,55 +4,56 @@
       <a class="w3-bar-item w3-button w3-hover-black w3-left" href="javascript:void(0);" @click="toggleFunction" title="Navigation Menu">
         <i class="fa fa-bars"></i>
       </a>
-      <div id="navDemo" class="w3-bar-block w3-white w3-hide" @change="changeLanguage">
+      <div id="navMenu" class="w3-bar-block w3-white w3-hide" @change="changeLanguage">
         <a href="/landing/#home" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonHome[selectedLanguage]}}</a>
         <a href="/landing/#about" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonAbout[selectedLanguage]}}</a>
         <a href="/landing/#blog" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonBlog[selectedLanguage]}}</a>
         <a href="/landing/#contact" class="w3-bar-item w3-button" @click="toggleFunction">{{ menuButtonContact[selectedLanguage] }}</a>
         <a v-if="userStore.role === 'admin'"
           href="/newblog"
-          class="w3-bar-item w3-button w3-hover-black">
+          class="w3-bar-item w3-button">
           {{ menuButtonNewPost[selectedLanguage] }}
         </a>
       </div>
       <!-- Login button and popup dialog -->
       <v-container class="w3-bar-item w3-button w3-right">
+        <!--{{ userStore.name }}-->
         <p  @click="dialog = true">
-          <span> {{userStore.name}}</span>
-          <v-icon name="loginIcon" color="black">mdi-login</v-icon>
+          <v-icon v-if="loggedIn" name="logoutIcon" color="black">mdi-logout</v-icon>
+          <v-icon v-else name="loginIcon" color="black">mdi-login</v-icon>
         </p>
         <v-dialog v-model="dialog" max-width="500">
           <v-card>
             <v-card-title class="headline">
-              {{ loggedIn ? 'Logout' : (isLogin ? 'Login' : 'Registrieren') }}
+              {{ loggedIn ? dialogLogout[selectedLanguage] : (isLogin ? dialogLogin[selectedLanguage] : dialogRegistry[selectedLanguage]) }}
             </v-card-title>
             <v-card-text>
               <v-form ref="form" v-model="valid">
                 <v-text-field
                   v-if="!isLogin && !loggedIn"
                   v-model="firstname"
-                  label="First Name"
+                  :label="dialogFirstName[selectedLanguage]"
                   :rules="[v => !!v || 'Firstname is must']"
                   required
                 ></v-text-field>
                 <v-text-field
                   v-if="!isLogin && !loggedIn"
                   v-model="name"
-                  label="Name"
+                  :label="dialogName[selectedLanguage]"
                   :rules="[v => !!v || 'Name is must']"
                   required
                 ></v-text-field>
                 <v-text-field
                   v-if="!loggedIn"
                   v-model="email"
-                  label="E-Mail"
+                  :label="dialogEmail[selectedLanguage]"
                   :rules="[v => /.+@.+\..+/.test(v) || 'correct E-Mail is required']"
                   required
                 ></v-text-field>
                 <v-text-field
                   v-if="!loggedIn"
                   v-model="password"
-                  label="Passwort"
+                  :label="dialogPsw[selectedLanguage]"
                   :rules="[v => !!v || 'Passwort is must']"
                   type="password"
                   required
@@ -61,7 +62,8 @@
                   v-if="!isLogin && !loggedIn"
                   v-model="gdpr"
                   :rules="[v => !!v || 'please accept the GDPR']"
-                  label="I accept the GDPR"
+                  :label="dialogGdpr[selectedLanguage]"
+                  th:href="@{url '/gdpr'}"
                   required
                 ></v-checkbox>
               </v-form>
@@ -91,29 +93,26 @@
     </div>
  
 </template>
-
 <script setup>
 import { ref, reactive } from 'vue';
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/services/userStore'
-
+// useUserStore is a Pinia store for managing user state
 const router = useRouter()
 const userStore = useUserStore()
-
+// Axios instance for API requests
 const api = axios.create({
   baseURL: 'https://yowayoli.com/api'
 })
-
+// jwt token interceptor
 api.interceptors.request.use(config => {
   if (userStore.token) {
     config.headers.Authorization = `Bearer ${userStore.token}`
   }
   return config
 })
-
-
-  // States
+// States
   const dialog = ref(false);
   const valid = ref(false);
   const isLogin = ref(true);
@@ -123,7 +122,7 @@ api.interceptors.request.use(config => {
   const email = ref('');
   const password = ref('');
   const gdpr = ref(false);
-  // Sprachen
+  // laguage selection
   import { onMounted } from 'vue';
   const selectedLanguage = ref(document.documentElement.lang || 'hu');
   onMounted(() => {
@@ -157,6 +156,46 @@ api.interceptors.request.use(config => {
     hu: 'Új blog bejegyzés',
     de: 'Neuen Blog Beitrag erstellen'
   });
+  const dialogLogout = reactive({
+    en: 'Logout',
+    hu: 'Kijelentkezés',
+    de: 'Abmelden'
+  });
+  const dialogLogin = reactive({
+    en: 'Login',
+    hu: 'Bejelentkezés',
+    de: 'Anmelden'
+  });
+  const dialogRegistry = reactive({
+    en: 'Registration',
+    hu: 'Regisztráció',
+    de: 'Registrierung'
+  });
+  const dialogFirstName = reactive({
+    en: 'First Name',
+    hu: 'Keresztnév',
+    de: 'Vorname'
+  });
+  const dialogName = reactive({
+    en: 'Name',
+    hu: 'Név',
+    de: 'Nachname'
+  });
+  const dialogEmail = reactive({
+    en: 'E-Mail',
+    hu: 'E-Mail',
+    de: 'E-Mail'
+  });
+  const dialogPsw = reactive({
+    en: 'Password',
+    hu: 'Jelszó',
+    de: 'Passwort'
+  });
+  const dialogGdpr = reactive({
+    en: 'I accept the GDPR',
+    hu: 'Elfogadom az adatvédelmi irányelveket',
+    de: 'Ich akzeptiere die Datenschutzbestimmungen'
+  });
   // toggleFunction login
   function toggleForm() {
     isLogin.value = !isLogin.value;
@@ -182,18 +221,17 @@ api.interceptors.request.use(config => {
           userStore.setUser(response.data.user, response.data.token);
           loggedIn.value = true;
           dialog.value = false;
-          //alert('Login erfolgreich! ' + userStore.name + '/'+ userStore.role);
           return { success: true };
         } else {
-          alert('Login fehlgeschlagen! Bitte überprüfen Sie Ihre Anmeldedaten.');
+          alert('Login not successful. Please check your credentials.');
           return { success: false };
         }
       } catch (error) {
-        alert('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.');
+        alert('Login failed. Please check your credentials.');
         return { success: false, error };
       }
     } else {
-      // Registrierung
+      // Registration
       try {
         await axios.post('https://yowayoli.com/api/create-user', {
           firstname: firstname.value,
@@ -204,7 +242,7 @@ api.interceptors.request.use(config => {
           adress: '',
           psw: password.value,
         });
-        alert('Registrierung erfolgreich! Please check your EMAIL for confirmation.');
+        alert('Registration successful. You can now log in.');
         firstname.value = '',
         name.value = '',
         email.value = '',
@@ -212,7 +250,7 @@ api.interceptors.request.use(config => {
         loggedIn.value = false;
         this.$user.name.value = '';
         this.$user.role.value = '';
-        isLogin.value = true; // Zurück zum Login-Formular
+        isLogin.value = true;
         gdpr.value = false;
         dialog.value = false;
         return { success: true };
@@ -221,14 +259,14 @@ api.interceptors.request.use(config => {
       }
     }
   }
-  // Language change
+  // manage language change
   function changeLanguage(event) {
     selectedLanguage.value = event.target.value;
     document.documentElement.lang = selectedLanguage.value;
   }
-  // toggleFunction for menü
+  // toggleFunction for Menu
   function toggleFunction() {
-    var x = document.getElementById("navDemo");
+    var x = document.getElementById("navMenu");
     if (x.className.indexOf("w3-show") == -1) {
       x.className += " w3-show";
     } else {
