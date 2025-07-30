@@ -4,10 +4,6 @@
       <p  @click="dialog = true" class="w3-display-topright w3-padding-large">
         <v-icon name="loginIcon" color="black">mdi-login</v-icon>
       </p>
-            <!-- domain -->
-      <div class="w3-display-topleft w3-padding-large w3-xlarge">
-        YOWAYOLI.COM
-      </div>
       <!-- Login Dialog -->
       <v-dialog v-model="dialog" max-width="500">
         <v-card>
