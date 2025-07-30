@@ -11,7 +11,7 @@
         <a href="/landing/#contact" class="w3-bar-item w3-button" @click="toggleFunction">{{ menuButtonContact[selectedLanguage] }}</a>
         <a v-if="userStore.role === 'admin'"
           href="/newblog"
-          class="w3-bar-item w3-button w3-hover-black w3-hide-small">
+          class="w3-bar-item w3-button w3-hover-black">
           {{ menuButtonNewPost[selectedLanguage] }}
         </a>
       </div>
