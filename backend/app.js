@@ -74,14 +74,47 @@ app.post('/send-email', async (req, res) => {
     try {
         await transporter.sendMail({
             from: 'info@yowayoli.com', // sender E-Mail, !!same like defined in tansporter!!
-            to: 'antali.gyongyi@gmail.com', // receiver E-Mail, the mailaddress of admin
-            subject: 'Üzenet a Honlapról!', // Subject of the email
-            text: 'Név: '+subject+', email:'+email+', üzenet:'+message, //  plain text body
+            to: email, // receiver E-Mail
+            subject: subject, // Subject of the email
+            text: message, //  plain text body
         });
         res.status(200).send('E-Mail gesendet!');
     } catch (error) {
         console.error(error); // Failure loggen
         res.status(500).send(error.message); // give back the error message for Frontend
+    }
+});
+
+// Add user to newsletter abonent
+app.post('/abonewsletter', async (req, res) => {
+    const { firstname, name, email } = req.body;
+    try {
+        const database = client.db('yowayoli');
+        const collection = database.collection('aboliste');
+        const result = await collection.insertOne({ firstname, name, email });
+        if (result.acknowledged) {
+            let mailError = null;
+            try {
+                await transporter.sendMail({
+                    from: 'info@yowayoli.com',
+                    to: email,
+                    subject: 'newsletter abonement on yowayoli.com',
+                    text: 'Dear '+firstname+', you have sucsesfull abonement on yowayoli.com newsletter!',
+                });
+            } catch (error) {
+                console.error('E-Mail konnte nicht gesendet werden:', error);
+                mailError = error.message;
+                const deleteThis = await collection.findone({ _id: result.insertedId });
+                const result = await collection.deleteOne({ _id: new ObjectId(String(deleteThis._id)) });
+                res.status(500).send(`User could not be created because email could not be sent: ${mailError}`);   
+            }
+            res.status(201).json({ ok: true, insertedId: result.insertedId, mailError });
+        } else {
+            res.status(500).json({ ok: false, error: "Abonement is not possible!" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ ok: false, error: error.message });
     }
 });
 

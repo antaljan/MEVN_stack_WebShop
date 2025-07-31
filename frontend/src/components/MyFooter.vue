@@ -146,25 +146,22 @@ import { sendEmail } from '@/services/emailService';
 async function submit() {
   if (form.value && await form.value.validate()) {
     try {
-      const result = await sendEmail({
-        email: email.value,
-        subject: firstname.value + ' ' + name.value,
-        message:'newsletter abo'
-    });
-      if (result && result.success) {
-        alert('Successful E-mail sending!');
-      } else {
-        alert('Error by Email sending: ' + (result && result.error ? result.error : 'Unknown error'));
+        await axios.post('https://yowayoli.com/api/abonewsletter', {
+          firstname: firstname.value,
+          name: name.value,
+          email: email.value,
+        });
+        alert('Abonement successful. Thank you for subscribing!');
+        dialog.value = false;
+        firstname.value = '';
+        name.value = '';
+        email.value = '';
+        gdpr.value = false;
+        form.value.resetValidation();
+        return { success: true };
+      } catch (error) {
+        return { success: false, error };
       }
-      dialog.value = false;
-      firstname.value = '';
-      name.value = '';
-      email.value = '';
-      gdpr.value = false;
-      form.value.resetValidation();
-    } catch (error) {
-      alert('Error by Email sending: ' + error.message);
-    }
   }
 }
 </script>
