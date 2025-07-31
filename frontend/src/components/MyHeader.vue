@@ -14,11 +14,16 @@
           class="w3-bar-item w3-button">
           {{ menuButtonNewPost[selectedLanguage] }}
         </a>
+        <a v-if="userStore.role === 'admin'"
+          href="/users"
+          class="w3-bar-item w3-button">
+          {{ menuButtonUsers[selectedLanguage] }}
+        </a>
       </div>
       <!-- Login button and popup dialog -->
       <v-container class="w3-bar-item w3-button w3-right">
-        <!--{{ userStore.name }}-->
         <p  @click="dialog = true">
+          {{ userStore.name }}
           <v-icon v-if="loggedIn" name="logoutIcon" color="black">mdi-logout</v-icon>
           <v-icon v-else name="loginIcon" color="black">mdi-login</v-icon>
         </p>
@@ -130,6 +135,16 @@ api.interceptors.request.use(config => {
     if (langSelect) {
       langSelect.value = selectedLanguage.value;
     }
+    const token = localStorage.getItem('jwt');
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (!token || !userData ) {
+      loggedIn.value = false;
+      userStore.name = '';
+    } else {
+      loggedIn.value = true;
+      userStore.role = userData.role;
+      userStore.name = userData.name;
+    }
   });
   const menuButtonHome = reactive({
     en: 'HOME',
@@ -155,6 +170,11 @@ api.interceptors.request.use(config => {
     en: 'Create Post',
     hu: 'Új blog bejegyzés',
     de: 'Neuen Blog Beitrag erstellen'
+  });
+  const menuButtonUsers = reactive({
+    en: 'User Managemet',
+    hu: 'Felhasználók kezelése',
+    de: 'Benutzerverwaltung'
   });
   const dialogLogout = reactive({
     en: 'Logout',

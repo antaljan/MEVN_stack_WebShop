@@ -4,7 +4,7 @@ import gdpr from '../view/gdprStatement.vue'
 import commingSoon from '../view/commingSoon.vue'
 import blog from '../view/blogRead.vue'
 import newblog from '../view/blogWrite.vue'
-import { useUserStore } from '@/services/userStore'
+import usersMan from '../view/users.vue'
 
 const routes = [
     {
@@ -33,15 +33,27 @@ const routes = [
     component: newblog,
     beforeEnter: (to, from, next) => {
         const token = localStorage.getItem('jwt');
-        const userStore = useUserStore()
-        if (!token) {
-            alert('no authentication found, redirecting to home');
-            next('/landing'); // Weiterleitung, wenn kein Token
-        } else if (userStore.role !== 'admin') {
-            alert('You do not have permission to access this page.');
-            next('/landing'); // Falls Rolle nicht ausreicht
+        const userData = JSON.parse(localStorage.getItem('user'));
+        if (!token || !userData || userData.role !== 'admin') {
+            alert('No authentication or insufficient permissions');
+            next('/landing');
         } else {
-            next(); // Alles ok, Zugang erlaubt
+            next();
+        }
+    }
+    },
+    {
+    path: '/users',
+    name: 'users',
+    component: usersMan,
+    beforeEnter: (to, from, next) => {
+        const token = localStorage.getItem('jwt');
+        const userData = JSON.parse(localStorage.getItem('user'));
+        if (!token || !userData || userData.role !== 'admin') {
+            alert('No authentication or insufficient permissions');
+            next('/landing');
+        } else {
+            next();
         }
     }
     },
