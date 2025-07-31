@@ -93,9 +93,9 @@ const message = ref('');
 
 async function handleSendEmail() {
   const result = await sendEmail({
-    email: email.value,
-    subject: subject.value,
-    message: message.value
+    email: 'antali.gyongyi@gmail.com',
+    subject: 'kapcsolatfelvetel a honlaprol',
+    message: 'felado:' + email.value + 'targy:' + subject.value + ' üzenet:' + message.value
   });
   if (result.success) {
     alert('succsesluff E-mail sending!');
