@@ -4,7 +4,7 @@ import gdpr from '../view/gdprStatement.vue'
 import commingSoon from '../view/commingSoon.vue'
 import blog from '../view/blogRead.vue'
 import newblog from '../view/blogWrite.vue'
-import usersMan from '../view/users.vue'
+import usersMan from '../view/usersManagement.vue'
 
 const routes = [
     {
