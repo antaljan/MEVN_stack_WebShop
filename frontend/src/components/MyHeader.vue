@@ -14,6 +14,11 @@
           class="w3-bar-item w3-button">
           {{ menuButtonNewPost[selectedLanguage] }}
         </a>
+        <a v-if="userStore.role === 'admin'"
+          href="/users"
+          class="w3-bar-item w3-button">
+          {{ menuButtonUsers[selectedLanguage] }}
+        </a>
       </div>
       <!-- Login button and popup dialog -->
       <v-container class="w3-bar-item w3-button w3-right">
@@ -155,6 +160,11 @@ api.interceptors.request.use(config => {
     en: 'Create Post',
     hu: 'Új blog bejegyzés',
     de: 'Neuen Blog Beitrag erstellen'
+  });
+  const menuButtonUsers = reactive({
+    en: 'User Managemet',
+    hu: 'Felhasználók kezelése',
+    de: 'Benutzerverwaltung'
   });
   const dialogLogout = reactive({
     en: 'Logout',
