@@ -139,8 +139,7 @@ const gdpr = ref(false);
 const form = ref(null);
 
 // import { sendEmail } from '@/services/emailService';
-import { sendEmail } from '@/services/emailService';
-
+import axios from 'axios';
 // Submit handler function --> this function is called when the user clicks the "SEND" button
 // It checks if the form is valid and sends the email if it is.
 async function submit() {
