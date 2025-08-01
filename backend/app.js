@@ -119,7 +119,7 @@ app.post('/abonewsletter', async (req, res) => {
 });
 
 // Get users to newsletter abonent
-app.post('/getabosnewsletter', async (req, res) => {
+app.post('/getabos', async (req, res) => {
     const { firstname, name, email } = req.body;
     try {
         const database = client.db('yowayoli');
