@@ -118,6 +118,21 @@ app.post('/abonewsletter', async (req, res) => {
     }
 });
 
+// Get users to newsletter abonent
+app.post('/getabos', async (req, res) => {
+    const { firstname, name, email } = req.body;
+    try {
+        const database = client.db('yowayoli');
+        const collection = database.collection('aboliste');
+        const abos = await collection.find({}).toArray();
+        res.status(200).json(abos);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ ok: false, error: error.message });
+    }
+});
+
+
 // Create user in datenbank
 app.post('/create-user', async (req, res) => {
     const { firstname, name, email, phone, rolle, adress, psw } = req.body;
@@ -433,6 +448,22 @@ function authenticateToken(req, res, next) {
     next()
   })
 }
+
+// Middleware to log API requests
+app.use(async(req, res, next) => {
+  const logData = {
+    ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+    method: req.method,
+    url: req.originalUrl,
+    userAgent: req.headers['user-agent'],
+    timestamp: new Date().toISOString()
+  };
+  const database = client.db('yowayoli');
+  const collection = database.collection('apiLogs');
+  await collection.insertOne({logData});
+  next();
+});
+
 
 // Start of the server
 app.listen(3000, '0.0.0.0', () => {
