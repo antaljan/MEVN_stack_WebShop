@@ -28,9 +28,12 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
+const dialog = ref(false);
+//import { defineProps } from 'vue';
 
-const props = defineProps(['dialog'])
-const emit = defineEmits(['update:dialog'])
+//const props = defineProps();
+//const dialogLocal = ref(props.dialog);
+//const emit = defineEmits(['event-name']);
 const subject = ref('');
 const message = ref('');
 const image = ref(null);
