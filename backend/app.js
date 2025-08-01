@@ -133,7 +133,7 @@ app.post('/getabos', async (req, res) => {
 });
 
 // Get count of newsletter abonent
-app.get('/api/newsletter-count', async (req, res) => {
+app.get('/newsletter-count', async (req, res) => {
   try {
     const database = client.db('yowayoli');
     const collection = database.collection('aboliste');
