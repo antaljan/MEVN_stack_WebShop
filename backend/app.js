@@ -118,6 +118,21 @@ app.post('/abonewsletter', async (req, res) => {
     }
 });
 
+// Get users to newsletter abonent
+app.post('/getabosnewsletter', async (req, res) => {
+    const { firstname, name, email } = req.body;
+    try {
+        const database = client.db('yowayoli');
+        const collection = database.collection('aboliste');
+        const abos = await collection.find({}).toArray();
+        res.status(200).json(abos);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ ok: false, error: error.message });
+    }
+});
+
+
 // Create user in datenbank
 app.post('/create-user', async (req, res) => {
     const { firstname, name, email, phone, rolle, adress, psw } = req.body;
