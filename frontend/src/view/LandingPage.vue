@@ -3,6 +3,7 @@
   <heroSection/>
   <aboutSection/>
   <blogSection/>
+  <CalendarSertion/>
   <contactSection/>
   <MyFooter/>
 </template>
@@ -14,6 +15,7 @@
   import blogSection from '../components/blogSection.vue';
   import MyFooter from "../components/MyFooter.vue";
   import MyHeader from "../components/MyHeader.vue";
+  import CalendarSertion from '../components/terminReserv.vue';
 </script>
 
 
