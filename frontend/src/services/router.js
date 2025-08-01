@@ -5,6 +5,7 @@ import commingSoon from '../view/commingSoon.vue'
 import blog from '../view/blogRead.vue'
 import newblog from '../view/blogWrite.vue'
 import usersMan from '../view/usersManagement.vue'
+import abosMan from '../view/abosManagement.vue'
 
 const routes = [
     {
@@ -46,6 +47,21 @@ const routes = [
     path: '/users',
     name: 'users',
     component: usersMan,
+    beforeEnter: (to, from, next) => {
+        const token = localStorage.getItem('jwt');
+        const userData = JSON.parse(localStorage.getItem('user'));
+        if (!token || !userData || userData.role !== 'admin') {
+            alert('No authentication or insufficient permissions');
+            next('/landing');
+        } else {
+            next();
+        }
+    }
+    },
+    {
+    path: '/abos',
+    name: 'abos',
+    component: abosMan,
     beforeEnter: (to, from, next) => {
         const token = localStorage.getItem('jwt');
         const userData = JSON.parse(localStorage.getItem('user'));
