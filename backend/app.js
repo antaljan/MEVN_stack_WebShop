@@ -132,6 +132,18 @@ app.post('/getabos', async (req, res) => {
     }
 });
 
+// Get count of newsletter abonent
+app.get('/api/newsletter-count', async (req, res) => {
+  try {
+    const database = client.db('yowayoli');
+    const collection = database.collection('aboliste');
+    const count = await collection.countDocuments({});
+    res.status(200).json({ count });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
 
 // Create user in datenbank
 app.post('/create-user', async (req, res) => {
