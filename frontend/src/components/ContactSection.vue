@@ -20,7 +20,7 @@
         </div>
         <input class="w3-input w3-border" type="text" :placeholder="contactMessage[selectedLanguage]" required name="Message" v-model="message">
         <input class="w3-check w3-padding-24" type="checkbox">
-        <label>{{gdprReading1[selectedLanguage]}}<a href="gdpr"   target="_blank" rel="noopener"  class="w3-hover-text-red">{{gdprReading2[selectedLanguage]}}</a>{{gdprReading3[selectedLanguage]}}</label>
+        <label>{{gdprReading1[selectedLanguage]}}<a href="/gdpr"   target="_blank" rel="noopener"  class="w3-hover-text-red">{{gdprReading2[selectedLanguage]}}</a>{{gdprReading3[selectedLanguage]}}</label>
         <button class="w3-button w3-black w3-right w3-section" type="submit">
           <i class="fa fa-paper-plane"></i> {{contactSendButton[selectedLanguage]}}
         </button>
