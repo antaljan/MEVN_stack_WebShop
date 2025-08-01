@@ -434,6 +434,22 @@ function authenticateToken(req, res, next) {
   })
 }
 
+// Middleware to log API requests
+app.use(async(req, res, next) => {
+  const logData = {
+    ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+    method: req.method,
+    url: req.originalUrl,
+    userAgent: req.headers['user-agent'],
+    timestamp: new Date().toISOString()
+  };
+  const database = client.db('yowayoli');
+  const collection = database.collection('apiLogs');
+  await collection.insertOne({logData});
+  next();
+});
+
+
 // Start of the server
 app.listen(3000, '0.0.0.0', () => {
   console.log('Server is running on port:3000 http://localhost:3000');
