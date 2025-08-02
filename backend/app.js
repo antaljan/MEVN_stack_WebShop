@@ -86,7 +86,7 @@ app.post('/send-email', async (req, res) => {
 });
 
 // Add user to newsletter abonent
-app.post('/abonewsletter', async (req, res) => {
+app.post('/newsletter/subscribe', async (req, res) => {
     const { firstname, name, email } = req.body;
     try {
         const database = client.db('yowayoli');
@@ -99,10 +99,10 @@ app.post('/abonewsletter', async (req, res) => {
                     from: 'info@yowayoli.com',
                     to: email,
                     subject: 'newsletter abonement on yowayoli.com',
-                    text: 'Dear '+firstname+', you have sucsesfull abonement on yowayoli.com newsletter!',
+                    text: 'Dear '+firstname+', you have sucsesfull subscribe for newsletter on antaligyongyi.hu or yowayoli.com!',
                 });
             } catch (error) {
-                console.error('E-Mail konnte nicht gesendet werden:', error);
+                console.error('error! cant send the E-Mail wit failure:', error);
                 mailError = error.message;
                 const deleteThis = await collection.findone({ _id: result.insertedId });
                 const result = await collection.deleteOne({ _id: new ObjectId(String(deleteThis._id)) });
@@ -118,17 +118,41 @@ app.post('/abonewsletter', async (req, res) => {
     }
 });
 
-// Get users to newsletter abonent
-app.post('/getabos', async (req, res) => {
-    const { firstname, name, email } = req.body;
+// Get newsletter subscribert
+app.post('/newsletter/subscribers', async (req, res) => {
+    console.log('try to get subscribers');
     try {
         const database = client.db('yowayoli');
         const collection = database.collection('aboliste');
         const abos = await collection.find({}).toArray();
-        res.status(200).json(abos);
+        console.log('subscribert are succsesfull load from database');
+        res.status(200).json({ ok: true, abos });
     } catch (error) {
         console.error(error);
         res.status(500).json({ ok: false, error: error.message });
+    }
+});
+
+// Unsubscribe newsletter
+app.get('/newsletter/unsubscribe/:email', async (req, res) => {
+    const email = req.params.email;
+    if (!email) {
+        return res.status(400).json({ ok: false, message: 'Email address is required.' });
+    }
+    try {
+        const database = client.db('yowayoli');
+        const collection = database.collection('aboliste');
+        const result = await collection.deleteOne({ email });
+        if (result.deletedCount === 1) {
+            console.log(`Abonement with email ${email} deleted successfully.`);
+            res.status(200).json({ ok: true, message: 'Unsubscribed successfully.' });
+        } else {
+            console.log(`Abonement with email ${email} not found.`);
+            res.status(404).json({ ok: false, message: 'Email not found.' });
+        }
+    } catch (error) {
+        console.error('Unsubscribe error:', error);
+        res.status(500).json({ ok: false, message: 'Server error.', error: error.message });
     }
 });
 
