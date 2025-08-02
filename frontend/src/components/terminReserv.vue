@@ -93,15 +93,5 @@
       },
     },
   }
-/*
-in src/plugins/vuetify.js:
-import { VCalendar } from 'vuetify/labs/VCalendar'
 
-export default createVuetify({
-  components: {
-    VCalendar,
-  },
-})
-
-*/
 </script>
