@@ -71,20 +71,20 @@
 <script setup>
   import MyHeader from '../components/MyHeader.vue';
   import MyFooter from '../components/MyFooter.vue';
-  import { ref } from 'vue';
-  import { onMounted } from 'vue';
+  import { ref, onMounted } from 'vue';
   import axios from 'axios';
   // get the subscriber from the API
   const abonements = ref([]);
+  const subscriberCount = ref(0);
   onMounted(async () => {
     try {
-      const response = await axios.post('https://yowayoli.com/newsletter/subscribers/')
-      abonements.value = response.data;
-      subscriberCount = abonements.count;
+      const response = await axios.post('https://yowayoli.com/newsletter/subscribers/');
+      abonements.value = response.data.abos;
+      subscriberCount.value = abonements.value.length;
     } catch (error) {
-      console.error('Failure by loding of Abonnements:', error);
-    }
-  });
+    console.error('Failure by loading of Abonements:', error);
+  }
+});
   // timeline for newsletters
   const isOpen = ref(false)
   const nLetters = [
