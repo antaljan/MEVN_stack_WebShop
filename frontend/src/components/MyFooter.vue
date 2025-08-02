@@ -145,12 +145,12 @@ import axios from 'axios';
 async function submit() {
   if (form.value && await form.value.validate()) {
     try {
-        await axios.post('https://yowayoli.com/api/abonewsletter', {
+        await axios.post('https://yowayoli.com/api/newsletter/subscribe', {
           firstname: firstname.value,
           name: name.value,
           email: email.value,
         });
-        alert('Abonement successful. Thank you for subscribing!');
+        alert('Subscribe successful. Thank you for subscribing!');
         dialog.value = false;
         firstname.value = '';
         name.value = '';

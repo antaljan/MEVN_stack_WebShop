@@ -74,29 +74,17 @@
   import { ref } from 'vue';
   import { onMounted } from 'vue';
   import axios from 'axios';
-  // get the subscriber count from the API
-  const subscriberCount = ref(0);
-  onMounted(async () => {
-    try {
-      const response = await axios.get('https://yowayoli.com/api/newsletter-count')
-      subscriberCount.value = response.data.count
-    } catch (error) {
-      console.error('Fehler beim Laden der Abonnenten:', error)
-    }
-  })
-  // get abonements from the API
+  // get the subscriber from the API
   const abonements = ref([]);
   onMounted(async () => {
     try {
-      const response = await axios.post('https://yowayoli.com/api/getabos')
+      const response = await axios.post('https://yowayoli.com/newsletter/subscribers/')
       abonements.value = response.data;
+      subscriberCount = abonements.count;
     } catch (error) {
       console.error('Failure by loding of Abonnements:', error);
     }
   });
-  /*const aboList = [
-    abonements
-  ]*/
   // timeline for newsletters
   const isOpen = ref(false)
   const nLetters = [
