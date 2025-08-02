@@ -11,8 +11,18 @@
           max-width="344"
           :subtitle="`${subscriberCount} ember iratkozott fel a hírlevélre`"          
           title="Feliratkozók"
+          @click="showList = !showList"
           link
-        ></v-card>
+        >
+        <v-card-text v-if="showList">
+          <v-list>
+            <v-list-item v-for="abo in abonements" :key="abo._id">
+            <v-list-item-title>{{ abo.firstname }} {{ abo.name }}</v-list-item-title>
+            <v-list-item-subtitle>{{ abo.email }}</v-list-item-subtitle>
+          </v-list-item>
+        </v-list>
+    </v-card-text>
+      </v-card>
       </v-col>
       <!--Card for timeline of newsletters-->
       <v-col cols="12" md="4">
@@ -74,11 +84,12 @@
   import { ref, onMounted } from 'vue';
   import axios from 'axios';
   // get the subscriber from the API
+  const showList = ref(false);
   const abonements = ref([]);
   const subscriberCount = ref(0);
   onMounted(async () => {
     try {
-      const response = await axios.post('https://yowayoli.com/newsletter/subscribers/');
+      const response = await axios.post('https://yowayoli.com/api/newsletter/subscribers');
       abonements.value = response.data.abos;
       subscriberCount.value = abonements.value.length;
     } catch (error) {
