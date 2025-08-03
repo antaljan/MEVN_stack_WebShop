@@ -115,7 +115,7 @@
   background-attachment: fixed;
   background-position: center;
   background-size: cover;
-  z-index: 1;
+  z-index: 0;
 }
 
 .v-container::before {
