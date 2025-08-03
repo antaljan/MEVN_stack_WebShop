@@ -38,4 +38,27 @@ const selectedLanguage = ref(document.documentElement.lang || 'hu');
     });
     observer.observe(document.documentElement, { attributes: true });
 </script>
+<style scoped>
+            /* Create a Parallax Effect */
+        .bgimg-1 {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        /* First image (Logo. Full height) */
+        .bgimg-1 {
+            background-image: url('https://yowayoli.com/forestbridge.jpg');
+            min-height: 400px;
+            max-height: 100%;
+        }
+        /* Turn off parallax scrolling for tablets and phones */
+        @media only screen and (max-device-width: 800px) {
+            .bgimg-1 {
+            background-attachment: scroll;
+            min-height: 400px;
+            }
+        }
+
+</style>
 
