@@ -49,14 +49,14 @@ const selectedLanguage = ref(document.documentElement.lang || 'hu');
         /* First image (Logo. Full height) */
         .bgimg-1 {
             background-image: url('https://yowayoli.com/forestbridge.jpg');
-            min-height: 400px;
+            min-height: 344px;
             max-height: 100%;
         }
         /* Turn off parallax scrolling for tablets and phones */
         @media only screen and (max-device-width: 800px) {
             .bgimg-1 {
             background-attachment: scroll;
-            min-height: 400px;
+            min-height: 344px;
             }
         }
 
