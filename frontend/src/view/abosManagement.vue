@@ -1,7 +1,7 @@
 <template>
   <my-header/>
-  <v-app>
-  <v-container class="w3-centered w3-padding-top-48">
+  <v-app class="w3-centered w3-padding-top-48">
+   <v-container>
     <v-row >
       <!--Card for Number of abonement-->
       <v-col cols="12" md="4">
@@ -9,7 +9,7 @@
           append-icon="mdi-format-list-bulleted"
           class="mx-auto"
           max-width="344"
-          :subtitle="`${subscriberCount} ember iratkozott fel a hírlevélre`"          
+          :subtitle="`${subscriberCount} feliratkozó a hírlevelekre`"
           title="Feliratkozók"
           @click="showList = !showList"
           link
@@ -31,7 +31,7 @@
           class="mx-auto"
           max-width="344"
           title="Hírlevelek"
-          subtitle="Hírlevelek listája időrendben"
+          :subtitle="`${nLettersCount} hírlevél készült eddig`"
           @click="isOpen = !isOpen"
           style="cursor: pointer"
         >
@@ -98,12 +98,14 @@
 });
   // timeline for newsletters
   const isOpen = ref(false)
+  const nLettersCount = ref(0);
   const nLetters = [
     { date: '2025.08.02', from: 'Gyöngyi', title: 'Új kampány indul holnap!', color: 'green' },
     { date: '2025.07.21', from: 'Jani', title: 'Ne felejtsd el tesztelni a sablont!', color: 'blue' },
     { date: '2025.07.10', from: 'Jani', title: 'Indul a Hírlevél szolgáltatás!', color: 'blue' },
     // Ide jöhetnek további üzenetek...
   ]
+  nLettersCount.value = nLetters.length;
 </script>
 <style scoped>
 .v-container {
