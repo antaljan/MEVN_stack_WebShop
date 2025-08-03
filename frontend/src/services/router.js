@@ -6,6 +6,7 @@ import blog from '../view/blogRead.vue'
 import newblog from '../view/blogWrite.vue'
 import usersMan from '../view/usersManagement.vue'
 import abosMan from '../view/abosManagement.vue'
+import NewsletterComposer from '@/view/NewsletterComposer.vue'
 
 const routes = [
     {
@@ -62,6 +63,21 @@ const routes = [
     path: '/abos',
     name: 'abos',
     component: abosMan,
+    beforeEnter: (to, from, next) => {
+        const token = localStorage.getItem('jwt');
+        const userData = JSON.parse(localStorage.getItem('user'));
+        if (!token || !userData || userData.role !== 'admin') {
+            alert('No authentication or insufficient permissions');
+            next('/landing');
+        } else {
+            next();
+        }
+    }
+    },
+    {
+    path: '/newsletterComposer',
+    name: 'newsletterComposer',
+    component: NewsletterComposer,
     beforeEnter: (to, from, next) => {
         const token = localStorage.getItem('jwt');
         const userData = JSON.parse(localStorage.getItem('user'));

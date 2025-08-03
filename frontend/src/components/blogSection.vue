@@ -56,6 +56,14 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import axios from 'axios';
+const isMobile = ref(false);
+onMounted(() => {
+  fetchPosts();
+  isMobile.value = window.innerWidth < 600;
+  window.addEventListener('resize', () => {
+    isMobile.value = window.innerWidth < 600;
+  });
+});
 // language selection
 const posts = ref([]);
 const selectedLanguage = ref(document.documentElement.lang || 'hu');
@@ -93,7 +101,7 @@ async function fetchPosts() {
   }
 }
 const groupedPosts = computed(() => {
-  const chunkSize = 3;
+  const chunkSize = isMobile.value ? 1 : 3;
   const result = [];
   for (let i = 0; i < posts.value.length; i += chunkSize) {
     result.push(posts.value.slice(i, i + chunkSize));
