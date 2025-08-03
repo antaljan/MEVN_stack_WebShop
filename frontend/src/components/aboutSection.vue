@@ -1,27 +1,28 @@
 <template>
     <!-- Container (About Section) -->
-    <div class="w3-content w3-container w3-padding-64" id="about">
+    <div class="w3-content w3-container " id="about">
         <h3 class="w3-center"><i class="fa fa-user w3-margin-right"></i>{{aboutName[selectedLanguage]}}</h3>
         <p class="w3-center"><em>{{aboutTitle[selectedLanguage]}}</em></p>
         <!--<p>{{aboutText1[selectedLanguage]}}</p>-->
         <div class="w3-row">
-            <div class="w3-col m6 w3-center w3-padding-large">
+            <div class="w3-col m6 w3-center w3-padding-small">
                 <img src="https://yowayoli.com/avatar_hat.jpg" class="w3-round w3-image w3-opacity w3-hover-opacity-off" alt="Photo of Me" width="500" height="333">
             </div>
             <div v-if="userStore.role !== 'admin'"
-                class="w3-col m6 w3-padding-large"
+                class="w3-col m6 w3-padding-small"
                 v-html="aboutText2">
             </div>
-            <div class="w3-col m6 w3-padding-large">
-            <textarea v-if="userStore.role === 'admin'"
-                v-model="aboutText2"
-                rows="10" 
-                cols="80">
-            </textarea> 
-            <v-button v-if="userStore.role === 'admin'"
-                class="w3-button w3-black w3-margin-top"
-                @click="saveAboutText2">{{aboutSave[selectedLanguage]}}
-            </v-button>
+            <div v-if="userStore.role === 'admin'"
+                class="w3-col m6 w3-padding-small">
+                <textarea 
+                    v-model="aboutText2"
+                    rows="10" 
+                    cols="40">
+                </textarea> 
+                <v-button v-if="userStore.role === 'admin'"
+                    class="w3-button w3-black w3-margin-top"
+                    @click="saveAboutText2">{{aboutSave[selectedLanguage]}}
+                </v-button>
             </div>
         </div>
     </div>

@@ -104,3 +104,25 @@ async function handleSendEmail() {
   }
 }
 </script>
+<style scoped>
+          /* Create a Parallax Effect */
+        .bgimg-2 {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        /* Second image (Portfolio) */
+        .bgimg-2 {
+            background-image: url("https://yowayoli.com/parallax2.jpg");
+            min-height: 344px;
+        }
+                /* Turn off parallax scrolling for tablets and phones */
+        @media only screen and (max-device-width: 800px) {
+            .bgimg-2 {
+            background-attachment: scroll;
+            min-height: 344px;
+            }
+        }
+
+</style>
