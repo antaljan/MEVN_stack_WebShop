@@ -3,7 +3,7 @@
   <heroSection/>
   <aboutSection/>
   <blogSection/>
-  <CalendarSertion/>
+  <CalendarSertion v-if="userStore.role === 'user' || userStore.role === 'admin'"/>
   <contactSection/>
   <MyFooter/>
 </template>
@@ -16,6 +16,9 @@
   import MyFooter from "../components/MyFooter.vue";
   import MyHeader from "../components/MyHeader.vue";
   import CalendarSertion from '../components/terminReserv.vue';
+  // Import userStore for user role and name
+  import { useUserStore } from '@/services/userStore'
+  const userStore = useUserStore()
 </script>
 
 
