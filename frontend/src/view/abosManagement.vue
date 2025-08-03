@@ -64,7 +64,7 @@
         <v-card
           append-icon="mdi-open-in-new"
           class="mx-auto"
-          href="#"
+          href="/newsletterComposer"
           max-width="344"
           rel="noopener"
           subtitle="ide kattinva készíthetsz hírlevelet"
