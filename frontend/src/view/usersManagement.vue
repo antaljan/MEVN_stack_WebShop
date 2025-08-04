@@ -19,6 +19,9 @@
                     <v-icon small color="red" @click="deleteUser(item._id)">
                         mdi-delete
                     </v-icon>
+                    <v-icon small color="red" @click="pswRes(item)">
+                        mdi-passport
+                    </v-icon>
                 </template>
                 </v-data-table>
             </v-col>
@@ -63,18 +66,51 @@
                     v-model="adress"
                     label='Cím'
                 ></v-text-field>
+                </v-form>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="green" text @click="submit">Mentés</v-btn>
+                <v-btn color="grey" text @click="dialog = false">Mégsem</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+    <v-dialog v-model="pswDialog" max-width="500">
+        <v-card>
+            <v-card-title class="headline">Új Jelszó</v-card-title>
+            <v-card-text>
+                <v-form ref="form" v-model="valid">
                 <v-text-field
-                    v-model="psw"
-                    label='Jelszó'
+                    v-model="firstname"
+                    label='Keresztnév'
+                    :rules="[v => !!v || 'Firstname is must']"
+                    required
+                ></v-text-field>
+                <v-text-field
+                    v-model="name"
+                    label='Vezetéknév'
+                    :rules="[v => !!v || 'Name is must']"
+                    required
+                ></v-text-field>
+                <v-text-field
+                    v-model="email"
+                    label='email'
+                    :rules="[v => /.+@.+\..+/.test(v) || 'correct E-Mail is required']"
+                    required
+                ></v-text-field>
+                <v-text-field
+                    v-model="password"
+                    label='jelszó'
+                    :rules="[v => !!v || 'Passwort is must']"
+                    type="password"
+                    required
                 ></v-text-field>
                 </v-form>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="green" text @click="submit">
-                    Mentés
-                </v-btn>
-                <v-btn color="grey" text @click="dialog = false">Mégsem</v-btn>
+                <v-btn color="green" text @click="pswSubmit">Mentés</v-btn>
+                <v-btn color="grey" text @click="pswDialog = false">Mégsem</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -89,6 +125,7 @@
 
     // 💡 Állapotváltozók
     const dialog = ref(false);
+    const pswDialog = ref(false);
     const users = ref([]);
     const valid = ref(false);
     const selectedUserId = ref(null);
@@ -101,7 +138,8 @@
     const phone = ref('');
     const rolle = ref('');
     const adress = ref('');
-    const psw = ref('');
+    const password = ref('');
+    
 
     // 🧾 Táblázat fejléc
     const headers = [
@@ -133,9 +171,19 @@
         phone.value = user.phone;
         rolle.value = user.rolle;
         adress.value = user.adress;
-        psw.value = user.psw;
         selectedUserId.value = user._id;
     };
+
+    // password reset
+    const pswRes = (user) => {
+        pswDialog.value = true;
+        firstname.value = user.firstname;
+        name.value = user.name;
+        email.value = user.email;
+        password.value = null;
+        selectedUserId.value = user._id;
+    };
+
 
     // ❌ Törlés
     const deleteUser = (userId) => {
@@ -160,7 +208,6 @@
             phone: phone.value,
             rolle: rolle.value,
             adress: adress.value,
-            psw: psw.value,
         };
         const url = selectedUserId.value
             ? 'https://yowayoli.com/api/user/update'
@@ -181,6 +228,32 @@
             return false;
         }
     };
+
+    // password reset
+    const pswSubmit= () => {
+        if (form.value?.validate()) {
+            const userData = {
+            firstname: firstname.value,
+            name: name.value,
+            email: email.value,
+            password: password.value,
+        };
+        const url = 'https://yowayoli.com/api/user/update'
+        const payload = { id: selectedUserId.value, ...userData }
+        axios.post(url, payload)
+            .then(() => {
+                dialog.value = false;
+                fetchUsers();
+            })
+            .catch(error => {
+                console.error('Error saving user:', error);
+            });
+        } else {
+            alert('Kérlek töltsd ki az összes kötelező mezőt!');
+            return false;
+        }
+    };
+
 </script>
 
 <style scoped>
