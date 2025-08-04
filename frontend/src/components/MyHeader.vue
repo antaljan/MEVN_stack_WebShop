@@ -243,7 +243,7 @@ api.interceptors.request.use(config => {
     } else if (isLogin.value) {
       // Login
       try {
-        const response = await axios.post('https://yowayoli.com/api/login', {
+        const response = await axios.post('https://yowayoli.com/api/user/login', {
           email: email.value,
           psw: password.value
         });
@@ -263,7 +263,7 @@ api.interceptors.request.use(config => {
     } else {
       // Registration
       try {
-        await axios.post('https://yowayoli.com/api/create-user', {
+        await axios.post('https://yowayoli.com/api/user/create', {
           firstname: firstname.value,
           name: name.value,
           email: email.value,

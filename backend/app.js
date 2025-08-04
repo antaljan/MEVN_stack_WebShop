@@ -11,8 +11,14 @@ const cors = require('cors');
 require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken')
+// Import routes, middliware, controllers
 const newsletterRoutes = require('./routes/newsletter.routes');
 const newsletterModel = require('./models/newsletter.model');
+const userRoutes = require('./routes/user.routes');
+const { connect } = require('./db/mongo');
+connect();
+const authenticateToken = require('./middleware/auth');
+const logger = require('./middleware/logger');
 
 // Load environment variables from .env file
 require('dotenv').config();
@@ -43,21 +49,14 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/newsletter', newsletterRoutes);
+app.use('/user', userRoutes);
+app.use(logger); 
 
-// Connect to MongoDB once and keep the connection open for app usage
-async function connectToMongoDB() {
-  try {
-    await client.connect();
-    const db = client.db('yowayoli');
-    newsletterModel.init(db);
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } catch (err) {
-    console.error("Failed to connect to MongoDB", err);
-    process.exit(1);
-  }
-}
-connectToMongoDB();
+// példáulda a védett végpontra
+app.post('/some-protected-endpoint', authenticateToken, (req, res) => {
+  res.send('Sikeres hozzáférés védett végponthoz!');
+});
+
 
 // Endpoint to send an email
 app.post('/send-email', async (req, res) => {
@@ -74,136 +73,6 @@ app.post('/send-email', async (req, res) => {
         console.error(error); // Failure loggen
         res.status(500).send(error.message); // give back the error message for Frontend
     }
-});
-
-// Create user in datenbank
-app.post('/create-user', async (req, res) => {
-    const { firstname, name, email, phone, rolle, adress, psw } = req.body;
-    try {
-        const database = client.db('yowayoli');
-        const collection = database.collection('users');
-        const result = await collection.insertOne({ firstname, name, email, phone, rolle, adress, psw });
-        if (result.acknowledged) {
-            let mailError = null;
-            try {
-                await transporter.sendMail({
-                    from: 'info@yowayoli.com',
-                    to: email,
-                    subject: 'Registration on yowayoli.com',
-                    text: 'Dear '+firstname+', you have sucsesfull registred on yowayoli.com!',
-                });
-            } catch (error) {
-                console.error('E-Mail konnte nicht gesendet werden:', error);
-                mailError = error.message;
-                const deleteThis = await collection.findone({ _id: result.insertedId });
-                const result = await collection.deleteOne({ _id: new ObjectId(String(deleteThis._id)) });
-                res.status(500).send(`User could not be created because email could not be sent: ${mailError}`);   
-            }
-            res.status(201).json({ ok: true, insertedId: result.insertedId, mailError });
-        } else {
-            res.status(500).json({ ok: false, error: "User could not be created" });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ ok: false, error: error.message });
-    }
-});
-
-// Read all users from datenbank
-app.post('/get-users', async (req, res) => {
-    try {
-        const database = client.db('yowayoli');
-        const collection = database.collection('users');
-        const users = await collection.find({}).toArray();
-        res.status(200).json(users);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send(error.message);
-    }
-});
-
-// Update user in datenbank
-app.post('/update-user', async (req, res) => {
-    const { id, firstname, name, email, phone, rolle, adress, psw } = req.body;  // Expecting an ID and user data in the request body
-    try {
-        const database = client.db('yowayoli');
-        const collection = database.collection('users');
-        const result = await collection.updateOne(
-            { _id: new ObjectId(String(id)) }, // Filter by ID
-            { $set: { firstname, name, email, phone, rolle, adress, psw } } // Update the user data
-        );
-        if (result.matchedCount === 1) {
-            res.status(200).send(`User with ID ${id} updated successfully.`);
-
-        } else {
-            res.status(404).send(`User with ID ${id} not found.`);
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send(error.message);
-    }
-});
-
-// Delete user from datenbank
-app.post('/delete-user', async (req, res) => {
-    const { id } = req.body;  // Expecting an ID in the request body  
-    try {
-        const database = client.db('yowayoli');
-        const collection = database.collection('users');
-        const result = await collection.deleteOne({ _id: new ObjectId(String(id)) });
-        if (result.deletedCount === 1) {
-            res.status(200).send(`User with ID ${id} deleted successfully.`);
-        } else {
-            res.status(404).send(`User with ID ${id} not found.`);
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send(error.message);
-    }
-});
-
-// Login user
-app.post('/login', async (req, res) => {
-  const { email, psw } = req.body
-  console.log('Login attempt for email:', email)
-  try {
-    const database = client.db('yowayoli')
-    const collection = database.collection('users')
-    const user = await collection.findOne({ email, psw })
-    if (user) {
-      console.log('Login successful for email:', email)
-      // Token generálása
-      const token = jwt.sign(
-        {
-          id: user._id,
-          name: user.firstname,
-          role: user.rolle
-        },
-        process.env.JWT_SECRET,
-        { expiresIn: '1h' }
-      )
-      res.status(200).json({
-        success: true,
-        token,
-        user: {
-          name: user.firstname,
-          role: user.rolle
-        }
-      })
-    } else {
-      console.log('Login failed for email:', email)
-      res.status(401).json({ success: false, message: 'Invalid credentials' })
-    }
-  } catch (error) {
-    console.error(error)
-    res.status(500).send(error.message)
-  }
-})
-
-// Logout user
-app.post('/logout', (req, res) => {
-    console.log('User logged out');
-    res.status(200).json({ success: true });
 });
 
 // File upload functionality using Multer
@@ -377,34 +246,6 @@ app.post('/saveabout', authenticateToken, async (req, res) => {
     console.error(error);
     res.status(500).json({ success: false, error: error.message });
   }
-});
-
-
-// Middleware to authenticate JWT tokens
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization']
-  const token = authHeader && authHeader.split(' ')[1]
-  if (!token) return res.sendStatus(401)
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403)
-    req.user = user
-    next()
-  })
-}
-
-// Middleware to log API requests
-app.use(async(req, res, next) => {
-  const logData = {
-    ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
-    method: req.method,
-    url: req.originalUrl,
-    userAgent: req.headers['user-agent'],
-    timestamp: new Date().toISOString()
-  };
-  const database = client.db('yowayoli');
-  const collection = database.collection('apiLogs');
-  await collection.insertOne({logData});
-  next();
 });
 
 // Start of the server
