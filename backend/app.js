@@ -249,6 +249,9 @@ app.post('/saveabout', authenticateToken, async (req, res) => {
 });
 
 // Start of the server
-app.listen(3000, '0.0.0.0', () => {
-  console.log('Server is running on port:3000 http://localhost:3000');
+connect().then(() => {
+  newsletterModel.init();
+  app.listen(3000, '0.0.0.0', () => {
+    console.log('Server is running on port:3000 http://localhost:3000');
+  });
 });

@@ -1,12 +1,12 @@
 const { ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
-const transporter = require('../utils/mailer'); // ha külön fájlban definiálod
+const transporter = require('../utils/mailer');
 require('dotenv').config();
 
 
 // MongoDB kapcsolat elérése
 function getDb() {
-  const { client } = require('../db/mongo'); // feltételezve, hogy külön fájlban van a Mongo client
+  const { client } = require('../db/mongo');
   return client.db('yowayoli');
 }
 
