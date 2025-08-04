@@ -35,13 +35,14 @@ async function sendWelcomeEmail(to, firstname) {
 }
 
 async function sendEmail(to, subject, text) {
+  console.log('email.service started!');
   const mailOptions = {
     from: 'info@yowayoli.com',
     to: to,
     subject: subject,
     text: text
   };
-
+  console.log('trying to send email for:', to);
   try {
     await transporter.sendMail(mailOptions);
     console.log(`Welcome email sent to ${to}`);
