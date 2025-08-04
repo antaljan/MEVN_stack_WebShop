@@ -2,13 +2,15 @@ const { ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
 const transporter = require('../utils/mailer');
 const { getDb } = require('../db/mongo');
+const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 exports.createUser = async (req, res) => {
   const { firstname, name, email, phone, rolle, adress, psw } = req.body;
+  const hashedPsw = await bcrypt.hash(psw, 10);
   try {
     const collection = getDb().collection('users');
-    const result = await collection.insertOne({ firstname, name, email, phone, rolle, adress, psw });
+    const result = await collection.insertOne({ firstname, name, email, phone, rolle, adress, psw: hashedPsw });
 
     if (result.acknowledged) {
       try {
@@ -42,7 +44,9 @@ exports.getUsers = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   const { id, ...updates } = req.body;
-  try {
+if (updates.psw) {
+  updates.psw = await bcrypt.hash(updates.psw, 10);
+}  try {
     const result = await getDb().collection('users').updateOne(
       { _id: new ObjectId(id) },
       { $set: updates }
@@ -74,17 +78,15 @@ exports.deleteUser = async (req, res) => {
 exports.login = async (req, res) => {
   const { email, psw } = req.body;
   try {
-    const user = await getDb().collection('users').findOne({ email, psw });
-    if (user) {
-      const token = jwt.sign(
-        { id: user._id, name: user.firstname, role: user.rolle },
-        process.env.JWT_SECRET,
-        { expiresIn: '1h' }
-      );
-      res.status(200).json({ success: true, token, user: { name: user.firstname, role: user.rolle } });
-    } else {
-      res.status(401).json({ success: false, message: 'Invalid credentials' });
-    }
+    const user = await getDb().collection('users').findOne({ email });
+    const valid = await bcrypt.compare(psw, user?.psw);
+    if (!valid) return res.status(401).json({ success: false, message: 'Invalid credentials' });
+    const token = jwt.sign(
+      { id: user._id, name: user.firstname, role: user.rolle },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+    res.status(200).json({ success: true, token, user: { name: user.firstname, role: user.rolle } });
   } catch (error) {
     res.status(500).send(error.message);
   }
