@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
-const transporter = require('../services/email.service');
+const emailService = require('../services/email.service');
 const { getDb } = require('../db/mongo');
 const bcrypt = require('bcrypt');
 const { error } = require('console');
@@ -17,11 +17,10 @@ exports.createUser = async (req, res) => {
     if (result.acknowledged) {
       console.log('database register successfull');
       try {
-        await transporter.sendMail({
-          from: 'info@yowayoli.com',
+        await emailService.sendMail({
           to: email,
           subject: 'Registration on yowayoli.com',
-          text: `Dear ${firstname}, you have successfully registered on yowayoli.com!`,
+          text: `Dear ${firstname}, you have successfully registered on yowayoli.com!`
         });
         console.log('email send about registring');
         res.status(201).json({ ok: true, insertedId: result.insertedId });
