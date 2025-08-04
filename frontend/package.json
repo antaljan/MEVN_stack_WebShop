@@ -13,6 +13,7 @@
     "chart.js": "^4.5.0",
     "chartjs-gauge": "^0.3.0",
     "core-js": "^3.8.3",
+    "dompurify": "^3.2.6",
     "marked": "^16.1.1",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.4.1",

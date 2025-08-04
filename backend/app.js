@@ -6,11 +6,12 @@
 
 // Import necessary modules
 const express = require('express');
-const nodemailer = require('nodemailer');
 const bodyParser = require("body-parser")
 const cors = require('cors');
+require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken')
+const newsletterRoutes = require('./routes/newsletter.routes');
 
 // Load environment variables from .env file
 require('dotenv').config();
@@ -40,20 +41,7 @@ const client = new MongoClient(uri, {
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-
-// Middleware to parse JSON request bodies
-const transporter = nodemailer.createTransport({
-    host: 'smtp.ionos.de',
-    port: 465,
-    secure: true, // true für Port 465, false für 587
-    auth: {
-        user: gmxUser,
-        pass: gmxPass
-    },
-    tls: {
-        rejectUnauthorized: false
-    }
-});
+app.use('/newsletter', newsletterRoutes);
 
 // Connect to MongoDB once and keep the connection open for app usage
 async function connectToMongoDB() {
@@ -83,90 +71,6 @@ app.post('/send-email', async (req, res) => {
         console.error(error); // Failure loggen
         res.status(500).send(error.message); // give back the error message for Frontend
     }
-});
-
-// Add user to newsletter abonent
-app.post('/newsletter/subscribe', async (req, res) => {
-    const { firstname, name, email } = req.body;
-    try {
-        const database = client.db('yowayoli');
-        const collection = database.collection('aboliste');
-        const result = await collection.insertOne({ firstname, name, email });
-        if (result.acknowledged) {
-            let mailError = null;
-            try {
-                await transporter.sendMail({
-                    from: 'info@yowayoli.com',
-                    to: email,
-                    subject: 'newsletter abonement on yowayoli.com',
-                    text: 'Dear '+firstname+', you have sucsesfull subscribe for newsletter on antaligyongyi.hu or yowayoli.com!',
-                });
-            } catch (error) {
-                console.error('error! cant send the E-Mail wit failure:', error);
-                mailError = error.message;
-                const deleteThis = await collection.findone({ _id: result.insertedId });
-                const result = await collection.deleteOne({ _id: new ObjectId(String(deleteThis._id)) });
-                res.status(500).send(`User could not be created because email could not be sent: ${mailError}`);   
-            }
-            res.status(201).json({ ok: true, insertedId: result.insertedId, mailError });
-        } else {
-            res.status(500).json({ ok: false, error: "Abonement is not possible!" });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ ok: false, error: error.message });
-    }
-});
-
-// Get newsletter subscribert
-app.post('/newsletter/subscribers', async (req, res) => {
-    console.log('try to get subscribers');
-    try {
-        const database = client.db('yowayoli');
-        const collection = database.collection('aboliste');
-        const abos = await collection.find({}).toArray();
-        console.log('subscribert are succsesfull load from database');
-        res.status(200).json({ ok: true, abos });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ ok: false, error: error.message });
-    }
-});
-
-// Unsubscribe newsletter
-app.get('/newsletter/unsubscribe/:email', async (req, res) => {
-    const email = req.params.email;
-    if (!email) {
-        return res.status(400).json({ ok: false, message: 'Email address is required.' });
-    }
-    try {
-        const database = client.db('yowayoli');
-        const collection = database.collection('aboliste');
-        const result = await collection.deleteOne({ email });
-        if (result.deletedCount === 1) {
-            console.log(`Abonement with email ${email} deleted successfully.`);
-            res.status(200).json({ ok: true, message: 'Unsubscribed successfully.' });
-        } else {
-            console.log(`Abonement with email ${email} not found.`);
-            res.status(404).json({ ok: false, message: 'Email not found.' });
-        }
-    } catch (error) {
-        console.error('Unsubscribe error:', error);
-        res.status(500).json({ ok: false, message: 'Server error.', error: error.message });
-    }
-});
-
-// Get count of newsletter abonent
-app.get('/newsletter-count', async (req, res) => {
-  try {
-    const database = client.db('yowayoli');
-    const collection = database.collection('aboliste');
-    const count = await collection.countDocuments({});
-    res.status(200).json({ count });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ ok: false, error: error.message });
-  }
 });
 
 // Create user in datenbank
@@ -499,7 +403,6 @@ app.use(async(req, res, next) => {
   await collection.insertOne({logData});
   next();
 });
-
 
 // Start of the server
 app.listen(3000, '0.0.0.0', () => {

@@ -55,7 +55,7 @@
         </v-list>
       </v-card>
 
-      <!-- Statisztika mock 
+      <!-- Statisztika
       <v-divider class="my-4" />
       <v-card>
         <v-card-title>📊 Küldési statisztika</v-card-title>
@@ -81,13 +81,15 @@
   <MyFooter/>
 </template>
 <script setup>
-import { ref, computed, axios  } from 'vue'
+import { ref, computed  } from 'vue'
+import axios from 'axios'
 import { marked } from 'marked'
 import MyFooter from '../components/MyFooter.vue'
 import MyHeader from '../components/MyHeader.vue'
-import { toast } from 'vue3-toastify'
+//import { toast } from 'vue3-toastify'
 import { greetingMarkdown } from '../sablons/GreetingTemplate.js'
 import { featuredImageMarkdown } from '../sablons/ProductTemplate.js'
+import DOMPurify from 'dompurify'
 
 // 📋 Form state
 const valid = ref(false)
@@ -116,13 +118,13 @@ const stats = computed(() => ({
   openRate: Math.round((opened.value / sent.value) * 100)
 }))*/
 
-// 🔄 Markdown → HTML
-const convertedHtml = computed(() => marked(content.value || ''))
-
 // 📆 Dátum formázás
-const formattedDate = computed(() =>
-  sendDate.value ? new Date(sendDate.value).toLocaleDateString() : 'Nincs kiválasztva'
-)
+const formattedSendDate = sendDate.value
+  ? new Date(sendDate.value).toISOString()
+  : null
+
+// convert and purify markdown to html
+const convertedHtml = computed(() => DOMPurify.sanitize(marked(content.value || '')))
 
 // ➕ Blokk beszúrás
 function insertBlock(block) {
@@ -134,14 +136,14 @@ async function sendNewsletter() {
   try {
     const payload = {
       subject: subject.value,
-      content: content.value,
-      sendDate: sendDate.value
+      content: convertedHtml.value,
+      sendDate: formattedSendDate
     }
   await axios.post('https://yowayoli.com/api/send-newsletter', payload)
-  toast.success('✅ Hírlevél elküldve vagy időzítve!')
+  alert('✅ Hírlevél elküldve vagy időzítve!')
   } catch (err) {
     console.error(err)
-    toast.error('❌ Hiba történt a küldés során.')
+    alert('❌ Hiba történt a küldés során.')
   }
 }
 </script>
