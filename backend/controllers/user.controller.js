@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
-const transporter = require('../utils/mailer');
+const transporter = require('../services/email.service');
 const { getDb } = require('../db/mongo');
 const bcrypt = require('bcrypt');
 const { error } = require('console');

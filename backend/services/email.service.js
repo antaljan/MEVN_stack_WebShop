@@ -34,4 +34,26 @@ async function sendWelcomeEmail(to, firstname) {
   }
 }
 
-module.exports = { sendWelcomeEmail };
+async function sendEmail(to, subject, text) {
+  const mailOptions = {
+    from: 'info@yowayoli.com',
+    to: to,
+    subject: subject,
+    text: text
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Welcome email sent to ${to}`);
+  } catch (error) {
+    console.error(`Failed to send welcome email to ${to}:`, error);
+    throw error;
+  }
+}
+
+module.exports = {
+  sendWelcomeEmail,
+  sendEmail,
+  transporter
+};
+
