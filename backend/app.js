@@ -14,7 +14,7 @@ const jwt = require('jsonwebtoken')
 // Import routes, middliware, controllers
 const newsletterRoutes = require('./routes/newsletter.routes');
 const newsletterModel = require('./models/newsletter.model');
-const emailService = require('../services/email.service');
+const emailService = require('./services/email.service');
 const userRoutes = require('./routes/user.routes');
 const { connect } = require('./db/mongo');
 const authenticateToken = require('./middleware/auth');
