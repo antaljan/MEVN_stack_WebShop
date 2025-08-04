@@ -17,11 +17,11 @@ exports.createUser = async (req, res) => {
     if (result.acknowledged) {
       console.log('database register successfull');
       try {
-        await emailService.sendMail({
-          to: email,
-          subject: 'Registration on yowayoli.com',
-          text: `Dear ${firstname}, you have successfully registered on yowayoli.com!`
-        });
+        await emailService.sendEmail(
+          email,
+          'Registration on yowayoli.com',
+          `Dear ${firstname}, you have successfully registered on yowayoli.com!`
+        );
         console.log('email send about registring');
         res.status(201).json({ ok: true, insertedId: result.insertedId });
       } catch (mailError) {
