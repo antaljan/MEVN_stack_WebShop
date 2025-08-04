@@ -12,6 +12,7 @@ require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken')
 const newsletterRoutes = require('./routes/newsletter.routes');
+const newsletterModel = require('./models/newsletter.model');
 
 // Load environment variables from .env file
 require('dotenv').config();
@@ -47,6 +48,8 @@ app.use('/newsletter', newsletterRoutes);
 async function connectToMongoDB() {
   try {
     await client.connect();
+    const db = client.db('yowayoli');
+    newsletterModel.init(db);
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } catch (err) {
