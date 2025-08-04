@@ -14,6 +14,7 @@ const jwt = require('jsonwebtoken')
 // Import routes, middliware, controllers
 const newsletterRoutes = require('./routes/newsletter.routes');
 const newsletterModel = require('./models/newsletter.model');
+const emailService = require('../services/email.service');
 const userRoutes = require('./routes/user.routes');
 const { connect } = require('./db/mongo');
 const authenticateToken = require('./middleware/auth');
@@ -61,14 +62,13 @@ app.post('/some-protected-endpoint', authenticateToken, (req, res) => {
 app.post('/send-email', async (req, res) => {
     const { email, subject, message } = req.body;
     try {
-        await transporter.sendMail({
-            from: 'info@yowayoli.com', // sender E-Mail, !!same like defined in tansporter!!
-            to: email, // receiver E-Mail
-            subject: subject, // Subject of the email
-            text: message, //  plain text body
+        await emailService.sendEmail({
+            to: email,
+            subject: subject,
+            text: message,
         });
         res.status(200).send('E-Mail gesendet!');
-    } catch (error) {
+      } catch (error) {
         console.error(error); // Failure loggen
         res.status(500).send(error.message); // give back the error message for Frontend
     }
