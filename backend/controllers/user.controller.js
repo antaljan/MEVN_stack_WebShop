@@ -3,16 +3,19 @@ const jwt = require('jsonwebtoken');
 const transporter = require('../utils/mailer');
 const { getDb } = require('../db/mongo');
 const bcrypt = require('bcrypt');
+const { error } = require('console');
 require('dotenv').config();
 
 exports.createUser = async (req, res) => {
   const { firstname, name, email, phone, rolle, adress, psw } = req.body;
+  console.log('user registry started for:',email);
   const hashedPsw = await bcrypt.hash(psw, 10);
   try {
     const collection = getDb().collection('users');
     const result = await collection.insertOne({ firstname, name, email, phone, rolle, adress, psw: hashedPsw });
 
     if (result.acknowledged) {
+      console.log('database register successfull');
       try {
         await transporter.sendMail({
           from: 'info@yowayoli.com',
@@ -20,15 +23,19 @@ exports.createUser = async (req, res) => {
           subject: 'Registration on yowayoli.com',
           text: `Dear ${firstname}, you have successfully registered on yowayoli.com!`,
         });
+        console.log('email send about registring');
         res.status(201).json({ ok: true, insertedId: result.insertedId });
       } catch (mailError) {
         await collection.deleteOne({ _id: result.insertedId });
+        console.log('email sending failure');
         res.status(500).send(`User creation failed due to email error: ${mailError.message}`);
       }
     } else {
+      console.log('database registration failure no answer');
       res.status(500).json({ ok: false, error: 'User creation failed.' });
     }
   } catch (error) {
+    console.log('database registration failure:',error);
     res.status(500).json({ ok: false, error: error.message });
   }
 };
