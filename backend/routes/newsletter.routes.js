@@ -6,7 +6,7 @@ const newsletterController = require('../controllers/newsletter.controller');
 router.post('/subscribe', newsletterController.subscribe);
 
 // get subscribers
-router.get('/subscribers', newsletterController.getSubscribers);
+router.post('/subscribers', newsletterController.getSubscribers);
 
 // unsubscribe
 router.get('/unsubscribe/:email', newsletterController.unsubscribe);
