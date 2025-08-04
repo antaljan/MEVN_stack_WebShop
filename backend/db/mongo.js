@@ -27,7 +27,12 @@ async function connect() {
   }
 }
 
+function getDb() {
+  return client.db('yowayoli');
+}
+
 module.exports = {
   client,
   connect,
+  getDb
 };

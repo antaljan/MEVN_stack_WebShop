@@ -1,14 +1,8 @@
 const { ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
 const transporter = require('../utils/mailer');
+const { getDb } = require('../db/mongo');
 require('dotenv').config();
-
-
-// MongoDB kapcsolat elérése
-function getDb() {
-  const { client } = require('../db/mongo');
-  return client.db('yowayoli');
-}
 
 exports.createUser = async (req, res) => {
   const { firstname, name, email, phone, rolle, adress, psw } = req.body;

@@ -16,7 +16,6 @@ const newsletterRoutes = require('./routes/newsletter.routes');
 const newsletterModel = require('./models/newsletter.model');
 const userRoutes = require('./routes/user.routes');
 const { connect } = require('./db/mongo');
-connect();
 const authenticateToken = require('./middleware/auth');
 const logger = require('./middleware/logger');
 
