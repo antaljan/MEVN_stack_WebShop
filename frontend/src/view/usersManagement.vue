@@ -114,7 +114,7 @@
 
     // 📦 Felhasználók lekérése
     const fetchUsers = () => {
-        axios.post('https://yowayoli.com/api/get-users')
+        axios.post('https://yowayoli.com/api/user/get')
             .then(response => {
             users.value = response.data;
         })
@@ -140,7 +140,7 @@
     // ❌ Törlés
     const deleteUser = (userId) => {
         if (confirm("Biztosan törlöd ezt a felhasználót?")) {
-            axios.post('https://yowayoli.com/api/delete-user', { id: userId })
+            axios.post('https://yowayoli.com/api/user/delete', { id: userId })
             .then(() => {
                 fetchUsers();
             })
@@ -163,8 +163,8 @@
             psw: psw.value,
         };
         const url = selectedUserId.value
-            ? 'https://yowayoli.com/api/update-user'
-            : 'https://yowayoli.com/api/create-user';
+            ? 'https://yowayoli.com/api/user/update'
+            : 'https://yowayoli.com/api/user/create';
         const payload = selectedUserId.value
             ? { id: selectedUserId.value, ...userData }
             : userData;

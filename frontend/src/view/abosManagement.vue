@@ -90,7 +90,7 @@
   onMounted(async () => {
     try {
       const response = await axios.post('https://yowayoli.com/api/newsletter/subscribers');
-      abonements.value = response.data.abos;
+      abonements.value = response.data.subscribers;
       subscriberCount.value = abonements.value.length;
     } catch (error) {
     console.error('Failure by loading of Abonements:', error);
