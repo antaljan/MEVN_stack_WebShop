@@ -34,13 +34,13 @@ async function sendWelcomeEmail(to, firstname) {
   }
 }
 
-async function sendEmail(to, subject, text) {
+async function sendEmail(to, subject, message) {
   console.log('email.service started!');
   const mailOptions = {
     from: 'info@yowayoli.com',
     to: to,
     subject: subject,
-    text: text
+    text: message
   };
   console.log('trying to send email for:', to);
   try {

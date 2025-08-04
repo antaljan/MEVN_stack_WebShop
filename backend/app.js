@@ -61,8 +61,9 @@ app.post('/some-protected-endpoint', authenticateToken, (req, res) => {
 // Endpoint to send an email
 app.post('/send-email', async (req, res) => {
     const { email, subject, message } = req.body;
+    console.log('router email:',email);
     try {
-        await emailService.sendEmail({email, subject, message});
+        await emailService.sendEmail(email, subject, message);
         res.status(200).send('E-Mail gesendet!');
       } catch (error) {
         console.error(error); // Failure loggen
