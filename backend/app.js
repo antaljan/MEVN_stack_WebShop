@@ -16,7 +16,6 @@ const newsletterRoutes = require('./routes/newsletter.routes');
 const newsletterModel = require('./models/newsletter.model');
 const userRoutes = require('./routes/user.routes');
 const { connect } = require('./db/mongo');
-connect();
 const authenticateToken = require('./middleware/auth');
 const logger = require('./middleware/logger');
 
@@ -249,6 +248,9 @@ app.post('/saveabout', authenticateToken, async (req, res) => {
 });
 
 // Start of the server
-app.listen(3000, '0.0.0.0', () => {
-  console.log('Server is running on port:3000 http://localhost:3000');
+connect().then(() => {
+  newsletterModel.init();
+  app.listen(3000, '0.0.0.0', () => {
+    console.log('Server is running on port:3000 http://localhost:3000');
+  });
 });
