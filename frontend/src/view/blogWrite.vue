@@ -115,7 +115,7 @@ async function submitPost() {
   }
   // Blogeintrag absenden
   try {
-    await axios.post('https://yowayoli.com/api/newpost', {
+    await axios.post('https://yowayoli.com/api/posts/new', {
       'language': document.documentElement.lang,
       'title': post.value.title,
       'subtitle': post.value.subtitle,
