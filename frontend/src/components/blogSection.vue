@@ -92,7 +92,7 @@ onMounted(() => {
 // Fetch posts from the API
 async function fetchPosts() {
   try {
-    const response = await axios.get(`https://yowayoli.com/api/posts?lang=${selectedLanguage.value}`);
+    const response = await axios.get(`https://yowayoli.com/api/posts`);
     if (Array.isArray(response.data)) {
       posts.value = response.data;
     }
