@@ -1,14 +1,12 @@
 const { ObjectId } = require('mongodb');
-const { MongoClient } = require('../db/mongo');
 const path = require('path');
 const fs = require('fs');
-const { getDb } = require('../mongo');
+const { getDb } = require('../db/mongo');
 
 const createPost = async (req, res) => {
   try {
     const { language, title, subtitle, author, date, content, image } = req.body;
-    const db = getDb();
-    const result = await db.collection('blogposts').insertOne({
+    const result = await getDb().collection('blogposts').insertOne({
       language,
       title,
       subtitle,
@@ -25,8 +23,7 @@ const createPost = async (req, res) => {
 
 const getAllPosts = async (req, res) => {
   try {
-    const db = getDb();
-    const posts = await db.collection('blogposts').find({}).sort({ createdAt: -1 }).toArray();
+    const posts = await getDb().collection('blogposts').find({}).sort({ createdAt: -1 }).toArray();
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -36,8 +33,7 @@ const getAllPosts = async (req, res) => {
 
 const getPostById = async (req, res) => {
   try {
-    const db = getDb();
-    const post = await db.collection('blogposts').findOne({ _id: new ObjectId(req.params.id) });
+    const post = await getDb().collection('blogposts').findOne({ _id: new ObjectId(req.params.id) });
     if (post) {
       res.status(200).json(post);
     } else {
@@ -56,8 +52,7 @@ const updatePost = async (req, res) => {
       updateData.image = '/uploads/' + req.file.filename;
     }
 
-    const db = getDb();
-    const result = await db.collection('blogposts').updateOne(
+    const result = await getDb().collection('blogposts').updateOne(
       { _id: new ObjectId(req.params.id) },
       { $set: updateData }
     );
@@ -74,8 +69,7 @@ const updatePost = async (req, res) => {
 
 const deletePost = async (req, res) => {
   try {
-    const db = getDb();
-    const result = await db.collection('blogposts').deleteOne({ _id: new ObjectId(req.params.id) });
+    const result = await getDb().collection('blogposts').deleteOne({ _id: new ObjectId(req.params.id) });
 
     if (result.deletedCount === 1) {
       res.status(200).json({ success: true });
