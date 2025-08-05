@@ -48,7 +48,6 @@ async function sendEmail(to, subject, message) {
     console.log(`Welcome email sent to ${to}`);
   } catch (error) {
     console.error(`Failed to send welcome email to ${to}:`, error);
-    throw error;
   }
 }
 
