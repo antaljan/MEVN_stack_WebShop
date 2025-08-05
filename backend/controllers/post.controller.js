@@ -1,12 +1,13 @@
 const { ObjectId } = require('mongodb');
-const { MongoClient } = require('../db/mongo'); // evtl. nur connect() nötig
+const { MongoClient } = require('../db/mongo');
 const path = require('path');
 const fs = require('fs');
+const { getDb } = require('../mongo');
 
 const createPost = async (req, res) => {
   try {
     const { language, title, subtitle, author, date, content, image } = req.body;
-    const db = MongoClient.db('yowayoli');
+    const db = getDb();
     const result = await db.collection('blogposts').insertOne({
       language,
       title,
@@ -24,7 +25,7 @@ const createPost = async (req, res) => {
 
 const getAllPosts = async (req, res) => {
   try {
-    const db = MongoClient.db('yowayoli');
+    const db = getDb();
     const posts = await db.collection('blogposts').find({}).sort({ createdAt: -1 }).toArray();
     res.status(200).json(posts);
   } catch (error) {
@@ -32,9 +33,10 @@ const getAllPosts = async (req, res) => {
   }
 };
 
+
 const getPostById = async (req, res) => {
   try {
-    const db = MongoClient.db('yowayoli');
+    const db = getDb();
     const post = await db.collection('blogposts').findOne({ _id: new ObjectId(req.params.id) });
     if (post) {
       res.status(200).json(post);
@@ -54,7 +56,7 @@ const updatePost = async (req, res) => {
       updateData.image = '/uploads/' + req.file.filename;
     }
 
-    const db = MongoClient.db('yowayoli');
+    const db = getDb();
     const result = await db.collection('blogposts').updateOne(
       { _id: new ObjectId(req.params.id) },
       { $set: updateData }
@@ -72,7 +74,7 @@ const updatePost = async (req, res) => {
 
 const deletePost = async (req, res) => {
   try {
-    const db = MongoClient.db('yowayoli');
+    const db = getDb();
     const result = await db.collection('blogposts').deleteOne({ _id: new ObjectId(req.params.id) });
 
     if (result.deletedCount === 1) {
