@@ -31,7 +31,7 @@ const routes = [
     },
     {
     path: '/newblog',
-    name: 'newblog',
+    name: 'newblog-create',
     component: newblog,
     beforeEnter: (to, from, next) => {
         const token = localStorage.getItem('jwt');
@@ -46,7 +46,7 @@ const routes = [
     },
     {
     path: '/newblog/:id',
-    name: 'newblog',
+    name: 'newblog-edit',
     component: newblog,
     beforeEnter: (to, from, next) => {
         const token = localStorage.getItem('jwt');
