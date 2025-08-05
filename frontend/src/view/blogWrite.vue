@@ -102,7 +102,7 @@ async function submitPost() {
       });
       uploadedFileName = response.data && response.data.filename ? response.data.filename : imageFile.value.name;
       post.value.image = uploadedFileName;
-      //alert('Bild hochgeladen: ' + uploadedFileName);
+      console.log('Bild hochgeladen: ' + uploadedFileName);
     } catch (error) {
       alert('Fehler beim Bild-Upload: ' + error);
       return;

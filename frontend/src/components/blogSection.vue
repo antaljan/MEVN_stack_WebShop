@@ -100,6 +100,7 @@ async function fetchPosts() {
     console.error('Fehler beim Laden der Blogposts:', error);
   }
 }
+// grupping post preview in 3 pack if not mobile device
 const groupedPosts = computed(() => {
   const chunkSize = isMobile.value ? 1 : 3;
   const result = [];
@@ -108,10 +109,12 @@ const groupedPosts = computed(() => {
   }
   return result;
 });
+// formating the post date to localformat
 function formatDate(dateStr) {
   if (!dateStr) return '';
   return new Date(dateStr).toLocaleDateString();
 }
+// trimm the post text for preview
 function getFirstWords(text, n) {
   if (!text) return '';
   return text.split(' ').slice(0, n).join(' ');
@@ -122,7 +125,7 @@ onMounted(() => {
 watch(selectedLanguage, () => {
   fetchPosts();
 });
-// Importing router for navigation
+// navigation to post
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const navigateToPost = (post) => {

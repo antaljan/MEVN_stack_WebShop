@@ -28,6 +28,9 @@
             <v-btn :to="'/landing/#blog'" color="primary" text>
               {{ backToBlogSection[selectedLanguage] }}
             </v-btn>
+            <v-btn :to="'/newblog/{{post._id}}'" color="primary" text>
+              {{ editBlog[selectedLanguage] }}
+            </v-btn>
           </v-card-actions>
         </v-col>
       </v-row>
@@ -70,6 +73,11 @@ const backToBlogSection = {
   en: 'back to blog section',
   hu: 'vissza a blog szekcióhoz',
   de: 'zurück zum Blogbereich'
+};
+const editBlog = {
+  en: 'edit blog',
+  hu: 'blog szerkesztése',
+  de: 'blog bearbeiten'
 };
 // Language change handler
 onMounted(() => {
