@@ -28,8 +28,15 @@
             <v-btn :to="'/landing/#blog'" color="primary" text>
               {{ backToBlogSection[selectedLanguage] }}
             </v-btn>
-            <v-btn :to="'/newblog/{{post._id}}'" color="primary" text>
+            <v-btn v-if="userStore.role === 'admin'"
+              :to="`/newblog/${post._id}`"
+              color="primary" text>
               {{ editBlog[selectedLanguage] }}
+            </v-btn>
+            <v-btn v-if="userStore.role === 'admin'"
+              @click.prevent="deletePost(post)"
+              color="primary" text>
+              {{ deleteBlog[selectedLanguage] }}
             </v-btn>
           </v-card-actions>
         </v-col>
@@ -48,6 +55,8 @@ import axios from 'axios';
 import { useRoute } from 'vue-router';
 import MyFooter from "../components/MyFooter.vue";
 import MyHeader from "../components/MyHeader.vue";
+import { useUserStore } from '@/services/userStore'
+const userStore = useUserStore()
 const post = ref(null);
 const route = useRoute();
 const postId = route.params.id;
@@ -75,10 +84,16 @@ const backToBlogSection = {
   de: 'zurück zum Blogbereich'
 };
 const editBlog = {
-  en: 'edit blog',
-  hu: 'blog szerkesztése',
-  de: 'blog bearbeiten'
+  en: 'edit post',
+  hu: 'post szerkesztése',
+  de: 'post bearbeiten'
 };
+const deleteBlog = {
+  en: 'delete post',
+  hu: 'post törlése',
+  de: 'post entfernen'
+};
+
 // Language change handler
 onMounted(() => {
   const langSelect = document.getElementById('langselect');
@@ -90,6 +105,22 @@ onMounted(() => {
     });
   }
 });
+
+// delete post
+const deletePost = async (post) => {
+  const confirmDelete = confirm(`Biztosan törölni szeretnéd ezt a bejegyzést: "${post.title}"?`);
+  if (!confirmDelete) return;
+
+  try {
+    await axios.delete(`https://yowayoli.com/api/posts/${post._id}`);
+    alert("Bejegyzés sikeresen törölve.");
+    window.location.href = "/landing/#blog"; // navigálás vissza a bloghoz
+  } catch (error) {
+    console.error("Hiba a törlés közben:", error);
+    alert("Hiba történt a bejegyzés törlésekor.");
+  }
+}
+
 </script>
 
 <style scoped>
