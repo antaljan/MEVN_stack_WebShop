@@ -31,7 +31,22 @@ const routes = [
     },
     {
     path: '/newblog',
-    name: 'newblog',
+    name: 'newblog-create',
+    component: newblog,
+    beforeEnter: (to, from, next) => {
+        const token = localStorage.getItem('jwt');
+        const userData = JSON.parse(localStorage.getItem('user'));
+        if (!token || !userData || userData.role !== 'admin') {
+            alert('No authentication or insufficient permissions');
+            next('/landing');
+        } else {
+            next();
+        }
+    }
+    },
+    {
+    path: '/newblog/:id',
+    name: 'newblog-edit',
     component: newblog,
     beforeEnter: (to, from, next) => {
         const token = localStorage.getItem('jwt');

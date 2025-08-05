@@ -65,6 +65,10 @@ import { ref } from 'vue';
 import axios from 'axios';
 import MyFooter from "../components/MyFooter.vue";
 import MyHeader from "../components/MyHeader.vue";
+import { useRoute } from 'vue-router';
+const route = useRoute();
+const postId = route.params.id;
+
 
 const post = ref({
   language: "",
@@ -74,6 +78,20 @@ const post = ref({
   date: "",
   content: "",
   image: ""
+});
+
+// load post if its available
+import { onMounted } from 'vue';
+onMounted(async () => {
+  if (!postId) return;
+  try {
+    const response = await axios.get(`https://yowayoli.com/api/posts/${postId}`);
+    post.value = response.data;
+    previewUrl.value = response.data.image;
+  } catch (error) {
+    alert("Nem sikerült betölteni a blogbejegyzést szerkesztéshez.");
+    console.error(error);
+  }
 });
 
 // 🔧 Reaktive Variablen
@@ -89,41 +107,52 @@ function handleFileChange(event) {
   }
 }
 
-// 📝 Blogeintrag absenden
+// send post
 async function submitPost() {
-  // Erst Bild hochladen, falls vorhanden
+  // image upload
   let uploadedFileName = '';
   if (imageFile.value) {
     const formDataImg = new FormData();
     formDataImg.append('image', imageFile.value);
+    console.log("FormData tartalma:", formDataImg.get('image'));
     try {
       const response = await axios.post('https://yowayoli.com/api/upload', formDataImg, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
+      console.log("Szerver válasza:", response.data);
       uploadedFileName = response.data && response.data.filename ? response.data.filename : imageFile.value.name;
       post.value.image = uploadedFileName;
-      //alert('Bild hochgeladen: ' + uploadedFileName);
+      console.log('image is uploaded on name: ' + uploadedFileName);
     } catch (error) {
-      alert('Fehler beim Bild-Upload: ' + error);
+      alert('Failure by uploading of image: ' + error);
       return;
     }
   }
-  // Validierung der Eingabefelder
+  // validating the imput fields
   if (!post.value.title || !post.value.author || !post.value.date || !post .value.content) {
     alert('Bitte füllen Sie alle erforderlichen Felder aus.');
     return;
   }
-  // Blogeintrag absenden
+  // send post to backend
   try {
-    await axios.post('https://yowayoli.com/api/posts/new', {
-      'language': document.documentElement.lang,
-      'title': post.value.title,
-      'subtitle': post.value.subtitle,
-      'author': post.value.author,
-      'date': post.value.date,
-      'content': post.value.content,
-      'image': 'https://yowayoli.com/api/uploads/' + uploadedFileName
-    });
+
+    if (postId) {
+      post.value.image = 'https://yowayoli.com/api/uploads/' + uploadedFileName;
+      post.value.language = document.documentElement.lang;
+      await axios.put(`https://yowayoli.com/api/posts/${postId}`, post.value);
+    } else {
+      post.value = {
+        language: document.documentElement.lang,
+        title: post.value.title,
+        subtitle: post.value.subtitle,
+        author: post.value.author,
+        date: post.value.date,
+        content: post.value.content,
+        image: 'https://yowayoli.com/api/uploads/' + uploadedFileName
+    };
+      await axios.post('https://yowayoli.com/api/posts/new', post.value);
+    }
+
     alert('Blogeintrag erfolgreich erstellt!');
     return { success: true };
   } catch (error) {
