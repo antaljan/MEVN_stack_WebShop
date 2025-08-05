@@ -4,11 +4,13 @@
 import axios from 'axios';
 
 export async function sendEmail({ email, subject, message }) {
+    const to = email;
+    const text = message;
     try {
         await axios.post('https://yowayoli.com/api/email/send', {
-            email,
+            to,
             subject,
-            message
+            text
         });
         return { success: true };
     } catch (error) {
