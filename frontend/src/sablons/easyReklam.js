@@ -17,5 +17,5 @@ Ha úgy érzed, elakadtál, vagy csak szeretnél tisztábban látni, a coaching 
 
 Antali Gyöngyi • info@yowayoli.com
 
-[GDPR](https:/yowayoli.com/gdpr) , [Leiratkozás](https:/yowayoli.com/api/unsubscribe/{{email}})
+[GDPR](https://yowayoli.com/gdpr) , Leiratkozás:https://yowayoli.com/api/unsubscribe/{{email}}
 `

@@ -143,7 +143,7 @@ async function sendNewsletter() {
   try {
     const payload = {
       subject: subject.value,
-      rawContent: convertedHtml.value,
+      rawcontent: convertedHtml.value,
       sendDate: formattedSendDate
     }
   await axios.post('https://yowayoli.com/api/newsletter/send', payload)
