@@ -1,6 +1,7 @@
 const newsletterModel = require('../models/newsletter.model');
 const emailService = require('../services/email.service');
 
+// subscribe for newsletter --> save subscriber in mongodb
 async function subscribe(req, res) {
   const { firstname, name, email } = req.body;
   try {
@@ -15,6 +16,7 @@ async function subscribe(req, res) {
   }
 }
 
+// get all subscribers from mongodb
 async function getSubscribers(req, res) {
   console.log('Frontend try to get all subscribers.');
   try {
@@ -27,6 +29,7 @@ async function getSubscribers(req, res) {
   }
 }
 
+// unsubscribe from newsletter --> delete subscriber from mongodb
 async function unsubscribe(req, res) {
   const email = req.params.email;
   console.log('unsubscribe started for:', email);
@@ -49,8 +52,32 @@ async function unsubscribe(req, res) {
   }
 }
 
+// send newsletter for all subscribers
+async function send(req, res) {
+  console.log('Frontend try to send newsletter.');
+  const { subject, content, sendDate } = req.payload;
+
+  try {
+    const subscribers = await newsletterModel.getAllSubscribers();
+    console.log('Successfully retrieved all subscribers.');
+
+    for (const subscriber of subscribers) {
+      const to = subscriber.email;
+      await emailService.sendHtml(to, subject, content);
+    }
+
+    res.status(200).json({ ok: true, message: 'Newsletter sent successfully.' });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ ok: false, error: error.message });
+  }
+}
+
+
+
 module.exports = {
   subscribe,
   getSubscribers,
-  unsubscribe
+  unsubscribe,
+  send
 };

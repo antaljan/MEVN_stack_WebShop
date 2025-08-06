@@ -5,7 +5,7 @@ export const easyMarkdown =  `
 
 Coaching, ami segít megtalálni az utad – személyesen vagy online.
 
-## Miért válaszd a engem?
+## Miért válassz engem?
 
 *   🌱 Egyéni figyelem és bizalmi légkör
 *   🎯 Célorientált, megoldásközpontú szemlélet
@@ -17,5 +17,5 @@ Ha úgy érzed, elakadtál, vagy csak szeretnél tisztábban látni, a coaching 
 
 Antali Gyöngyi • info@yowayoli.com
 
-[Leiratkozás](https:/yowayoli.com/api/unsubscribe/{{email}})
+[GDPR](https:/yowayoli.com/gdpr) , [Leiratkozás](https:/yowayoli.com/api/unsubscribe/{{email}})
 `

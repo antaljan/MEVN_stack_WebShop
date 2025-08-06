@@ -146,7 +146,7 @@ async function sendNewsletter() {
       content: convertedHtml.value,
       sendDate: formattedSendDate
     }
-  await axios.post('https://yowayoli.com/api/send-newsletter', payload)
+  await axios.post('https://yowayoli.com/api/newsletter/send', payload)
   alert('✅ Hírlevél elküldve vagy időzítve!')
   } catch (err) {
     console.error(err)
