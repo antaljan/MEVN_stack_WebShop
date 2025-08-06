@@ -7,7 +7,7 @@
           <v-img
             v-if="post.image"
             :src="post.image"
-            height="200px"
+            height="400px"
             class="blog-image"
           ></v-img>
         </v-col>

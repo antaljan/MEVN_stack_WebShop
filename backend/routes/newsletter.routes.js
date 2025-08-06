@@ -11,4 +11,7 @@ router.post('/subscribers', newsletterController.getSubscribers);
 // unsubscribe
 router.get('/unsubscribe/:email', newsletterController.unsubscribe);
 
+// send
+router.post('/send', newsletterController.send);
+
 module.exports = router;

@@ -45,15 +45,33 @@ async function sendEmail(to, subject, message) {
   console.log('trying to send email for:', to);
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`Welcome email sent to ${to}`);
+    console.log(`Text email sent to ${to}`);
   } catch (error) {
-    console.error(`Failed to send email to ${to}:`, error);
+    console.error(`Failed to send text email to ${to}:`, error);
+  }
+}
+
+async function sendHtml(to, subject, subject) {
+  console.log('HTML email service started!');
+  const mailOptions = {
+    from: 'info@yowayoli.com',
+    to: to,
+    subject: subject,
+    html: subject
+  };
+  console.log('trying to send email for:', to);
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`HTML email sent to ${to}`);
+  } catch (error) {
+    console.error(`Failed to send HTML email to ${to}:`, error);
   }
 }
 
 module.exports = {
   sendWelcomeEmail,
   sendEmail,
+  sendHtml,
   transporter
 };
 
