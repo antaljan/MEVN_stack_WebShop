@@ -87,8 +87,13 @@ import { marked } from 'marked'
 import MyFooter from '../components/MyFooter.vue'
 import MyHeader from '../components/MyHeader.vue'
 //import { toast } from 'vue3-toastify'
-import { greetingMarkdown } from '../sablons/GreetingTemplate.js'
-import { featuredImageMarkdown } from '../sablons/ProductTemplate.js'
+import { headerMarkdown } from '../sablons/headerTemplate.js'
+import { heroMarkdown } from '../sablons/heroTemplate.js'
+import { contentTextMarkdown } from '../sablons/contTextTemplate.js'
+import { contentImageMarkdown } from '../sablons/contImageTemplate.js'
+import { ctaMarkdown } from '../sablons/ctaTemplate.js'
+import { footerMarkdown } from '../sablons/footerTemplate.js'
+import { easyMarkdown } from '../sablons/easyReklam.js'
 import DOMPurify from 'dompurify'
 
 // 📋 Form state
@@ -100,11 +105,13 @@ const showDatePicker = ref(false)
 
 // 🧱 Sablon blokkok
 const templateBlocks = [
-  { label: 'Köszöntő blokk', markdown: greetingMarkdown },
-  { label: 'Termékbemutató blokk', markdown: featuredImageMarkdown },
-  { label: 'Gomb blokk', markdown: '[Kattints ide](https://example.com)' },
-  { label: 'Kapcsolat blokk', markdown: '**Kapcsolat**: info@example.com' },
-  { label: 'Jogi (GDPR,leiratkozás)', markdown: '[**Adatvédelmi nyilatkoza**](https://yowayoli.com/gdpr) / [leiratkozás](https://yowayoli.com/api/unsubscribe/{email})' }
+  { label: 'Fejléc (Logo, Szlogen)', markdown: headerMarkdown },
+  { label: 'Hero (figyelemfelkeltés)', markdown: heroMarkdown },
+  { label: 'Tartalom - szöveg', markdown: contentTextMarkdown },
+  { label: 'Tartalom - képpel', markdown: contentImageMarkdown },
+  { label: 'CTA (Call To Action) gombok', markdown: ctaMarkdown },
+  { label: 'Lábléc (Kapcsolat, GDPR, Leiratkozás)', markdown: footerMarkdown },
+  { label: 'Egyszerű reklám', markdown: easyMarkdown }
 ]
 
 /* 📊 Statisztikák

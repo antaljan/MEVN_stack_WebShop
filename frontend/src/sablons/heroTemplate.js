@@ -1,5 +1,5 @@
 // Markdown Template for products
-export const featuredImageMarkdown = `
+export const heroMarkdown = `
 ### ✨ Újdonság a kínálatban!
 
 Ismerd meg legújabb termékünket — amit már mindenki keres!
