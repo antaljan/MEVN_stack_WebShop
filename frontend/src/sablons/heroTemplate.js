@@ -1,12 +1,14 @@
 // Markdown Template for products
 export const heroMarkdown = `
-### ✨ Újdonság a kínálatban!
 
-Ismerd meg legújabb termékünket — amit már mindenki keres!
+### ✨ Új a honlapomon!
 
-![Legújabb termék](https://yowayoli.com/avatar_hat.jpg)
+Gyere ismerd meg legújabb részletekkel — amit már mindenki keres!
+
+![Antali Gyöngyi](https://yowayoli.com/avatar_hat.jpg)
 
 Ne maradj le, csak korlátozott ideig elérhető!
 
-[Kattints ide a részletekért](https://yowayoli.com/products/new-item)
+[Kattints ide a részletekért](https://yowayoli.com/landing/#about)
+
 `
