@@ -124,6 +124,7 @@ async function submitPost() {
       uploadedFileName = response.data && response.data.filename ? response.data.filename : imageFile.value.name;
       post.value.image = uploadedFileName;
       console.log('image is uploaded on name: ' + uploadedFileName);
+      alert('Blog Post is successful saved.');
     } catch (error) {
       alert('Failure by uploading of image: ' + error);
       return;
