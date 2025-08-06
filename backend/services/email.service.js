@@ -51,13 +51,13 @@ async function sendEmail(to, subject, message) {
   }
 }
 
-async function sendHtml(to, subject, subject) {
+async function sendHtml(to, subject, content) {
   console.log('HTML email service started!');
   const mailOptions = {
     from: 'info@yowayoli.com',
     to: to,
     subject: subject,
-    html: subject
+    html: content
   };
   console.log('trying to send email for:', to);
   try {

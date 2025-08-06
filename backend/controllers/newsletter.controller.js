@@ -1,6 +1,12 @@
 const newsletterModel = require('../models/newsletter.model');
 const emailService = require('../services/email.service');
 
+function fillTemplate(content, data) {
+  return content
+    .replace(/{{firstname}}/g, data.firstname)
+    .replace(/{{email}}/g, data.email);
+}
+
 // subscribe for newsletter --> save subscriber in mongodb
 async function subscribe(req, res) {
   const { firstname, name, email } = req.body;
@@ -55,9 +61,9 @@ async function unsubscribe(req, res) {
 // send newsletter for all subscribers
 async function send(req, res) {
   console.log('Frontend try to send newsletter.');
-  const { subject, content, sendDate } = req.body;
+  const { subject, rawcontent, sendDate } = req.body;
 
-  if (!subject || !content) {
+  if (!subject || !rawcontent) {
     console.log('Subject and content are required.');
     return res.status(400).json({ ok: false, error: 'Subject and content are required.' });
   }
@@ -67,6 +73,10 @@ async function send(req, res) {
     console.log('Successfully retrieved all subscribers.');
 
     for (const subscriber of subscribers) {
+      const content = fillTemplate(rawcontent, {
+        firstname: subscriber.firstname,
+        email: subscriber.email
+      });
       const to = subscriber.email;
       await emailService.sendHtml(to, subject, content);
     }
