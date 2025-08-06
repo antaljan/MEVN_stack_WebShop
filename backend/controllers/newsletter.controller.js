@@ -55,7 +55,12 @@ async function unsubscribe(req, res) {
 // send newsletter for all subscribers
 async function send(req, res) {
   console.log('Frontend try to send newsletter.');
-  const { subject, content, sendDate } = req.payload;
+  const { subject, content, sendDate } = req.body;
+
+  if (!subject || !content) {
+    console.log('Subject and content are required.');
+    return res.status(400).json({ ok: false, error: 'Subject and content are required.' });
+  }
 
   try {
     const subscribers = await newsletterModel.getAllSubscribers();
@@ -72,8 +77,6 @@ async function send(req, res) {
     res.status(500).json({ ok: false, error: error.message });
   }
 }
-
-
 
 module.exports = {
   subscribe,
