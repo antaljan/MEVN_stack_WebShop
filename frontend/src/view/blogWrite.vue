@@ -50,7 +50,8 @@
               rows="6"
             ></v-textarea>
             <v-card-actions>
-              <v-btn color="primary" type="submit">Blogeintrag erstellen</v-btn>
+              <v-btn color="primary" type="submit">{{savePost[selectedLanguage]}}</v-btn>
+              <v-btn color="primary" :to="'/landing'">{{backToLanding[selectedLanguage]}}</v-btn>
             </v-card-actions>
           </v-col>
         </v-row>
@@ -159,6 +160,29 @@ async function submitPost() {
     return { success: false, error };
   }
 }
+
+// language change
+import { reactive } from 'vue';
+    const selectedLanguage = ref(document.documentElement.lang || 'hu');
+    const savePost = reactive({
+        en: 'save post',
+        hu: 'post mentése',
+        de: 'Post speichern'
+    });
+    const backToLanding = reactive({
+        en: 'Back to starting page',
+        hu: 'Vissza a kezdőoldalra',
+        de: 'Zurück zum Startseite'
+    });
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === "lang") {
+                selectedLanguage.value = document.documentElement.lang;
+            }
+        });
+    });
+    observer.observe(document.documentElement, { attributes: true });
+
 </script>
 
 <style scoped>
