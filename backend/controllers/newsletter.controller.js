@@ -58,34 +58,25 @@ async function unsubscribe(req, res) {
   }
 }
 
-// send newsletter for all subscribers
+// send newsletter selected subscribers with timing
 async function send(req, res) {
-  console.log('Frontend try to send newsletter.');
-  const { subject, rawcontent, sendDate } = req.body;
+  console.log('Frontend try to scedule newsletter sending.');
+  const { subject, rawcontent, subscribers, sendDate, sent } = req.body;
 
-  if (!subject || !rawcontent) {
-    console.log('Subject and content are required.');
-    return res.status(400).json({ ok: false, error: 'Subject and content are required.' });
+  if (!subject || !rawcontent || !subscribers || !sendDate || !sendDate) {
+    console.log('All fields are required.');
+    return res.status(400).json({ ok: false, error: 'All fields are required.' });
   }
-
+  
   try {
-    const subscribers = await newsletterModel.getAllSubscribers();
-    console.log('Successfully retrieved all subscribers.');
-
-    for (const subscriber of subscribers) {
-      const content = fillTemplate(rawcontent, {
-        firstname: subscriber.firstname,
-        email: subscriber.email
-      });
-      const to = subscriber.email;
-      await emailService.sendHtml(to, subject, content);
-    }
-
-    res.status(200).json({ ok: true, message: 'Newsletter sent successfully.' });
+    await newsletterModel.saveScheduledNewsletter({ subject, rawcontent, subscribers, sendDate, sent: false });
+    console.log('Newsletter scheduled successfully.');
+    res.status(200).json({ ok: true, message: 'Newsletter scheduled successfully.' });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ ok: false, error: error.message });
   }
+
 }
 
 module.exports = {
