@@ -1,7 +1,7 @@
 // newsletter model
 const { ObjectId } = require('mongodb');
 const { client } = require('../db/mongo');
-function getDb() { require('../db/mongo') };
+const { getDb } = require('../db/mongo');
 
 let collection;
 
