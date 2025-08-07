@@ -63,11 +63,23 @@ async function send(req, res) {
   console.log('Frontend try to scedule newsletter sending.');
   const { subject, rawcontent, subscribers, sendDate, sent } = req.body;
 
-  if (!subject || !rawcontent || !subscribers || !sendDate || !sendDate) {
-    console.log('All fields are required.');
-    return res.status(400).json({ ok: false, error: 'All fields are required.' });
+  if (!subject) {
+    console.log('subject is required.');
+    return res.status(400).json({ ok: false, error: 'subject is required.' });
   }
-  
+  if (!rawcontent) {
+    console.log('rawcontent is required.');
+    return res.status(400).json({ ok: false, error: 'rawcontent is required.' });
+  }
+  if (!subscribers) {
+    console.log('subscribers are required.');
+    return res.status(400).json({ ok: false, error: 'subscribers are required.' });
+  }
+  if (!sendDate) {
+    console.log('sendDate is required.');
+    return res.status(400).json({ ok: false, error: 'sendDate is required.' });
+  }
+ 
   try {
     await newsletterModel.saveScheduledNewsletter({ subject, rawcontent, subscribers, sendDate, sent: false });
     console.log('Newsletter scheduled successfully.');
@@ -81,6 +93,7 @@ async function send(req, res) {
 
 module.exports = {
   subscribe,
+  fillTemplate,
   getSubscribers,
   unsubscribe,
   send
