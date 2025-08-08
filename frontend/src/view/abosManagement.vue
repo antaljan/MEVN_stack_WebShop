@@ -41,18 +41,21 @@
               <div class="font-weight-bold ms-1 mb-2">Mai nap</div>
               <v-timeline align="start" density="compact">
                 <v-timeline-item
-                  v-for="letter in nLetters"
-                  :key="letter.date"
-                  :dot-color="letter.color"
+                  v-for="letter in scheduledNewsletters"
+                  :key="letter.sendDate"
+                  :dot-color="!letter.sent ? 'red' : 'green'"
                   size="x-small"
                 >
-                <div class="mb-4">
-                  <div class="font-weight-normal">
-                    <strong>{{ letter.date }}</strong> @{{ letter.from }}
-                  </div>
-                  <div>{{ letter.title }}</div>
+                <div class="font-weight-normal">
+                  <strong>{{ letter.sendDate }}</strong> - {{ letter.subject }}
+                  <v-icon :color="!letter.sent ? 'red' : 'green'" size="small" class="ms-2">
+                    {{ !letter.sent ? 'mdi-close-circle' : 'mdi-check-circle' }}
+                  </v-icon>
                 </div>
-                </v-timeline-item>
+              <div v-for="subscriber in letter.subscribers" :key="subscriber.email" class="mb-1">
+                <div>{{ subscriber.email }}</div>
+              </div>                
+            </v-timeline-item>
               </v-timeline>
             </v-card-text>
           </div>
@@ -86,7 +89,10 @@
   // get the subscriber from the API
   const showList = ref(false);
   const abonements = ref([]);
+  const scheduledNewsletters = ref([]);
   const subscriberCount = ref(0);
+  const isOpen = ref(false)
+  const nLettersCount = ref(0);
   onMounted(async () => {
     try {
       const response = await axios.post('https://yowayoli.com/api/newsletter/subscribers');
@@ -95,17 +101,15 @@
     } catch (error) {
     console.error('Failure by loading of Abonements:', error);
   }
+  try {
+    const response = await axios.post('https://yowayoli.com/api/newsletter/getsceduled');
+    scheduledNewsletters.value = response.data.scheduledNewsletters;
+    nLettersCount.value = scheduledNewsletters.value.length;
+  } catch (error) {
+    console.error('Failure by loading of scheduled newsletters:', error);
+  }
 });
-  // timeline for newsletters
-  const isOpen = ref(false)
-  const nLettersCount = ref(0);
-  const nLetters = [
-    { date: '2025.08.02', from: 'Gyöngyi', title: 'Új kampány indul holnap!', color: 'green' },
-    { date: '2025.07.21', from: 'Jani', title: 'Ne felejtsd el tesztelni a sablont!', color: 'blue' },
-    { date: '2025.07.10', from: 'Jani', title: 'Indul a Hírlevél szolgáltatás!', color: 'blue' },
-    // Ide jöhetnek további üzenetek...
-  ]
-  nLettersCount.value = nLetters.length;
+
 </script>
 <style scoped>
 .v-container {
