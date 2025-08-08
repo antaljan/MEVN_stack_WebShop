@@ -13,7 +13,7 @@ function init() {
 
 
 function addSubscriber({ firstname, name, email }) {
-  return collection.insertOne({ firstname, name, email, group:"ujonc" });
+  return collection.insertOne({ firstname, name, email, group:"ujjonc" });
 }
 
 function deleteSubscriberByEmail(email) {
