@@ -13,7 +13,7 @@ function init() {
 
 
 function addSubscriber({ firstname, name, email }) {
-  return collection.insertOne({ firstname, name, email });
+  return collection.insertOne({ firstname, name, email, group:"ujonc" });
 }
 
 function deleteSubscriberByEmail(email) {
@@ -47,6 +47,12 @@ module.exports = {
       .toArray();
   },
 
+  // get all sceduled newsletters
+  async getAllNewsletters(currentTime) {
+    const db = getDb();
+    return await db.collection('schedulednewsletters').find({}).toArray();
+  },
+
   // mark newsletter like sent
   async markAsSent(newsletterId) {
     const db = getDb();
@@ -60,7 +66,7 @@ module.exports = {
   // get all subscribers
   async getAllSubscribers() {
     const db = getDb();
-    return await db.collection('subscribers').find({}).toArray();
+    return await db.collection('aboliste').find({}).toArray();
   }
 };
 

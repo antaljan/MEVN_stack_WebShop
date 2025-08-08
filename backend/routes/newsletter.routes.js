@@ -14,4 +14,7 @@ router.get('/unsubscribe/:email', newsletterController.unsubscribe);
 // send
 router.post('/send', newsletterController.send);
 
+// send
+router.post('/getsceduled', newsletterController.schednewsletters);
+
 module.exports = router;

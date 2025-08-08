@@ -35,6 +35,19 @@ async function getSubscribers(req, res) {
   }
 }
 
+// get all scheduled newsletters
+async function schednewsletters(req, res) {
+  console.log('Frontend try to get all scheduled newsletters.');
+  try {
+    const scheduledNewsletters = await newsletterModel.getAllNewsletters();
+    console.log('successfull',);
+    res.status(200).json({ ok: true, scheduledNewsletters });
+  } catch (error) {
+    console.log('error:',error);
+    res.status(500).json({ ok: false, error: error.message });
+  }
+}
+
 // unsubscribe from newsletter --> delete subscriber from mongodb
 async function unsubscribe(req, res) {
   const email = req.params.email;
@@ -88,7 +101,6 @@ async function send(req, res) {
     console.error('Error:', error);
     res.status(500).json({ ok: false, error: error.message });
   }
-
 }
 
 module.exports = {
@@ -96,5 +108,6 @@ module.exports = {
   fillTemplate,
   getSubscribers,
   unsubscribe,
-  send
+  send,
+  schednewsletters
 };
