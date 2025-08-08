@@ -117,7 +117,7 @@
               v-for="abo in filteredAbonements"
               :key="abo._id"
               :label="abo.name + ' ' + abo.firstname + ' (' + abo.email + ')'"
-              :value="abo.email"
+              :value="abo"
               v-model="selectedSubscribers"
               :rules="[v => !!v || 'Kötelező mező']"
             ></v-checkbox>
@@ -191,10 +191,6 @@
   }
 });
 async function submit() {
-    alert(subject.value);
-    alert(selectedTemplate.value);
-    alert(selectedSubscribers.value);
-    alert(dateInput.value);
     if (!subject.value || !selectedTemplate.value || selectedSubscribers.value.length === 0 || !dateInput.value) {
       alert('Kérlek, tölts ki minden mezőt!');
       return;
@@ -202,8 +198,8 @@ async function submit() {
     try {
         const sendDate = new Date(dateInput.value).toISOString();
         await axios.post('https://yowayoli.com/api/newsletter/send', {
-          subject : subject,
-          rawcontent : selectedTemplate,
+          subject : subject.value,
+          rawcontent : selectedTemplate.value,
           subscribers : selectedSubscribers.value,
           sendDate :  sendDate,
           sent : false
@@ -212,6 +208,7 @@ async function submit() {
         dialog.value = false;
         return { success: true };
       } catch (error) {
+        console.log(error);
         return { success: false, error };
       }
   }
