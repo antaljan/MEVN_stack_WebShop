@@ -41,38 +41,104 @@
               <div class="font-weight-bold ms-1 mb-2">Mai nap</div>
               <v-timeline align="start" density="compact">
                 <v-timeline-item
-                  v-for="letter in nLetters"
-                  :key="letter.date"
-                  :dot-color="letter.color"
+                  v-for="letter in scheduledNewsletters"
+                  :key="letter.sendDate"
+                  :dot-color="!letter.sent ? 'red' : 'green'"
                   size="x-small"
                 >
-                <div class="mb-4">
-                  <div class="font-weight-normal">
-                    <strong>{{ letter.date }}</strong> @{{ letter.from }}
-                  </div>
-                  <div>{{ letter.title }}</div>
+                <div class="font-weight-normal">
+                  <strong>{{ letter.sendDate }}</strong> - {{ letter.subject }}
+                  <v-icon :color="!letter.sent ? 'red' : 'green'" size="small" class="ms-2">
+                    {{ !letter.sent ? 'mdi-close-circle' : 'mdi-check-circle' }}
+                  </v-icon>
                 </div>
-                </v-timeline-item>
+              <div v-for="subscriber in letter.subscribers" :key="subscriber.email" class="mb-1">
+                <div>{{ subscriber.email }}</div>
+              </div>                
+            </v-timeline-item>
               </v-timeline>
             </v-card-text>
           </div>
         </v-expand-transition>
       </v-card>
       </v-col>
-      <!--Card for creat a new newsletter-->
-      <v-col cols="12" md="4">
-        <v-card
-          append-icon="mdi-open-in-new"
-          class="mx-auto"
-          href="/newsletterComposer"
-          max-width="344"
-          rel="noopener"
-          subtitle="ide kattinva készíthetsz hírlevelet"
-          target="_blank"
-          title="Hírlevél készítése"
-        ></v-card>
-      </v-col>
     </v-row>
+      <!--action buttons-->
+      <v-spacer></v-spacer>
+      <br/>
+      <v-btn text @click="dialog = true">
+        Hírlevél küldése
+      </v-btn>
+      <v-spacer></v-spacer>
+      <br/>
+      <v-btn text :to="'/newsletterComposer'">
+        Sablon 
+      </v-btn>
+    <!--dialog for sending newsletter-->
+    <v-dialog v-model="dialog" max-width="600">
+    <v-card>
+      <v-card-title class="headline">Hírlevél küldése</v-card-title>
+      <v-card-text>
+        <v-form ref="form" v-model="valid">
+          <!-- cím (subject) -->
+          <v-text-field
+                v-model="subject"
+                label="Hírlevél címe"
+                readonly
+                v-on="on"
+                :rules="[v => !!v || 'Kötelező mező']"
+          ></v-text-field>
+          <!-- Küldési dátum és idő -->
+
+          <v-menu
+            v-model="dateMenu"
+            :close-on-content-click="false"
+            location="end"
+          >
+            <template v-slot:activator="{ props }">
+              <v-btn
+                color="indigo"
+                v-bind="props"
+              >
+                küldés ideje:{{ sendingDate }}
+              </v-btn>
+            </template>
+            <v-card>
+              <v-date-picker v-model="datePart" @input="combineDateTime"></v-date-picker>
+              <v-time-picker v-model="timePart" @input="combineDateTime"></v-time-picker>
+            </v-card>
+          </v-menu>
+
+          <!-- Subscriber lista -->
+          <v-subheader class="mt-4">Címzettek</v-subheader>
+          <v-checkbox
+            v-for="abo in abonements"
+            :key="abo._id"
+            :label="abo.name + ' ' + abo.firstname + ' (' + abo.email + ')'"
+            :value="abo._id"
+            v-model="selectedSubscribers"
+          ></v-checkbox>
+
+          <!-- Template kiválasztása -->
+          <v-select
+            v-model="selectedTemplate"
+            :items="templates"
+            item-text="name"
+            item-value="id"
+            label="Sablon kiválasztása"
+            :rules="[v => !!v || 'Kötelező mező']"
+            class="mt-4"
+          ></v-select>
+        </v-form>
+      </v-card-text>
+
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="green" text @click="submit">Küldés</v-btn>
+        <v-btn color="grey" text @click="dialog = false">Mégsem</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
   </v-container>
   </v-app>
   <my-footer/>
@@ -86,7 +152,25 @@
   // get the subscriber from the API
   const showList = ref(false);
   const abonements = ref([]);
+  const subject = ref('');
+  const scheduledNewsletters = ref([]);
   const subscriberCount = ref(0);
+  const isOpen = ref(false)
+  const nLettersCount = ref(0);
+  const dialog = ref(false);
+  const valid = ref(false);
+  const form = ref(null);
+  const dateMenu= false;
+  const datePart= null;
+  const timePart= null;
+  const sendingDate= ref('');
+  const selectedSubscribers=[];
+  const selectedTemplate= null;
+
+  //const settingsSelection = ref([])
+
+
+  // reques subscribers and newsletters from backend
   onMounted(async () => {
     try {
       const response = await axios.post('https://yowayoli.com/api/newsletter/subscribers');
@@ -95,17 +179,41 @@
     } catch (error) {
     console.error('Failure by loading of Abonements:', error);
   }
+  try {
+    const response = await axios.post('https://yowayoli.com/api/newsletter/getsceduled');
+    scheduledNewsletters.value = response.data.scheduledNewsletters;
+    nLettersCount.value = scheduledNewsletters.value.length;
+  } catch (error) {
+    console.error('Failure by loading of scheduled newsletters:', error);
+  }
 });
-  // timeline for newsletters
-  const isOpen = ref(false)
-  const nLettersCount = ref(0);
-  const nLetters = [
-    { date: '2025.08.02', from: 'Gyöngyi', title: 'Új kampány indul holnap!', color: 'green' },
-    { date: '2025.07.21', from: 'Jani', title: 'Ne felejtsd el tesztelni a sablont!', color: 'blue' },
-    { date: '2025.07.10', from: 'Jani', title: 'Indul a Hírlevél szolgáltatás!', color: 'blue' },
-    // Ide jöhetnek további üzenetek...
-  ]
-  nLettersCount.value = nLetters.length;
+async function submit() {
+  if (form.value && await form.value.validate()) {
+    try {
+        await axios.post('https://yowayoli.com/api/newsletter/send', {
+          subject : subject,
+          rawcontent : this.selectedTemplate,
+          subscribers : this.selectedSubscribers,
+          sendDate : this.sendingDate,
+          sent : false
+        });
+        alert('A hírlevél sikeresen elküldve!');
+        dialog.value = false;
+        return { success: true };
+      } catch (error) {
+        return { success: false, error };
+      }
+  }
+}
+
+function combineDateTime() {
+    if (this.datePart && this.timePart) {
+      this.sendingDate = `${this.datePart} ${this.timePart}`;
+      this.dateMenu = false;
+    }
+}
+
+
 </script>
 <style scoped>
 .v-container {
