@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const newsletterController = require('../controllers/newsletter.controller');
+const { save } = require('../controllers/newsletter.controller');
 
 // subscribe
 router.post('/subscribe', newsletterController.subscribe);
@@ -16,5 +17,8 @@ router.post('/send', newsletterController.send);
 
 // send
 router.post('/getsceduled', newsletterController.schednewsletters);
+
+// save newsletter template in mongo
+router.post('/newsletter/save', save);
 
 module.exports = router;

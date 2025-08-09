@@ -1,42 +1,29 @@
 <template>
   <MyHeader/>
   <v-container>
-    <v-form v-model="valid" lazy-validation>
-      <v-text-field label="Tárgy" v-model="subject" required />
-
+      <!--HTML elónézet-->
       <v-textarea
-        label="Tartalom (Markdown)"
-        v-model="content"
-        auto-grow
-        rows="8"
-        required
+        v-model="subject"
+        label="Hírlevél minta tárgya"
+        rows="1"
+        outlined
+        :rules="[v => !!v || 'A tartalom nem lehet üres']"
+        @input="valid = subject.length > 0"
       />
-
-      <v-menu v-model="showDatePicker" transition="scale-transition" offset-y>
-        <template #activator="{ on, attrs }">
-          <v-text-field
-            :value="formattedDate"
-            label="Küldés időpontja (opcionális)"
-            readonly
-            v-bind="attrs"
-            v-on="on"
-          />
-        </template>
-        <v-date-picker v-model="sendDate" @input="showDatePicker = false" />
-      </v-menu>
-
-      <v-btn color="primary" :disabled="!valid" @click="sendNewsletter">
-        Küldés
-      </v-btn>
-
-      <v-divider class="my-4" />
-
       <!-- Előnézet -->
       <v-card>
         <v-card-title>📬 Előnézet</v-card-title>
         <v-card-text>
-          <div v-html="convertedHtml" />
+          <div 
+          :rules="[v => !!v || 'A tartalom nem lehet üres']"
+          @input="valid = subject.length > 0"
+          v-html="convertedHtml" />
         </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" @click="sendNewsletter" :disabled="!valid">
+            Mentés
+          </v-btn>
+        </v-card-actions>
       </v-card>
 
       <!-- Sablon-elemek (Drag & Drop lista) -->
@@ -53,89 +40,51 @@
             </v-list-item-action>
           </v-list-item>
         </v-list>
-      </v-card>
+        <v-divider class="my-4" />
 
-      <!-- Statisztika
-      <v-divider class="my-4" />
-      <v-card>
-        <v-card-title>📊 Küldési statisztika</v-card-title>
-        <v-card-text>
-          <v-progress-linear :value="stats.openRate" height="20" color="green">
-            <strong>{{ stats.openRate }}% megnyitási arány</strong>
-          </v-progress-linear>
-          <v-list>
-            <v-list-item>
-              <v-list-item-content>📤 Elküldött: {{ stats.sent }}</v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>📖 Megnyitott: {{ stats.opened }}</v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>⚠️ Hibás: {{ stats.bounced }}</v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-card-text>
-      </v-card>-->
-    </v-form>
+      </v-card>
   </v-container>
   <MyFooter/>
 </template>
 <script setup>
 import { ref, computed  } from 'vue'
 import axios from 'axios'
-import { marked } from 'marked'
+//import { marked } from 'marked'
 import MyFooter from '../components/MyFooter.vue'
 import MyHeader from '../components/MyHeader.vue'
 //import { toast } from 'vue3-toastify'
-import { headerMarkdown } from '../sablons/headerTemplate.js'
-import { heroMarkdown } from '../sablons/heroTemplate.js'
-import { contentTextMarkdown } from '../sablons/contTextTemplate.js'
-import { contentImageMarkdown } from '../sablons/contImageTemplate.js'
-import { ctaMarkdown } from '../sablons/ctaTemplate.js'
-import { footerMarkdown } from '../sablons/footerTemplate.js'
-import { easyMarkdown } from '../sablons/easyReklam.js'
+import { headerHTML } from '../sablons/headerTemplate.js'
+import { heroHTML } from '../sablons/heroTemplate.js'
+import { contentTextHTML } from '../sablons/contTextTemplate.js'
+import { contentImageHTML } from '../sablons/contImageTemplate.js'
+import { ctaHTML } from '../sablons/ctaTemplate.js'
+import { footerHTML } from '../sablons/footerTemplate.js'
 import DOMPurify from 'dompurify'
 
 // 📋 Form state
 const valid = ref(false)
 const subject = ref('')
 const content = ref('')
-const sendDate = ref(null)
-const showDatePicker = ref(false)
+const today = new Date().toISOString().split('T')[0]
+
+//const showDatePicker = ref(false)
 
 // 🧱 Sablon blokkok
 const templateBlocks = [
-  { label: 'Fejléc (Logo, Szlogen)', markdown: headerMarkdown },
-  { label: 'Hero (figyelemfelkeltés)', markdown: heroMarkdown },
-  { label: 'Tartalom - szöveg', markdown: contentTextMarkdown },
-  { label: 'Tartalom - képpel', markdown: contentImageMarkdown },
-  { label: 'CTA (Call To Action) gombok', markdown: ctaMarkdown },
-  { label: 'Lábléc (Kapcsolat, GDPR, Leiratkozás)', markdown: footerMarkdown },
-  { label: 'Egyszerű reklám', markdown: easyMarkdown }
+  { label: 'Fejléc (Logo, Szlogen)', HTML: headerHTML },
+  { label: 'Hero (figyelemfelkeltés)', HTML: heroHTML },
+  { label: 'Tartalom - szöveg', HTML: contentTextHTML },
+  { label: 'Tartalom - képpel', HTML: contentImageHTML },
+  { label: 'CTA (Call To Action) gombok', HTML: ctaHTML },
+  { label: 'Lábléc (Kapcsolat, GDPR, Leiratkozás)', HTML: footerHTML },
 ]
 
-/* 📊 Statisztikák
-const sent = ref(120)
-const opened = ref(85)
-const bounced = ref(6)
-const stats = computed(() => ({
-  sent: sent.value,
-  opened: opened.value,
-  bounced: bounced.value,
-  openRate: Math.round((opened.value / sent.value) * 100)
-}))*/
-
-// 📆 Dátum formázás
-const formattedSendDate = sendDate.value
-  ? new Date(sendDate.value).toISOString()
-  : null
-
 // convert and purify markdown to html
-const convertedHtml = computed(() => DOMPurify.sanitize(marked(content.value || '')))
+const convertedHtml = computed(() => DOMPurify.sanitize(content.value ));
 
 // ➕ Blokk beszúrás
 function insertBlock(block) {
-  content.value += `\n\n${block.markdown}`
+  content.value += `\n\n${block.HTML}`
 }
 
 // 📧 Hírlevél küldés
@@ -144,13 +93,13 @@ async function sendNewsletter() {
     const payload = {
       subject: subject.value,
       rawcontent: convertedHtml.value,
-      sendDate: formattedSendDate
+      sendDate: today
     }
-  await axios.post('https://yowayoli.com/api/newsletter/send', payload)
-  alert('✅ Hírlevél elküldve vagy időzítve!')
+  await axios.post('https://yowayoli.com/api/newsletter/save', payload)
+  alert('✅ Hírlevél sablon mentve!')
   } catch (err) {
     console.error(err)
-    alert('❌ Hiba történt a küldés során.')
+    alert('❌ Hiba történt a mentés során.')
   }
 }
 </script>
