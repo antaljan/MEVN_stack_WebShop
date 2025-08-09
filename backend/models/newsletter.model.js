@@ -20,10 +20,25 @@ function deleteSubscriberByEmail(email) {
   return collection.deleteOne({ email });
 }
 
+async function saveNewsletter(newsletterData) {
+  const db = getDb();
+  const collection = db.collection('newsletters');
+
+  const result = await collection.insertOne({
+    subject: newsletterData.subject,
+    rawcontent: newsletterData.rawcontent,
+    sendDate: newsletterData.sendDate,
+    createdAt: new Date()
+  });
+
+  return result;
+}
+
 module.exports = {
   init,
   addSubscriber,
   deleteSubscriberByEmail,
+  saveNewsletter,
   // save sceduled newsletter
   async saveScheduledNewsletter({ subject, rawcontent, subscribers, sendDate, sent = false }) {
     const result = await getDb().collection('schedulednewsletters').insertOne({

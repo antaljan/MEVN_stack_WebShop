@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="w3-content w3-container " id="schedule">
     <v-sheet
       class="d-flex"
       height="54"

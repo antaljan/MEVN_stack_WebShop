@@ -1,5 +1,6 @@
 const newsletterModel = require('../models/newsletter.model');
 const emailService = require('../services/email.service');
+const { saveNewsletter } = require('../models/newsletter.model');
 
 function fillTemplate(content, data) {
   return content
@@ -103,11 +104,33 @@ async function send(req, res) {
   }
 }
 
+
+async function save(req, res) {
+  try {
+    const { subject, rawcontent, sendDate } = req.body;
+
+    if (!subject || !rawcontent || !sendDate) {
+      return res.status(400).json({ error: 'Hiányzó mezők a kérésben.' });
+    }
+
+    const result = await saveNewsletter({ subject, rawcontent, sendDate });
+
+    res.status(201).json({
+      message: '✅ Hírlevél sablon sikeresen mentve.',
+      id: result.insertedId
+    });
+  } catch (err) {
+    console.error('❌ Hiba a mentés során:', err);
+    res.status(500).json({ error: 'Szerverhiba történt.' });
+  }
+}
+
 module.exports = {
   subscribe,
   fillTemplate,
   getSubscribers,
   unsubscribe,
   send,
-  schednewsletters
+  schednewsletters,
+  save
 };
