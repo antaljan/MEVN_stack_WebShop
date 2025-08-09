@@ -75,8 +75,8 @@
         Sablon 
       </v-btn>
     <!--dialog for sending newsletter-->
-    <v-dialog v-model="dialog" max-width="600px">
-    <v-card>
+    <v-dialog v-model="dialog" max-width="400px">
+    <v-card class="w3-card-4 w3-white w3-round-large">
       <v-card-title class="headline">Hírlevél küldése</v-card-title>
       <v-card-text>
         <v-container>
@@ -93,22 +93,22 @@
           <!-- sending Date-->
         <v-row>
           <v-col cols="12">
-              <v-date-picker
-                v-model="dateInput"
-                title="Küldés ideje"
-                header="Válassz egy dátumot"
-                :rules="[v => !!v || 'Kötelező mező']"
-              >
-              </v-date-picker>
+             <v-text-field
+              v-model="dateInput"
+              label="Küldés dátuma"
+              type="date"
+              :min="today"
+              
+             ></v-text-field>
           <br/>
           </v-col>
         </v-row>
           <!--Subscriber list button with filter -->
           <v-row>
-            <v-col cols="6" md="4">
+            <v-col cols="12" md="6">
               <a class="w3-button w3-hover-black w3-left" href="javascript:void(0);" @click="toggleCheckbox" title="Címzettek">Címzettek</a>
             </v-col>
-            <v-col cols="6" md="4">
+            <v-col cols="12" md="6">
               <v-select
                 v-model="selectedGroup"
                 :items = "subscriberGruop"
@@ -171,10 +171,7 @@
   import MyFooter from '../components/MyFooter.vue';
   import { ref, onMounted } from 'vue';
   import axios from 'axios';
-  //import { useDate } from 'vuetify';
   import { computed } from 'vue'
-  //const dateAdapter = useDate();
-  // get the subscriber from the API
   const showList = ref(false);
   const abonements = ref([]);
   const subject = ref('');
@@ -183,13 +180,13 @@
   const isOpen = ref(false)
   const nLettersCount = ref(0);
   const dialog = ref(false);
-  //const form = ref(null);
-  const dateInput= ref();
   const selectedTemplate= ref('');
   const templates=['...','Kedves {{firstname}}! ez egy teszt üzenet a hírlevél küldő rendszerből.',' '];
-  const subscriberGruop = ['ujonc', 'tesztelő', 'régi', '...'];
+  const subscriberGruop = ['mind','ujonc', 'tesztelő', 'régi', '...'];
   const selectedSubscribers = ref([])
   const selectedGroup = ref('mind')
+  const today = new Date().toISOString().split('T')[0]
+  const dateInput = ref(today)
 
   // reques subscribers and newsletters from backend
   onMounted(async () => {
