@@ -14,15 +14,15 @@
           @click="showList = !showList"
           link
         >
-        <v-card-text v-if="showList">
-          <v-list>
-            <v-list-item v-for="abo in abonements" :key="abo._id">
-            <v-list-item-title>{{ abo.firstname }} {{ abo.name }}</v-list-item-title>
-            <v-list-item-subtitle>{{ abo.email }}</v-list-item-subtitle>
-          </v-list-item>
-        </v-list>
-    </v-card-text>
-      </v-card>
+          <v-card-text v-if="showList">
+            <v-list>
+              <v-list-item v-for="abo in abonements" :key="abo._id">
+                <v-list-item-title>{{ abo.firstname }} {{ abo.name }}</v-list-item-title>
+                <v-list-item-subtitle>{{ abo.email }}</v-list-item-subtitle>
+              </v-list-item>
+            </v-list>
+          </v-card-text>
+        </v-card>
       </v-col>
       <!--Card for timeline of newsletters-->
       <v-col cols="12" md="4">
@@ -54,13 +54,13 @@
                 </div>
               <div v-for="subscriber in letter.subscribers" :key="subscriber.email" class="mb-1">
                 <div>{{ subscriber.email }}</div>
-              </div>                
+              </div>
             </v-timeline-item>
               </v-timeline>
             </v-card-text>
           </div>
         </v-expand-transition>
-      </v-card>
+        </v-card>
       </v-col>
     </v-row>
       <!--action buttons-->
@@ -75,61 +75,65 @@
         Sablon 
       </v-btn>
     <!--dialog for sending newsletter-->
-    <v-dialog v-model="dialog" max-width="600">
+    <v-dialog v-model="dialog" max-width="400">
     <v-card>
       <v-card-title class="headline">Hírlevél küldése</v-card-title>
       <v-card-text>
-        <v-form ref="form" v-model="valid">
-          <!-- cím (subject) -->
+        
+          <!-- subject -->
           <v-text-field
                 v-model="subject"
                 label="Hírlevél címe"
-                readonly
-                v-on="on"
                 :rules="[v => !!v || 'Kötelező mező']"
           ></v-text-field>
-          <!-- Küldési dátum és idő -->
-
-          <v-menu
-            v-model="dateMenu"
-            :close-on-content-click="false"
-            location="end"
-          >
-            <template v-slot:activator="{ props }">
-              <v-btn
-                color="indigo"
-                v-bind="props"
+          <!-- sending Date-->
+              <v-date-picker
+                v-model="dateInput"
+                title="Küldés igeje"
+                header= "válasz egy dátumot"
+                :rules="[v => !!v || 'Kötelező mező']"
               >
-                küldés ideje:{{ sendingDate }}
-              </v-btn>
-            </template>
-            <v-card>
-              <v-date-picker v-model="datePart" @input="combineDateTime"></v-date-picker>
-              <v-time-picker v-model="timePart" @input="combineDateTime"></v-time-picker>
-            </v-card>
-          </v-menu>
-
-          <!-- Subscriber lista -->
-          <v-subheader class="mt-4">Címzettek</v-subheader>
-          <v-checkbox
-            v-for="abo in abonements"
-            :key="abo._id"
-            :label="abo.name + ' ' + abo.firstname + ' (' + abo.email + ')'"
-            :value="abo._id"
-            v-model="selectedSubscribers"
-          ></v-checkbox>
-
+              </v-date-picker>
+          <br/>
+          <!--Subscriber lista -->
+          <v-row>
+            <v-col>
+              <a class="w3-button w3-hover-black w3-left" href="javascript:void(0);" @click="toggleCheckbox" title="Címzettek">Címzettek</a>
+            </v-col>
+            <v-col>
+              <v-select
+                v-model="selectedGroup"
+                :items = "subscriberGruop"
+                item-text="name"
+                item-value="id"
+                label="szűrő"
+              ></v-select>
+            </v-col>
+          </v-row>
+          <br/>
+          <div id="checkboxMenu" class="w3-hide">
+            <v-checkbox 
+              id="listSubscribers"
+              v-for="abo in filteredAbonements"
+              :key="abo._id"
+              :label="abo.name + ' ' + abo.firstname + ' (' + abo.email + ')'"
+              :value="abo"
+              v-model="selectedSubscribers"
+              :rules="[v => !!v || 'Kötelező mező']"
+            ></v-checkbox>
+          </div>
+          <br/>
           <!-- Template kiválasztása -->
           <v-select
             v-model="selectedTemplate"
+            :hint="selectedTemplate"
             :items="templates"
-            item-text="name"
-            item-value="id"
+            :item-title="selectedTemplate"
+            :item-value="selectedTemplate"
             label="Sablon kiválasztása"
             :rules="[v => !!v || 'Kötelező mező']"
             class="mt-4"
           ></v-select>
-        </v-form>
       </v-card-text>
 
       <v-card-actions>
@@ -149,6 +153,9 @@
   import MyFooter from '../components/MyFooter.vue';
   import { ref, onMounted } from 'vue';
   import axios from 'axios';
+  //import { useDate } from 'vuetify';
+  import { computed } from 'vue'
+  //const dateAdapter = useDate();
   // get the subscriber from the API
   const showList = ref(false);
   const abonements = ref([]);
@@ -158,17 +165,13 @@
   const isOpen = ref(false)
   const nLettersCount = ref(0);
   const dialog = ref(false);
-  const valid = ref(false);
-  const form = ref(null);
-  const dateMenu= false;
-  const datePart= null;
-  const timePart= null;
-  const sendingDate= ref('');
-  const selectedSubscribers=[];
-  const selectedTemplate= null;
-
-  //const settingsSelection = ref([])
-
+  //const form = ref(null);
+  const dateInput= ref();
+  const selectedTemplate= ref('');
+  const templates=['...','Kedves {{firstname}}! ez egy teszt üzenet a hírlevél küldő rendszerből.',' '];
+  const subscriberGruop = ['ujonc', 'tesztelő', 'régi', '...'];
+  const selectedSubscribers = ref([])
+  const selectedGroup = ref('mind')
 
   // reques subscribers and newsletters from backend
   onMounted(async () => {
@@ -188,31 +191,45 @@
   }
 });
 async function submit() {
-  if (form.value && await form.value.validate()) {
+    if (!subject.value || !selectedTemplate.value || selectedSubscribers.value.length === 0 || !dateInput.value) {
+      alert('Kérlek, tölts ki minden mezőt!');
+      return;
+    }
     try {
+        const sendDate = new Date(dateInput.value).toISOString();
         await axios.post('https://yowayoli.com/api/newsletter/send', {
-          subject : subject,
-          rawcontent : this.selectedTemplate,
-          subscribers : this.selectedSubscribers,
-          sendDate : this.sendingDate,
+          subject : subject.value,
+          rawcontent : selectedTemplate.value,
+          subscribers : selectedSubscribers.value,
+          sendDate :  sendDate,
           sent : false
         });
         alert('A hírlevél sikeresen elküldve!');
         dialog.value = false;
         return { success: true };
       } catch (error) {
+        console.log(error);
         return { success: false, error };
       }
   }
-}
 
-function combineDateTime() {
-    if (this.datePart && this.timePart) {
-      this.sendingDate = `${this.datePart} ${this.timePart}`;
-      this.dateMenu = false;
+
+//filter for checkbox
+const filteredAbonements = computed(() => {
+  return selectedGroup.value === 'mind'
+    ? abonements.value
+    : abonements.value.filter(abo => abo.group === selectedGroup.value)
+})
+
+// toggleFunction for Menu
+  function toggleCheckbox() {
+    var x = document.getElementById("checkboxMenu");
+    if ( x.className == "w3-hide"){
+      x.className = "w3-show"
+    }else{
+      x.className = "w3-hide"
     }
-}
-
+  }
 
 </script>
 <style scoped>
