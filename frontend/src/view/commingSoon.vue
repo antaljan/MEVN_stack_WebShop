@@ -58,7 +58,7 @@ const password = ref('');
 async function submit() {
     // Login
     try {
-      const response = await axios.post('https://yowayoli.com/api/login', {
+      const response = await axios.post('https://yowayoli.com/api/user/login', {
         email: email.value,
         psw: password.value
       });

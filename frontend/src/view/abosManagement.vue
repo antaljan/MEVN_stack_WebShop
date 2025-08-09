@@ -4,7 +4,7 @@
    <v-container>
     <v-row >
       <!--Card for Number of abonement-->
-      <v-col cols="12" md="4">
+      <v-col cols="6" md="4">
         <v-card
           append-icon="mdi-format-list-bulleted"
           class="mx-auto"
@@ -25,7 +25,7 @@
         </v-card>
       </v-col>
       <!--Card for timeline of newsletters-->
-      <v-col cols="12" md="4">
+      <v-col cols="6" md="4">
         <v-card
           append-icon="mdi-email-newsletter"
           class="mx-auto"
@@ -75,32 +75,40 @@
         Sablon 
       </v-btn>
     <!--dialog for sending newsletter-->
-    <v-dialog v-model="dialog" max-width="400">
-    <v-card>
+    <v-dialog v-model="dialog" max-width="400px">
+    <v-card class="w3-card-4 w3-white w3-round-large">
       <v-card-title class="headline">Hírlevél küldése</v-card-title>
       <v-card-text>
-        
+        <v-container>
+        <v-row>
+        <v-col cols="12">
           <!-- subject -->
           <v-text-field
                 v-model="subject"
                 label="Hírlevél címe"
                 :rules="[v => !!v || 'Kötelező mező']"
           ></v-text-field>
+        </v-col>
+        </v-row>
           <!-- sending Date-->
-              <v-date-picker
-                v-model="dateInput"
-                title="Küldés igeje"
-                header= "válasz egy dátumot"
-                :rules="[v => !!v || 'Kötelező mező']"
-              >
-              </v-date-picker>
+        <v-row>
+          <v-col cols="12">
+             <v-text-field
+              v-model="dateInput"
+              label="Küldés dátuma"
+              type="date"
+              :min="today"
+              
+             ></v-text-field>
           <br/>
-          <!--Subscriber lista -->
+          </v-col>
+        </v-row>
+          <!--Subscriber list button with filter -->
           <v-row>
-            <v-col>
+            <v-col cols="12" md="6">
               <a class="w3-button w3-hover-black w3-left" href="javascript:void(0);" @click="toggleCheckbox" title="Címzettek">Címzettek</a>
             </v-col>
-            <v-col>
+            <v-col cols="12" md="6">
               <v-select
                 v-model="selectedGroup"
                 :items = "subscriberGruop"
@@ -111,6 +119,9 @@
             </v-col>
           </v-row>
           <br/>
+          <!--Subscriber list toggle -->
+          <v-row>
+            <v-col cols="12">
           <div id="checkboxMenu" class="w3-hide">
             <v-checkbox 
               id="listSubscribers"
@@ -122,8 +133,12 @@
               :rules="[v => !!v || 'Kötelező mező']"
             ></v-checkbox>
           </div>
+          </v-col>
+          </v-row>
           <br/>
           <!-- Template kiválasztása -->
+          <v-row>
+            <v-col cols="12">
           <v-select
             v-model="selectedTemplate"
             :hint="selectedTemplate"
@@ -134,6 +149,9 @@
             :rules="[v => !!v || 'Kötelező mező']"
             class="mt-4"
           ></v-select>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-card-text>
 
       <v-card-actions>
@@ -153,10 +171,7 @@
   import MyFooter from '../components/MyFooter.vue';
   import { ref, onMounted } from 'vue';
   import axios from 'axios';
-  //import { useDate } from 'vuetify';
   import { computed } from 'vue'
-  //const dateAdapter = useDate();
-  // get the subscriber from the API
   const showList = ref(false);
   const abonements = ref([]);
   const subject = ref('');
@@ -165,13 +180,13 @@
   const isOpen = ref(false)
   const nLettersCount = ref(0);
   const dialog = ref(false);
-  //const form = ref(null);
-  const dateInput= ref();
   const selectedTemplate= ref('');
   const templates=['...','Kedves {{firstname}}! ez egy teszt üzenet a hírlevél küldő rendszerből.',' '];
-  const subscriberGruop = ['ujonc', 'tesztelő', 'régi', '...'];
+  const subscriberGruop = ['mind','ujonc', 'tesztelő', 'régi', '...'];
   const selectedSubscribers = ref([])
   const selectedGroup = ref('mind')
+  const today = new Date().toISOString().split('T')[0]
+  const dateInput = ref(today)
 
   // reques subscribers and newsletters from backend
   onMounted(async () => {
