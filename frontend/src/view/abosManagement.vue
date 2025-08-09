@@ -4,7 +4,7 @@
    <v-container>
     <v-row >
       <!--Card for Number of abonement-->
-      <v-col cols="12" md="4">
+      <v-col cols="6" md="4">
         <v-card
           append-icon="mdi-format-list-bulleted"
           class="mx-auto"
@@ -25,7 +25,7 @@
         </v-card>
       </v-col>
       <!--Card for timeline of newsletters-->
-      <v-col cols="12" md="4">
+      <v-col cols="6" md="4">
         <v-card
           append-icon="mdi-email-newsletter"
           class="mx-auto"
@@ -75,32 +75,40 @@
         Sablon 
       </v-btn>
     <!--dialog for sending newsletter-->
-    <v-dialog v-model="dialog" max-width="400">
+    <v-dialog v-model="dialog" max-width="600px">
     <v-card>
       <v-card-title class="headline">Hírlevél küldése</v-card-title>
       <v-card-text>
-        
+        <v-container>
+        <v-row>
+        <v-col cols="12">
           <!-- subject -->
           <v-text-field
                 v-model="subject"
                 label="Hírlevél címe"
                 :rules="[v => !!v || 'Kötelező mező']"
           ></v-text-field>
+        </v-col>
+        </v-row>
           <!-- sending Date-->
+        <v-row>
+          <v-col cols="12">
               <v-date-picker
                 v-model="dateInput"
-                title="Küldés igeje"
-                header= "válasz egy dátumot"
+                title="Küldés ideje"
+                header="Válassz egy dátumot"
                 :rules="[v => !!v || 'Kötelező mező']"
               >
               </v-date-picker>
           <br/>
-          <!--Subscriber lista -->
+          </v-col>
+        </v-row>
+          <!--Subscriber list button with filter -->
           <v-row>
-            <v-col>
+            <v-col cols="6" md="4">
               <a class="w3-button w3-hover-black w3-left" href="javascript:void(0);" @click="toggleCheckbox" title="Címzettek">Címzettek</a>
             </v-col>
-            <v-col>
+            <v-col cols="6" md="4">
               <v-select
                 v-model="selectedGroup"
                 :items = "subscriberGruop"
@@ -111,6 +119,9 @@
             </v-col>
           </v-row>
           <br/>
+          <!--Subscriber list toggle -->
+          <v-row>
+            <v-col cols="12">
           <div id="checkboxMenu" class="w3-hide">
             <v-checkbox 
               id="listSubscribers"
@@ -122,8 +133,12 @@
               :rules="[v => !!v || 'Kötelező mező']"
             ></v-checkbox>
           </div>
+          </v-col>
+          </v-row>
           <br/>
           <!-- Template kiválasztása -->
+          <v-row>
+            <v-col cols="12">
           <v-select
             v-model="selectedTemplate"
             :hint="selectedTemplate"
@@ -134,6 +149,9 @@
             :rules="[v => !!v || 'Kötelező mező']"
             class="mt-4"
           ></v-select>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-card-text>
 
       <v-card-actions>
