@@ -30,15 +30,21 @@ async function saveNewsletter(newsletterData) {
     sendDate: newsletterData.sendDate,
     createdAt: new Date()
   });
-
   return result;
 }
+
+async function getNewsletter() {
+  const db = getDb();
+  return await db.collection('newsletters').find({}).toArray();
+};
+
 
 module.exports = {
   init,
   addSubscriber,
   deleteSubscriberByEmail,
   saveNewsletter,
+  getNewsletter,
   // save sceduled newsletter
   async saveScheduledNewsletter({ subject, rawcontent, subscribers, sendDate, sent = false }) {
     const result = await getDb().collection('schedulednewsletters').insertOne({
@@ -63,7 +69,7 @@ module.exports = {
   },
 
   // get all sceduled newsletters
-  async getAllNewsletters(currentTime) {
+  async getAllNewsletters() {
     const db = getDb();
     return await db.collection('schedulednewsletters').find({}).toArray();
   },
