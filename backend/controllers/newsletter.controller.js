@@ -125,6 +125,20 @@ async function save(req, res) {
   }
 }
 
+// get all newsletter templates
+async function gettemplates(req, res) {
+  console.log('Frontend try to get all newsletter templates.');
+  try {
+    const allNewsletters = await newsletterModel.getNewsletter();
+    console.log('successfull',);
+    res.status(200).json({ ok: true, allNewsletters });
+  } catch (error) {
+    console.log('error:',error);
+    res.status(500).json({ ok: false, error: error.message });
+  }
+}
+
+
 module.exports = {
   subscribe,
   fillTemplate,
@@ -132,5 +146,6 @@ module.exports = {
   unsubscribe,
   send,
   schednewsletters,
-  save
+  save,
+  gettemplates
 };

@@ -21,4 +21,8 @@ router.post('/getsceduled', newsletterController.schednewsletters);
 // save newsletter template in mongo
 router.post('/save', save);
 
+// save newsletter template in mongo
+router.post('/gettemplates', newsletterController.gettemplates);
+
+
 module.exports = router;
