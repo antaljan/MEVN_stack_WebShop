@@ -104,7 +104,7 @@ async function send(req, res) {
   }
 }
 
-
+// save newsletter template
 async function save(req, res) {
   try {
     const { subject, rawcontent, sendDate } = req.body;
