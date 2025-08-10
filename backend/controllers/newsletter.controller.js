@@ -75,15 +75,15 @@ async function unsubscribe(req, res) {
 // send newsletter selected subscribers with timing
 async function send(req, res) {
   console.log('Frontend try to scedule newsletter sending.');
-  const { subject, rawcontent, subscribers, sendDate, sent } = req.body;
+  const { subject, templateId, subscribers, sendDate, sent } = req.body;
 
   if (!subject) {
     console.log('subject is required.');
     return res.status(400).json({ ok: false, error: 'subject is required.' });
   }
-  if (!rawcontent) {
-    console.log('rawcontent is required.');
-    return res.status(400).json({ ok: false, error: 'rawcontent is required.' });
+  if (!templateId) {
+    console.log('templateId is required.');
+    return res.status(400).json({ ok: false, error: 'templateId is required.' });
   }
   if (!subscribers) {
     console.log('subscribers are required.');
@@ -95,7 +95,7 @@ async function send(req, res) {
   }
  
   try {
-    await newsletterModel.saveScheduledNewsletter({ subject, rawcontent, subscribers, sendDate, sent: false });
+    await newsletterModel.saveScheduledNewsletter({ subject, templateId, subscribers, sendDate, sent: false });
     console.log('Newsletter scheduled successfully.');
     res.status(200).json({ ok: true, message: 'Newsletter scheduled successfully.' });
   } catch (error) {
