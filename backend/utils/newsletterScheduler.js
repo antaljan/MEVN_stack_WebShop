@@ -2,7 +2,7 @@ const cron = require('node-cron');
 const newsletterController = require('../controllers/newsletter.controller');
 const newsletterModel = require('../models/newsletter.model');
 const emailService = require('../services/email.service');
-
+const { getDb } = require('../db/mongo');
 
 function startNewsletterScheduler() {
   /* scheduler:
@@ -20,9 +20,11 @@ function startNewsletterScheduler() {
         console.log(`[CRON} number of newsletters to send:"${newsletters.length}"`);
         for (const newsletter of newsletters) {
             const subscribers = newsletter.subscribers;
+            const template = await getDb().collection('newsletters').findOne({ _id: newsletter.templateId });
+            const rawcontent = template.rawcontent;
             console.log(`[CRON] "${newsletter.subject}"The newsletter has to send for "${subscribers.length}" number of subscribers.`);
             for (const subscriber of subscribers) {
-                const content = newsletterController.fillTemplate(newsletter.rawcontent, {
+                const content = newsletterController.fillTemplate(rawcontent, {
                     firstname: subscriber.firstname,
                     name: subscriber.name,
                     email: subscriber.email

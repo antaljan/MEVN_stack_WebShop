@@ -141,14 +141,13 @@
             <v-col cols="12">
           <v-select
             v-model="selectedTemplate"
-            :hint="selectedTemplate"
             :items="templates"
-            :item-title="selectedTemplate"
-            :item-value="selectedTemplate"
+            item-title="subject"
+            item-value="id"
             label="Sablon kiválasztása"
             :rules="[v => !!v || 'Kötelező mező']"
             class="mt-4"
-          ></v-select>
+          />
             </v-col>
           </v-row>
         </v-container>
@@ -181,7 +180,7 @@
   const nLettersCount = ref(0);
   const dialog = ref(false);
   const selectedTemplate= ref('');
-  const templates=['...','Kedves {{firstname}}! ez egy teszt üzenet a hírlevél küldő rendszerből.',' '];
+  const templates=ref('');
   const subscriberGruop = ['mind','ujonc', 'tesztelő', 'régi', '...'];
   const selectedSubscribers = ref([])
   const selectedGroup = ref('mind')
@@ -190,21 +189,33 @@
 
   // reques subscribers and newsletters from backend
   onMounted(async () => {
+    // get subscribers
     try {
       const response = await axios.post('https://yowayoli.com/api/newsletter/subscribers');
       abonements.value = response.data.subscribers;
       subscriberCount.value = abonements.value.length;
     } catch (error) {
     console.error('Failure by loading of Abonements:', error);
-  }
-  try {
-    const response = await axios.post('https://yowayoli.com/api/newsletter/getsceduled');
-    scheduledNewsletters.value = response.data.scheduledNewsletters;
-    nLettersCount.value = scheduledNewsletters.value.length;
-  } catch (error) {
-    console.error('Failure by loading of scheduled newsletters:', error);
-  }
-});
+    }
+    // get scheduled newsletters
+    try {
+      const response = await axios.post('https://yowayoli.com/api/newsletter/getsceduled');
+      scheduledNewsletters.value = response.data.scheduledNewsletters;
+      nLettersCount.value = scheduledNewsletters.value.length;
+    } catch (error) {
+      console.error('Failure by loading of scheduled newsletters:', error);
+    }
+    // get newsletter tempalates
+    try {
+      const response = await axios.post('https://yowayoli.com/api/newsletter/gettemplates');
+      templates.value = response.data.allNewsletters.map(template => ({
+        id: template._id,
+        subject: template.subject
+      }));
+    } catch (error) {
+      console.error('Failure by loading of scheduled newsletters:', error);
+    }
+  });
 async function submit() {
     if (!subject.value || !selectedTemplate.value || selectedSubscribers.value.length === 0 || !dateInput.value) {
       alert('Kérlek, tölts ki minden mezőt!');
@@ -214,7 +225,7 @@ async function submit() {
         const sendDate = new Date(dateInput.value).toISOString();
         await axios.post('https://yowayoli.com/api/newsletter/send', {
           subject : subject.value,
-          rawcontent : selectedTemplate.value,
+          templateId: selectedTemplate.value,
           subscribers : selectedSubscribers.value,
           sendDate :  sendDate,
           sent : false

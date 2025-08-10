@@ -46,10 +46,10 @@ module.exports = {
   saveNewsletter,
   getNewsletter,
   // save sceduled newsletter
-  async saveScheduledNewsletter({ subject, rawcontent, subscribers, sendDate, sent = false }) {
+  async saveScheduledNewsletter({ subject, templateId, subscribers, sendDate, sent = false }) {
     const result = await getDb().collection('schedulednewsletters').insertOne({
       subject,
-      rawcontent,
+      templateId: new ObjectId(templateId),
       subscribers,
       sendDate: new Date(sendDate),
       sent
