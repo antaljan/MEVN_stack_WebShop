@@ -19,6 +19,6 @@ router.post('/send', newsletterController.send);
 router.post('/getsceduled', newsletterController.schednewsletters);
 
 // save newsletter template in mongo
-router.post('/newsletter/save', save);
+router.post('/save', save);
 
 module.exports = router;
