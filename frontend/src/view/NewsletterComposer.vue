@@ -78,6 +78,25 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-dialog v-model="dialogVisible" max-width="600px">
+  <v-card>
+    <v-card-title>Sablon blokk szerkesztése</v-card-title>
+    <v-card-text>
+      <v-textarea
+        v-model="editedHTML"
+        label="HTML tartalom"
+        rows="10"
+        outlined
+      />
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer />
+      <v-btn color="primary" @click="saveEditedBlock">Mentés</v-btn>
+      <v-btn color="secondary" @click="dialogVisible = false">Mégse</v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
+
   </v-container>
   <MyFooter/>
 </template>
@@ -102,7 +121,9 @@ const subject = ref('')
 const content = ref('')
 const today = new Date().toISOString().split('T')[0]
 const structure = ref([])
-//const structure = ref<{ label: string, HTML: string }[]>([])
+const dialogVisible = ref(false)
+const editedIndex = ref(-1)
+const editedHTML = ref('')
 
 
 //const showDatePicker = ref(false)
@@ -164,9 +185,9 @@ function clearNewsletter() {
 
 // edit block in inserted structure
 function editBlock(index) {
-  const block = structure.value[index]
-  //content.value += `\n\n<!-- ✏️ Szerkesztett blokk: ${block.label} -->\n${block.HTML}`
-  alert(`📝 "${block.label}" blokk újra hozzáadva szerkesztés céljából.`)
+  editedIndex.value = index
+  editedHTML.value = structure.value[index].HTML
+  dialogVisible.value = true
 }
 
 // remove block from structure
@@ -183,6 +204,20 @@ function removeBlock(index) {
   }
 }
 
+function saveEditedBlock() {
+  const index = editedIndex.value
+  const oldHTML = structure.value[index].HTML
+  const newHTML = editedHTML.value.trim()
+
+  // Frissítés a structure tömbben
+  structure.value[index].HTML = newHTML
+
+  // Frissítés a content.value-ben
+  const regex = new RegExp(`\\n*${escapeRegExp(oldHTML)}\\n*`, 'g')
+  content.value = content.value.replace(regex, `\n\n${newHTML}`).trim()
+
+  dialogVisible.value = false
+}
 
 
 </script>
