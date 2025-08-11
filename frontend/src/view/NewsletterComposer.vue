@@ -103,16 +103,22 @@
 <script setup>
 import { ref, computed  } from 'vue'
 import axios from 'axios'
-//import { marked } from 'marked'
 import MyFooter from '../components/MyFooter.vue'
 import MyHeader from '../components/MyHeader.vue'
-//import { toast } from 'vue3-toastify'
-import { headerHTML } from '../sablons/headerTemplate.js'
-import { heroHTML } from '../sablons/heroTemplate.js'
-import { contentTextHTML } from '../sablons/contTextTemplate.js'
-import { contentImageHTML } from '../sablons/contImageTemplate.js'
-import { ctaHTML } from '../sablons/ctaTemplate.js'
-import { footerHTML } from '../sablons/footerTemplate.js'
+// import the templates
+import { bodyImgL } from '../sablons/TemplateBodyImgL.js'
+import { bodyImgC } from '../sablons/TemplateBodyImgC.js'
+import { bodyTextImgL } from '../sablons/TemplateBodyTextImgL.js'
+import { bodyTextImgR } from '../sablons/TemplateBodyTextImgR.js'
+import { headerHTML } from '../sablons/TemplateHeader.js'
+import { heroHTML } from '../sablons/TemplateHero.js'
+import { BodyTextL } from '../sablons/TemplateBodyTextL.js'
+import { BodyTextC } from '../sablons/TemplateBodyTextC.js'
+import { BodyTextBL } from '../sablons/TemplateBodyTextBL.js'
+import { BodyTextBC } from '../sablons/TemplateBodyTextBC.js'
+import { BodyCtaC } from '../sablons/TemplateCtaC.js'
+import { BodyCtaL } from '../sablons/TemplateCtaL.js'
+import { footerHTML } from '../sablons/TemplateFooter.js'
 import DOMPurify from 'dompurify'
 
 // 📋 Form state
@@ -131,11 +137,18 @@ const editedHTML = ref('')
 // 🧱 Sablon blokkok
 const templateBlocks = [
   { label: 'Fejléc', HTML: headerHTML },
-  { label: 'Hero', HTML: heroHTML },
-  { label: 'Tartalom-szöveg', HTML: contentTextHTML },
-  { label: 'Tartalom-képpel', HTML: contentImageHTML },
-  { label: 'CTA', HTML: ctaHTML },
   { label: 'Lábléc', HTML: footerHTML },
+  { label: 'Hero', HTML: heroHTML },
+  { label: 'cím közép', HTML: BodyTextBC },
+  { label: 'cím ball', HTML: BodyTextBL },
+  { label: 'szöveg közép', HTML: BodyTextC },
+  { label: 'szöveg ball', HTML: BodyTextL },
+  { label: 'kép közép', HTML: bodyImgC },
+  { label: 'kép ball', HTML: bodyImgL },
+  { label: 'kép&szöveg ball', HTML: bodyTextImgL },
+  { label: 'kép&szöveg jobb', HTML: bodyTextImgR },
+  { label: 'gomb közép', HTML: BodyCtaC },
+  { label: 'gomb ball', HTML: BodyCtaL },
 ]
 
 /* change or ereas content
