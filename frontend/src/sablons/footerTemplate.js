@@ -7,7 +7,7 @@ export const footerHTML = `
 
   <div style="display: inline-block; margin-top: 10px;">
     <a href="https://yowayoli.com" style="margin: 0 10px; color: #0077cc; text-decoration: none;">Weboldal</a> |
-    <a href="https://https://www.facebook.com/profile.php?id=100064353450604" style="margin: 0 10px; color: #0077cc; text-decoration: none;">Facebook</a> |
+    <a href="https://www.facebook.com/profile.php?id=100064353450604" style="margin: 0 10px; color: #0077cc; text-decoration: none;">Facebook</a> |
     <a href="https://www.instagram.com/antaligyongyiedit/" style="margin: 0 10px; color: #0077cc; text-decoration: none;">Instagram</a> |
     <a href="https://yowayoli.com/gdpr" style="margin: 0 10px; color: #0077cc; text-decoration: none;">GDPR</a> |
     <a href="https://yowayoli.com/api/unsubscribe/{{email}}" style="margin: 0 10px; color: #0077cc; text-decoration: none;">Leiratkozás</a>
