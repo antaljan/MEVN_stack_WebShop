@@ -1,7 +1,7 @@
 <template>
   <MyHeader/>
   <v-container>
-      <!--HTML elónézet-->
+    <!-- subject-->
       <v-textarea
         v-model="subject"
         label="Hírlevél minta tárgya"
@@ -10,6 +10,23 @@
         :rules="[v => !!v || 'A tartalom nem lehet üres']"
         @input="valid = subject.length > 0"
       />
+      <!-- toolbar-->
+      <v-card >
+        <v-card-title>Sablon-elemek</v-card-title>
+        <v-card-items>
+              <v-btn v-for="(item, index) in templateBlocks" :key="index"
+                @click="insertBlock(item)"
+                class="ma-2"
+                :color="index % 2 === 0 ? 'primary' : 'secondary'"
+                :outlined="index % 2 === 0"
+                :text="index % 2 !== 0"
+              >
+                {{ item.label }}
+              </v-btn>
+        </v-card-items>
+      </v-card>
+    <v-row>
+      <v-col cols="12" md="9">
       <!-- Előnézet -->
       <v-card>
         <v-card-title>📬 Előnézet</v-card-title>
@@ -23,26 +40,63 @@
           <v-btn color="primary" @click="sendNewsletter" :disabled="!valid">
             Mentés
           </v-btn>
+          <v-btn color="primary" @click="clearNewsletter">
+            Törlés
+          </v-btn>
+          <v-btn color="primary" @click="loadNewsletter">
+            Betöltés
+          </v-btn>
+
         </v-card-actions>
       </v-card>
+      </v-col>
+      <v-col cols="12" md="3">
+        <!-- Structure -->
+        <v-card title="Sablon szerkezete">
+          <v-card-text>
+          <v-timeline align="start" density="compact">
+            <v-timeline-item
+              v-for="(structureitem, index) in structure"
+              :key="index"
+              size="x-small"
+            >
+              <div class="d-flex justify-space-between align-center">
+                <strong>{{ structureitem.label }}</strong>
+                <v-spacer></v-spacer>
+                <div>
+                  <v-btn icon size="small" @click="editBlock(index)">
+                    <v-icon>mdi-pencil</v-icon>
+                  </v-btn>
+                  <v-btn icon size="small" @click="removeBlock(index)">
+                    <v-icon color="error">mdi-delete</v-icon>
+                  </v-btn>
+                </div>
+              </div>
+            </v-timeline-item>
+          </v-timeline>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-dialog v-model="dialogVisible" max-width="600px">
+  <v-card>
+    <v-card-title>Sablon blokk szerkesztése</v-card-title>
+    <v-card-text>
+      <v-textarea
+        v-model="editedHTML"
+        label="HTML tartalom"
+        rows="10"
+        outlined
+      />
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer />
+      <v-btn color="primary" @click="saveEditedBlock">Mentés</v-btn>
+      <v-btn color="secondary" @click="dialogVisible = false">Mégse</v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
 
-      <!-- Sablon-elemek (Drag & Drop lista) -->
-      <v-divider class="my-4" />
-      <v-card>
-        <v-card-title>🧩 Sablon-elemek</v-card-title>
-        <v-list>
-          <v-list-item v-for="(item, index) in templateBlocks" :key="index">
-            <v-list-item-content>{{ item.label }}</v-list-item-content>
-            <v-list-item-action>
-              <v-btn icon @click="insertBlock(item)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-            </v-list-item-action>
-          </v-list-item>
-        </v-list>
-        <v-divider class="my-4" />
-
-      </v-card>
   </v-container>
   <MyFooter/>
 </template>
@@ -66,28 +120,45 @@ const valid = ref(false)
 const subject = ref('')
 const content = ref('')
 const today = new Date().toISOString().split('T')[0]
+const structure = ref([])
+const dialogVisible = ref(false)
+const editedIndex = ref(-1)
+const editedHTML = ref('')
+
 
 //const showDatePicker = ref(false)
 
 // 🧱 Sablon blokkok
 const templateBlocks = [
-  { label: 'Fejléc (Logo, Szlogen)', HTML: headerHTML },
-  { label: 'Hero (figyelemfelkeltés)', HTML: heroHTML },
-  { label: 'Tartalom - szöveg', HTML: contentTextHTML },
-  { label: 'Tartalom - képpel', HTML: contentImageHTML },
-  { label: 'CTA (Call To Action) gombok', HTML: ctaHTML },
-  { label: 'Lábléc (Kapcsolat, GDPR, Leiratkozás)', HTML: footerHTML },
+  { label: 'Fejléc', HTML: headerHTML },
+  { label: 'Hero', HTML: heroHTML },
+  { label: 'Tartalom-szöveg', HTML: contentTextHTML },
+  { label: 'Tartalom-képpel', HTML: contentImageHTML },
+  { label: 'CTA', HTML: ctaHTML },
+  { label: 'Lábléc', HTML: footerHTML },
 ]
+
+/* change or ereas content
+function modifyTemplate(content, what, whatfor) {
+  return content
+    .replace(/${what}/g, whatfor)
+}*/
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
 
 // convert and purify markdown to html
 const convertedHtml = computed(() => DOMPurify.sanitize(content.value ));
 
-// ➕ Blokk beszúrás
+// insert block into content
 function insertBlock(block) {
   content.value += `\n\n${block.HTML}`
+  structure.value.push({ label: block.label, HTML: block.HTML })
 }
 
-// 📧 Hírlevél küldés
+// send newsletter
 async function sendNewsletter() {
   try {
     const payload = {
@@ -102,6 +173,53 @@ async function sendNewsletter() {
     alert('❌ Hiba történt a mentés során.')
   }
 }
+
+// clear newsletter content
+function clearNewsletter() {
+  if (confirm("Biztosan törlöd a tartalmat?")) {
+    content.value = ''
+    subject.value = ''
+    structure.value = []
+  }
+}
+
+// edit block in inserted structure
+function editBlock(index) {
+  editedIndex.value = index
+  editedHTML.value = structure.value[index].HTML
+  dialogVisible.value = true
+}
+
+// remove block from structure
+function removeBlock(index) {
+  const block = structure.value[index]
+  if (confirm(`Biztosan törlöd a(z) "${block.label}" blokkot?`)) {
+    // Törlés a structure tömbből
+    structure.value.splice(index, 1)
+
+    // Törlés a content.value-ből
+    const htmlToRemove = block.HTML.trim()
+    const regex = new RegExp(`\\n*${escapeRegExp(htmlToRemove)}\\n*`, 'g')
+    content.value = content.value.replace(regex, '').trim()
+  }
+}
+
+function saveEditedBlock() {
+  const index = editedIndex.value
+  const oldHTML = structure.value[index].HTML
+  const newHTML = editedHTML.value.trim()
+
+  // Frissítés a structure tömbben
+  structure.value[index].HTML = newHTML
+
+  // Frissítés a content.value-ben
+  const regex = new RegExp(`\\n*${escapeRegExp(oldHTML)}\\n*`, 'g')
+  content.value = content.value.replace(regex, `\n\n${newHTML}`).trim()
+
+  dialogVisible.value = false
+}
+
+
 </script>
 
 <style scoped>
