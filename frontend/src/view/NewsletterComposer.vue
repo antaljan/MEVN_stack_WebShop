@@ -1,7 +1,7 @@
 <template>
   <MyHeader/>
   <v-container>
-    <!-- subject-->
+<!-- subject-->
       <v-textarea
         v-model="subject"
         label="Hírlevél minta tárgya"
@@ -10,7 +10,7 @@
         :rules="[v => !!v || 'A tartalom nem lehet üres']"
         @input="valid = subject.length > 0"
       />
-      <!-- toolbar-->
+<!-- toolbar-->
       <v-card >
         <v-card-title>Sablon-elemek</v-card-title>
         <v-card-items>
@@ -27,7 +27,7 @@
       </v-card>
     <v-row>
       <v-col cols="12" md="9">
-      <!-- Előnézet -->
+<!-- Preview - HTML -->
       <v-card>
         <v-card-title>📬 Előnézet</v-card-title>
         <v-card-text>
@@ -46,12 +46,11 @@
           <v-btn color="primary" @click="loadNewsletter">
             Betöltés
           </v-btn>
-
         </v-card-actions>
       </v-card>
       </v-col>
       <v-col cols="12" md="3">
-        <!-- Structure -->
+<!-- Structure -->
         <v-card title="Sablon szerkezete">
           <v-card-text>
           <v-timeline align="start" density="compact">
@@ -78,33 +77,51 @@
         </v-card>
       </v-col>
     </v-row>
+<!--- dialog for editing -->
     <v-dialog v-model="dialogVisible" max-width="600px">
-  <v-card>
-    <v-card-title>Sablon blokk szerkesztése</v-card-title>
-    <v-card-text>
-      <v-textarea
-        v-model="editedHTML"
-        label="HTML tartalom"
-        rows="10"
-        outlined
-      />
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer />
-      <v-btn color="primary" @click="saveEditedBlock">Mentés</v-btn>
-      <v-btn color="secondary" @click="dialogVisible = false">Mégse</v-btn>
-    </v-card-actions>
-  </v-card>
-</v-dialog>
-
-  </v-container>
-  <MyFooter/>
+      <v-card>
+        <v-card-title>Sablon blokk szerkesztése</v-card-title>
+        <v-card-text>
+          <v-textarea
+            v-model="editedHTML"
+            label="HTML tartalom"
+            rows ="10"
+            outlined
+          />
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="primary" @click="saveEditedBlock">Mentés</v-btn>
+          <v-btn color="secondary" @click="dialogVisible = false">Mégse</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+<!-- dialog list of saved templates -->
+    <v-card>
+      <v-card-title>Mentett sablonok</v-card-title>
+      <v-card-text>
+        <v-select
+            v-model="selectedTemplate"
+            :items="templates"
+            item-title="subject"
+            item-value="id"
+            label="Sablon kiválasztása"
+            class="mt-4"
+          />
+      </v-card-text>
+    </v-card>
+</v-container>
+<MyFooter/>
 </template>
 <script setup>
+// import componnents and libraries
 import { ref, computed  } from 'vue'
 import axios from 'axios'
 import MyFooter from '../components/MyFooter.vue'
 import MyHeader from '../components/MyHeader.vue'
+import DOMPurify from 'dompurify'
+import { onMounted } from 'vue'
+
 // import the templates
 import { bodyImgL } from '../sablons/TemplateBodyImgL.js'
 import { bodyImgC } from '../sablons/TemplateBodyImgC.js'
@@ -119,9 +136,8 @@ import { BodyTextBC } from '../sablons/TemplateBodyTextBC.js'
 import { BodyCtaC } from '../sablons/TemplateCtaC.js'
 import { BodyCtaL } from '../sablons/TemplateCtaL.js'
 import { footerHTML } from '../sablons/TemplateFooter.js'
-import DOMPurify from 'dompurify'
 
-// 📋 Form state
+// Form state
 const valid = ref(false)
 const subject = ref('')
 const content = ref('')
@@ -130,11 +146,10 @@ const structure = ref([])
 const dialogVisible = ref(false)
 const editedIndex = ref(-1)
 const editedHTML = ref('')
+const templates = ref([])
+const selectedTemplate = ref(null)
 
-
-//const showDatePicker = ref(false)
-
-// 🧱 Sablon blokkok
+// Sablon block
 const templateBlocks = [
   { label: 'Fejléc', HTML: headerHTML },
   { label: 'Lábléc', HTML: footerHTML },
@@ -151,11 +166,43 @@ const templateBlocks = [
   { label: 'gomb ball', HTML: BodyCtaL },
 ]
 
-/* change or ereas content
-function modifyTemplate(content, what, whatfor) {
-  return content
-    .replace(/${what}/g, whatfor)
-}*/
+onMounted(async () => {
+  try {
+    const response = await axios.post('https://yowayoli.com/api/newsletter/gettemplates')
+    templates.value = response.data.templates
+  } catch (error) {
+    console.error('Nem sikerült lekérni a sablonokat:', error)
+  }
+})
+
+// load newsletter content from localStorage
+async function loadNewsletter() {
+  if (!selectedTemplate.value) {
+    alert("Válassz ki egy sablont a betöltéshez!")
+    return
+  }
+
+  if (subject.value || content.value) {
+    if (!confirm("Biztosan törlöd a jelenlegi tartalmat?")) return
+    content.value = ''
+    subject.value = ''
+    structure.value = []
+  }
+
+  try {
+    const response = await axios.post('https://yowayoli.com/api/newsletter/gettemplate', {
+      id: selectedTemplate.value
+    })
+    const data = response.data
+    content.value = data.rawcontent
+    subject.value = data.subject
+    structure.value = data.structure
+  } catch (error) {
+    console.error('Hiba a sablon betöltésekor:', error)
+    alert('❌ Nem sikerült betölteni a sablont.')
+  }
+}
+
 
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -177,7 +224,8 @@ async function sendNewsletter() {
     const payload = {
       subject: subject.value,
       rawcontent: convertedHtml.value,
-      sendDate: today
+      sendDate: today,
+      structure: structure.value
     }
   await axios.post('https://yowayoli.com/api/newsletter/save', payload)
   alert('✅ Hírlevél sablon mentve!')
@@ -221,17 +269,13 @@ function saveEditedBlock() {
   const index = editedIndex.value
   const oldHTML = structure.value[index].HTML
   const newHTML = editedHTML.value.trim()
-
   // Frissítés a structure tömbben
   structure.value[index].HTML = newHTML
-
   // Frissítés a content.value-ben
   const regex = new RegExp(`\\n*${escapeRegExp(oldHTML)}\\n*`, 'g')
   content.value = content.value.replace(regex, `\n\n${newHTML}`).trim()
-
   dialogVisible.value = false
 }
-
 
 </script>
 
