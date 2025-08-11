@@ -23,12 +23,11 @@ function deleteSubscriberByEmail(email) {
 async function saveNewsletter(newsletterData) {
   const db = getDb();
   const collection = db.collection('newsletters');
-
   const result = await collection.insertOne({
     subject: newsletterData.subject,
     rawcontent: newsletterData.rawcontent,
     sendDate: newsletterData.sendDate,
-    createdAt: new Date()
+    structure: newsletterData.structure,
   });
   return result;
 }

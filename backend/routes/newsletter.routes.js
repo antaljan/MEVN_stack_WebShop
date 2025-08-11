@@ -24,5 +24,4 @@ router.post('/save', save);
 // save newsletter template in mongo
 router.post('/gettemplates', newsletterController.gettemplates);
 
-
 module.exports = router;
