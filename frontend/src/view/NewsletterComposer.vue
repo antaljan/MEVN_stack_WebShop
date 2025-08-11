@@ -13,7 +13,7 @@
 <!-- toolbar-->
       <v-card >
         <v-card-title>Sablon-elemek</v-card-title>
-        <v-card-items>
+        <v-card-text>
               <v-btn v-for="(item, index) in templateBlocks" :key="index"
                 @click="insertBlock(item)"
                 class="ma-2"
@@ -23,7 +23,7 @@
               >
                 {{ item.label }}
               </v-btn>
-        </v-card-items>
+        </v-card-text>
       </v-card>
     <v-row>
       <v-col cols="12" md="9">
@@ -104,7 +104,7 @@
             v-model="selectedTemplate"
             :items="templates"
             item-title="subject"
-            item-value="id"
+            item-value="_id"
             label="Sablon kiválasztása"
             class="mt-4"
           />
@@ -169,14 +169,14 @@ const templateBlocks = [
 onMounted(async () => {
   try {
     const response = await axios.post('https://yowayoli.com/api/newsletter/gettemplates')
-    templates.value = response.data.templates
+    templates.value = response.data.allNewsletters
   } catch (error) {
     console.error('Nem sikerült lekérni a sablonokat:', error)
   }
 })
 
-// load newsletter content from localStorage
-async function loadNewsletter() {
+// load newsletter content
+function loadNewsletter() {
   if (!selectedTemplate.value) {
     alert("Válassz ki egy sablont a betöltéshez!")
     return
@@ -189,19 +189,20 @@ async function loadNewsletter() {
     structure.value = []
   }
 
-  try {
-    const response = await axios.post('https://yowayoli.com/api/newsletter/gettemplate', {
-      id: selectedTemplate.value
-    })
-    const data = response.data
-    content.value = data.rawcontent
-    subject.value = data.subject
-    structure.value = data.structure
-  } catch (error) {
-    console.error('Hiba a sablon betöltésekor:', error)
-    alert('❌ Nem sikerült betölteni a sablont.')
+  // 🔍 Keresés a már lekért sablonok között
+  const selected = templates.value.find(t => t._id === selectedTemplate.value)
+
+  if (!selected) {
+    alert('❌ Nem található a kiválasztott sablon a listában.')
+    return
   }
+
+  // ✅ Betöltés a lokális adatokból
+  content.value = selected.rawcontent || ''
+  subject.value = selected.subject || ''
+  structure.value = selected.structure || []
 }
+
 
 
 function escapeRegExp(string) {
