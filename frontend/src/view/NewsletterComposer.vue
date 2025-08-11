@@ -220,6 +220,13 @@ function insertBlock(block) {
 
 // send newsletter
 async function sendNewsletter() {
+  console.log('Küldött payload:', JSON.stringify({
+  subject: subject.value,
+  rawcontent: convertedHtml.value,
+  sendDate: today,
+  structure: structure.value
+}, null, 2))
+
   try {
     const payload = {
       subject: subject.value,

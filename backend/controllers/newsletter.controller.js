@@ -107,13 +107,13 @@ async function send(req, res) {
 // save newsletter template
 async function save(req, res) {
   try {
-    const { subject, rawcontent, sendDate } = req.body;
+    const { subject, rawcontent, sendDate, structure } = req.body;
 
-    if (!subject || !rawcontent || !sendDate) {
+    if (!subject || !rawcontent || !sendDate || !structure) {
       return res.status(400).json({ error: 'Hiányzó mezők a kérésben.' });
     }
 
-    const result = await saveNewsletter({ subject, rawcontent, sendDate });
+    const result = await saveNewsletter({ subject, rawcontent, sendDate, structure });
 
     res.status(201).json({
       message: '✅ Hírlevél sablon sikeresen mentve.',
