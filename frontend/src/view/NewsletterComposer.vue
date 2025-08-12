@@ -82,12 +82,14 @@
       <v-card>
         <v-card-title>Sablon blokk szerkesztése</v-card-title>
         <v-card-text>
-          <v-textarea
-            v-model="editedHTML"
-            label="HTML tartalom"
-            rows ="10"
-            outlined
-          />
+          <h3>✏️ Szövegek</h3>
+          <div v-for="(text, i) in editableTexts" :key="'text-' + i">
+            <v-text-field v-model="editableTexts[i]" label="Szöveg" outlined />
+          </div>
+          <h3>🔗 Linkek</h3>
+          <div v-for="(link, i) in editableLinks" :key="'link-' + i">
+            <v-text-field v-model="editableLinks[i]" label="Link" outlined />
+          </div>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -148,6 +150,9 @@ const editedIndex = ref(-1)
 const editedHTML = ref('')
 const templates = ref([])
 const selectedTemplate = ref(null)
+const editableTexts = ref([])
+const editableLinks = ref([])
+
 
 // Sablon block
 const templateBlocks = [
@@ -191,7 +196,6 @@ function loadNewsletter() {
 
   // 🔍 Keresés a már lekért sablonok között
   const selected = templates.value.find(t => t._id === selectedTemplate.value)
-
   if (!selected) {
     alert('❌ Nem található a kiválasztott sablon a listában.')
     return
@@ -203,12 +207,10 @@ function loadNewsletter() {
   structure.value = selected.structure || []
 }
 
-
-
+// Escape special characters in a string for use in a regular expression
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
-
 
 // convert and purify markdown to html
 const convertedHtml = computed(() => DOMPurify.sanitize(content.value ));
@@ -227,7 +229,6 @@ async function sendNewsletter() {
   sendDate: today,
   structure: structure.value
 }, null, 2))
-
   try {
     const payload = {
       subject: subject.value,
@@ -256,8 +257,14 @@ function clearNewsletter() {
 function editBlock(index) {
   editedIndex.value = index
   editedHTML.value = structure.value[index].HTML
+
+  // Szűrés szövegekre és linkekre
+  editableTexts.value = filterText(editedHTML.value)
+  editableLinks.value = filterLink(editedHTML.value)
+
   dialogVisible.value = true
 }
+
 
 // remove block from structure
 function removeBlock(index) {
@@ -273,31 +280,47 @@ function removeBlock(index) {
   }
 }
 
+// save edited block
 function saveEditedBlock() {
   const index = editedIndex.value
-  const oldHTML = structure.value[index].HTML
-  const newHTML = editedHTML.value.trim()
+  let html = structure.value[index].HTML
+  // Szövegek cseréje
+  const originalTexts = filterText(html)
+  originalTexts.forEach((original, i) => {
+    const updated = editableTexts.value[i]
+    if (updated && updated !== original) {
+      html = html.replace(new RegExp(`>${escapeRegExp(original)}<`, 'g'), `>${updated}<`)
+    }
+  })
+  // Linkek cseréje
+  const originalLinks = filterLink(html)
+  originalLinks.forEach((original, i) => {
+    const updated = editableLinks.value[i]
+    if (updated && updated !== original) {
+      html = html.replace(new RegExp(escapeRegExp(original), 'g'), updated)
+    }
+  })
   // Frissítés a structure tömbben
-  structure.value[index].HTML = newHTML
+  structure.value[index].HTML = html
   // Frissítés a content.value-ben
+  const oldHTML = editedHTML.value.trim()
   const regex = new RegExp(`\\n*${escapeRegExp(oldHTML)}\\n*`, 'g')
-  content.value = content.value.replace(regex, `\n\n${newHTML}`).trim()
+  content.value = content.value.replace(regex, `\n\n${html}`).trim()
   dialogVisible.value = false
 }
 
-function filterText(text) {
-  const texts = [...html.matchAll(/>([^<]+)</g)]
+// Filter functions to extract text and links from HTML
+function filterText(html) {
+  return [...html.matchAll(/>([^<]+)</g)]
     .map(match => match[1].trim())
     .filter(text => text.length > 0);
-    console.log("Szövegek:", texts);
-  return texts
 }
 
-function filterLink(text) {
-  const links = [...html.matchAll(/https:\/\/[^"]+/g)].map(match => match[0]);
-  console.log("Linkek:", links);
-  return links;
+// Filter function to extract links from HTML
+function filterLink(html) {
+  return [...html.matchAll(/https:\/\/[^"]+/g)].map(match => match[0]);
 }
+
 
 
 </script>
