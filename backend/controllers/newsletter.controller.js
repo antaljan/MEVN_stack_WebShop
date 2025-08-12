@@ -138,6 +138,27 @@ async function gettemplates(req, res) {
   }
 }
 
+// delete newsletter template
+async function deleteTemplate(req, res) {
+  console.log('Frontend try to delete newsletter template.',req.body);
+  try {
+    const { _id } = req.body;
+    if (!_id) {
+      return res.status(400).json({ error: 'Hiányzó sablon ID.' });
+    }
+
+    const result = await newsletterModel.deleteNewsletter(_id);
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: 'Nem található sablon ezzel az ID-val.' });
+    }
+
+    res.status(200).json({ message: '🗑️ Sablon sikeresen törölve.' });
+  } catch (err) {
+    console.error('❌ Hiba a törlés során:', err);
+    res.status(500).json({ error: 'Szerverhiba történt.' });
+  }
+}
 
 module.exports = {
   subscribe,
@@ -147,5 +168,6 @@ module.exports = {
   send,
   schednewsletters,
   save,
-  gettemplates
+  gettemplates,
+  deleteTemplate
 };

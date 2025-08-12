@@ -2,14 +2,23 @@
   <MyHeader/>
   <v-container>
 <!-- subject-->
-      <v-textarea
-        v-model="subject"
-        label="Hírlevél minta tárgya"
-        rows="1"
-        outlined
-        :rules="[v => !!v || 'A tartalom nem lehet üres']"
-        @input="valid = subject.length > 0"
-      />
+    <v-row class="align-center">
+      <v-col cols="12" md="9">
+        <v-textarea
+          v-model="subject"
+          label="Hírlevél minta tárgya"
+          rows="1"
+          outlined
+          :rules="[v => !!v || 'A tartalom nem lehet üres']"
+          @input="valid = subject.length > 0"
+        />
+      </v-col>
+      <v-col cols="12" md="3">
+        <v-btn color="secondary" @click="templateDialogVisible = true">
+          Mentett sablonok
+        </v-btn>
+      </v-col>
+    </v-row>
 <!-- toolbar-->
       <v-card >
         <v-card-title>Sablon-elemek</v-card-title>
@@ -42,9 +51,6 @@
           </v-btn>
           <v-btn color="primary" @click="clearNewsletter">
             Törlés
-          </v-btn>
-          <v-btn color="primary" @click="loadNewsletter">
-            Betöltés
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -111,21 +117,36 @@
       </v-card>
     </v-dialog>
 <!-- dialog list of saved templates -->
-    <v-card>
-      <v-card-title>Mentett sablonok</v-card-title>
-      <v-card-text>
-        <v-select
-            v-model="selectedTemplate"
-            :items="templates"
-            item-title="subject"
-            item-value="_id"
-            label="Sablon kiválasztása"
-            class="mt-4"
-          />
-      </v-card-text>
-    </v-card>
-</v-container>
-<MyFooter/>
+    <v-dialog v-model="templateDialogVisible" max-width="600px">
+      <v-card>
+        <v-card-title>📁 Mentett sablonok</v-card-title>
+        <v-card-text>
+          <v-list>
+            <v-list-item
+              v-for="template in templates"
+              :key="template._id"
+            >
+                  <v-list-item-title>{{ template.subject }}</v-list-item-title>
+                  <v-list-item-subtitle>{{ new Date(template.sendDate).toLocaleDateString() }}</v-list-item-subtitle>
+                  <v-list-item-action>
+                    <v-btn icon @click="loadSelectedTemplate(template)">
+                      <v-icon>mdi-download</v-icon>
+                    </v-btn>
+                    <v-btn icon @click="deleteTemplate(template._id)">
+                      <v-icon color="error">mdi-delete</v-icon>
+                    </v-btn>
+                  </v-list-item-action>
+            </v-list-item>
+          </v-list>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="secondary" @click="templateDialogVisible = false">Bezárás</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
+  <MyFooter/>
 </template>
 <script setup>
 // import componnents and libraries
@@ -161,12 +182,11 @@ const dialogVisible = ref(false)
 const editedIndex = ref(-1)
 const editedHTML = ref('')
 const templates = ref([])
-const selectedTemplate = ref(null)
 const editableTexts = ref([])
 const editableLinks = ref([])
 const forbiddenChars = ['<', '>', '[', ']', '$', '%', '#', '`']
 const imageFile = ref(null);
-
+const templateDialogVisible = ref(false)
 
 // Sablon block
 const templateBlocks = [
@@ -200,27 +220,29 @@ function containsForbiddenChars(text) {
 }
 
 // load newsletter content
-function loadNewsletter() {
-  if (!selectedTemplate.value) {
-    alert("Válassz ki egy sablont a betöltéshez!")
-    return
-  }
+function loadSelectedTemplate(template) {
   if (subject.value || content.value) {
     if (!confirm("Biztosan törlöd a jelenlegi tartalmat?")) return
     content.value = ''
     subject.value = ''
     structure.value = []
   }
-  // 🔍 Keresés a már lekért sablonok között
-  const selected = templates.value.find(t => t._id === selectedTemplate.value)
-  if (!selected) {
-    alert('❌ Nem található a kiválasztott sablon a listában.')
-    return
+  content.value = template.rawcontent || ''
+  subject.value = template.subject || ''
+  structure.value = template.structure || []
+  templateDialogVisible.value = false
+}
+
+// delete template
+async function deleteTemplate(id) {
+  if (!confirm("Biztosan törlöd ezt a sablont?")) return
+  try {
+    await axios.post('https://yowayoli.com/api/newsletter/deletetemplate', { id })
+    templates.value = templates.value.filter(t => t._id !== id)
+  } catch (error) {
+    alert('❌ Nem sikerült törölni a sablont.')
+    console.error(error)
   }
-  // ✅ Betöltés a lokális adatokból
-  content.value = selected.rawcontent || ''
-  subject.value = selected.subject || ''
-  structure.value = selected.structure || []
 }
 
 // Escape special characters in a string for use in a regular expression
