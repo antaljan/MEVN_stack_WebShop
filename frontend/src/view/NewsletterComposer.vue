@@ -285,6 +285,21 @@ function saveEditedBlock() {
   dialogVisible.value = false
 }
 
+function filterText(text) {
+  const texts = [...html.matchAll(/>([^<]+)</g)]
+    .map(match => match[1].trim())
+    .filter(text => text.length > 0);
+    console.log("Szövegek:", texts);
+  return texts
+}
+
+function filterLink(text) {
+  const links = [...html.matchAll(/https:\/\/[^"]+/g)].map(match => match[0]);
+  console.log("Linkek:", links);
+  return links;
+}
+
+
 </script>
 
 <style scoped>
