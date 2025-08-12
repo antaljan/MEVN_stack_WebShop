@@ -234,11 +234,11 @@ function loadSelectedTemplate(template) {
 }
 
 // delete template
-async function deleteTemplate(id) {
+async function deleteTemplate(_id) {
   if (!confirm("Biztosan törlöd ezt a sablont?")) return
   try {
-    await axios.post('https://yowayoli.com/api/newsletter/deletetemplate', { id })
-    templates.value = templates.value.filter(t => t._id !== id)
+    await axios.post('https://yowayoli.com/api/newsletter/deletetemplate', { _id })
+    templates.value = templates.value.filter(t => t._id !== _id)
   } catch (error) {
     alert('❌ Nem sikerült törölni a sablont.')
     console.error(error)
