@@ -82,12 +82,26 @@
       <v-card>
         <v-card-title>Sablon blokk szerkesztése</v-card-title>
         <v-card-text>
-          <v-textarea
-            v-model="editedHTML"
-            label="HTML tartalom"
-            rows ="10"
-            outlined
-          />
+          <h3>✏️ Szövegek</h3>
+          <div v-for="(text, i) in editableTexts" :key="'text-' + i">
+            <v-text-field
+              v-model="editableTexts[i]"
+              label="Szöveg"
+              outlined
+              :rules="[v => !containsForbiddenChars(v) || 'Tiltott karaktert tartalmaz']"
+            />
+          </div>
+          <h3>🔗 Linkek</h3>
+          <div v-for="(link, i) in editableLinks" :key="'link-' + i">
+            <v-text-field v-model="editableLinks[i]" label="Link" outlined />
+            <v-file-input
+              v-model="imageFile"
+              label="Kép feltöltése"
+              accept="image/*"
+              outlined
+              @change="uploadImage(i)"
+            />
+          </div>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -148,6 +162,11 @@ const editedIndex = ref(-1)
 const editedHTML = ref('')
 const templates = ref([])
 const selectedTemplate = ref(null)
+const editableTexts = ref([])
+const editableLinks = ref([])
+const forbiddenChars = ['<', '>', '[', ']', '$', '%', '#', '`']
+const imageFile = ref(null);
+
 
 // Sablon block
 const templateBlocks = [
@@ -175,40 +194,39 @@ onMounted(async () => {
   }
 })
 
+// check text for vorbidden charakters
+function containsForbiddenChars(text) {
+  return forbiddenChars.some(char => text.includes(char));
+}
+
 // load newsletter content
 function loadNewsletter() {
   if (!selectedTemplate.value) {
     alert("Válassz ki egy sablont a betöltéshez!")
     return
   }
-
   if (subject.value || content.value) {
     if (!confirm("Biztosan törlöd a jelenlegi tartalmat?")) return
     content.value = ''
     subject.value = ''
     structure.value = []
   }
-
   // 🔍 Keresés a már lekért sablonok között
   const selected = templates.value.find(t => t._id === selectedTemplate.value)
-
   if (!selected) {
     alert('❌ Nem található a kiválasztott sablon a listában.')
     return
   }
-
   // ✅ Betöltés a lokális adatokból
   content.value = selected.rawcontent || ''
   subject.value = selected.subject || ''
   structure.value = selected.structure || []
 }
 
-
-
+// Escape special characters in a string for use in a regular expression
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
-
 
 // convert and purify markdown to html
 const convertedHtml = computed(() => DOMPurify.sanitize(content.value ));
@@ -227,7 +245,6 @@ async function sendNewsletter() {
   sendDate: today,
   structure: structure.value
 }, null, 2))
-
   try {
     const payload = {
       subject: subject.value,
@@ -256,8 +273,14 @@ function clearNewsletter() {
 function editBlock(index) {
   editedIndex.value = index
   editedHTML.value = structure.value[index].HTML
+
+  // Szűrés szövegekre és linkekre
+  editableTexts.value = filterText(editedHTML.value)
+  editableLinks.value = filterLink(editedHTML.value)
+
   dialogVisible.value = true
 }
+
 
 // remove block from structure
 function removeBlock(index) {
@@ -273,17 +296,74 @@ function removeBlock(index) {
   }
 }
 
+// save edited block
 function saveEditedBlock() {
   const index = editedIndex.value
-  const oldHTML = structure.value[index].HTML
-  const newHTML = editedHTML.value.trim()
+  const hasInvalidText = editableTexts.value.some(text => containsForbiddenChars(text));
+  if (hasInvalidText) {
+    alert("❌ A szöveg tiltott karaktert tartalmaz. Kérlek javítsd ki.");
+    return;
+  }
+  let html = structure.value[index].HTML
+  // Szövegek cseréje
+  const originalTexts = filterText(html)
+  originalTexts.forEach((original, i) => {
+    const updated = editableTexts.value[i]
+    if (updated && updated !== original) {
+      html = html.replace(new RegExp(`>${escapeRegExp(original)}<`, 'g'), `>${updated}<`)
+    }
+  })
+  // Linkek cseréje
+  const originalLinks = filterLink(html)
+  originalLinks.forEach((original, i) => {
+    const updated = editableLinks.value[i]
+    if (updated && updated !== original) {
+      html = html.replace(new RegExp(escapeRegExp(original), 'g'), updated)
+    }
+  })
   // Frissítés a structure tömbben
-  structure.value[index].HTML = newHTML
+  structure.value[index].HTML = html
   // Frissítés a content.value-ben
+  const oldHTML = editedHTML.value.trim()
   const regex = new RegExp(`\\n*${escapeRegExp(oldHTML)}\\n*`, 'g')
-  content.value = content.value.replace(regex, `\n\n${newHTML}`).trim()
+  content.value = content.value.replace(regex, `\n\n${html}`).trim()
   dialogVisible.value = false
 }
+
+// Filter functions to extract text and links from HTML
+function filterText(html) {
+  return [...html.matchAll(/>([^<]+)</g)]
+    .map(match => match[1].trim())
+    .filter(text => text.length > 0);
+}
+
+// Filter function to extract links from HTML
+function filterLink(html) {
+  return [...html.matchAll(/https:\/\/[^"]+/g)].map(match => match[0]);
+}
+
+// picture upload function
+const uploadImage = async (index) => {
+  if (!imageFile.value) return;
+
+  const formDataImg = new FormData();
+  formDataImg.append('image', imageFile.value);
+
+  try {
+    const response = await axios.post('https://yowayoli.com/api/upload', formDataImg, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+
+    const uploadedFileName = response.data?.filename || imageFile.value.name;
+    const imageUrl = `https://yowayoli.com/api/uploads/${uploadedFileName}`;
+
+    editableLinks.value[index] = imageUrl;
+    alert('✅ Kép sikeresen feltöltve és linkbe illesztve.');
+  } catch (error) {
+    alert('❌ Hiba a kép feltöltésekor: ' + error);
+  }
+};
+
 
 </script>
 
