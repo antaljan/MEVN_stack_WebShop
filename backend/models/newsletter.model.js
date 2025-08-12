@@ -37,6 +37,14 @@ async function getNewsletter() {
   return await db.collection('newsletters').find({}).toArray();
 };
 
+async function deleteNewsletter(id) {
+  console.log('Deleting template with nr:', id);
+  const db = getDb();
+  const collection = db.collection('newsletters');
+  const result = await collection.deleteOne({ _id: new ObjectId(id) });
+  return result;
+}
+
 
 module.exports = {
   init,
@@ -44,6 +52,7 @@ module.exports = {
   deleteSubscriberByEmail,
   saveNewsletter,
   getNewsletter,
+  deleteNewsletter,
   // save sceduled newsletter
   async saveScheduledNewsletter({ subject, templateId, subscribers, sendDate, sent = false }) {
     const result = await getDb().collection('schedulednewsletters').insertOne({

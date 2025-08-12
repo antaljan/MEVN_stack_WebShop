@@ -18,10 +18,13 @@ router.post('/send', newsletterController.send);
 // send
 router.post('/getsceduled', newsletterController.schednewsletters);
 
-// save newsletter template in mongo
+// save newsletter template
 router.post('/save', save);
 
-// save newsletter template in mongo
+// get all newsletter templates
 router.post('/gettemplates', newsletterController.gettemplates);
+
+// delete newsletter template
+router.post('/deletetemplate', newsletterController.deleteTemplate);
 
 module.exports = router;
