@@ -3,21 +3,17 @@
     <v-app>
     <v-container class="w3-container w3-padding-64">
     <v-card  class="mx-auto">
-        <v-img
-            color="surface-variant"
-            height="100"
-            src="newsletter.webp"
-            cover
-        >
-            <v-toolbar color="transparent">
-                <template v-slot:prepend>
-                    <v-btn icon="mdi-dots-vertical"></v-btn>
-                </template>
-                <v-toolbar-title class="w3-text-white">Aktuálisan {{subscriberCount}} feliratkozó a hírlevelekre,</v-toolbar-title>
-                <v-toolbar-title class="w3-text-white">és {{nLettersCount}} hírlevél készőlt</v-toolbar-title>
-            </v-toolbar>
-        </v-img>
-        <v-card-text>
+        <v-system-bar class="w3-center
+        ">
+            <span class="ms-2">Aktuálisan {{subscriberCount}}-an iratkoztak fel a hírlevelekre </span>
+            <v-icon icon="mdi-account" @click="showSubscriberList"></v-icon>
+            <span class="ms-2"> , {{nLettersCount}} hírlevél készült,</span>
+            <v-icon icon="mdi-email-newsletter" @click="newNewsletter"></v-icon>
+            <span class="ms-2"> , {{templatesCount}} hírlevél sablon áll rendelkezésre.</span>
+            <v-icon icon="mdi-account-multiple" @click="shownewslettergenerator"></v-icon>
+            <span class="ms-2">   </span>
+        </v-system-bar>
+        <v-card-text class="w3-padding-top-24">
             <div class="font-weight-bold ms-1 mb-2">Mai nap</div>
             <v-timeline align="start" density="compact">
                 <v-timeline-item
@@ -49,6 +45,7 @@
     import MyFooter from '../components/MyFooter.vue';
     import { ref, onMounted } from 'vue';
     import axios from 'axios';
+    import { useRouter } from 'vue-router';
     //import { computed } from 'vue'
     //const showList = ref(false);
     const abonements = ref([]);
@@ -65,6 +62,8 @@
     //const selectedGroup = ref('mind')
     //const today = new Date().toISOString().split('T')[0]
     //const dateInput = ref(today)
+    const templatesCount = ref(0);
+    const router = useRouter();
 
     // reques subscribers and newsletters from backend
     onMounted(async () => {
@@ -91,12 +90,25 @@
                 id: template._id,
                 subject: template.subject
             }));
+            templatesCount.value = templates.value.length;
         } catch (error) {
             console.error('Failure by loading of scheduled newsletters:', error);
         }
     });
 
-// function submit
+    function newNewsletter() {
+        alert('új hírlevél létrehozása');
+    }
+
+    function showSubscriberList() {
+        alert('Űrlap megjelenítése');
+    }
+
+    function shownewslettergenerator() {
+        router.push('/newsletterComposer');
+    }
+
+    // function submit
 /*async function submit() {
     if (!subject.value || !selectedTemplate.value || selectedSubscribers.value.length === 0 || !dateInput.value) {
       alert('Kérlek, tölts ki minden mezőt!');
