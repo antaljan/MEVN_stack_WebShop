@@ -14,15 +14,6 @@
         variant="outlined"
         hide-details
       ></v-select>
-      <v-select
-        v-model="weekday"
-        :items="weekdays"
-        class="ma-2"
-        density="compact"
-        label="weekdays"
-        variant="outlined"
-        hide-details
-      ></v-select>
     </v-sheet>
     <v-sheet>
       <v-calendar
@@ -40,20 +31,17 @@
 
   export default {
     data: () => ({
-      type: 'month',
-      types: ['month', 'week', 'day'],
-      weekday: [0, 1, 2, 3, 4, 5, 6],
-      weekdays: [
-        { title: 'Sun - Sat', value: [0, 1, 2, 3, 4, 5, 6] },
-        { title: 'Mon - Sun', value: [1, 2, 3, 4, 5, 6, 0] },
-        { title: 'Mon - Fri', value: [1, 2, 3, 4, 5] },
-        { title: 'Mon, Wed, Fri', value: [1, 3, 5] },
-      ],
-      value: [new Date()],
-      events: [],
-      colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-      titles: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
-    }),
+  type: 'month',
+  types: [
+    { text: 'Hónap', value: 'month' },
+    { text: 'Hét', value: 'week' },
+    { text: 'Nap', value: 'day' }
+  ],
+  weekday: [1, 2, 3, 4, 5, 6, 0], // hétfőtől vasárnapig
+  value: [new Date()],
+  events: [],
+})
+,
     mounted () {
       const adapter = useDate()
       this.getEvents({ start: adapter.startOfDay(adapter.startOfMonth(new Date())), end: adapter.endOfDay(adapter.endOfMonth(new Date())) })
