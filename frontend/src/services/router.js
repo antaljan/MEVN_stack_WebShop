@@ -5,8 +5,8 @@ import commingSoon from '../view/commingSoon.vue'
 import blog from '../view/blogRead.vue'
 import newblog from '../view/blogWrite.vue'
 import usersMan from '../view/usersManagement.vue'
-import abosMan from '../view/abosManagement.vue'
 import NewsletterComposer from '@/view/NewsletterComposer.vue'
+import NewsletterTracking from '@/view/NewsletterTracking.vue'
 
 const routes = [
     {
@@ -75,9 +75,9 @@ const routes = [
     }
     },
     {
-    path: '/abos',
-    name: 'abos',
-    component: abosMan,
+    path: '/newsletter',
+    name: 'newsletter',
+    component: NewsletterTracking,
     beforeEnter: (to, from, next) => {
         const token = localStorage.getItem('jwt');
         const userData = JSON.parse(localStorage.getItem('user'));
