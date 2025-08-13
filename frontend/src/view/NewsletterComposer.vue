@@ -145,9 +145,20 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- back button -->
+    <v-btn
+      class="w3-button w3-hover-black w3-round-large w3-margin-top-24"
+      color="primary"
+      :to="'/newsletter'"
+    >
+      <v-icon left>mdi-arrow-left</v-icon>
+      Vissza a hírlevél követéshez
+    </v-btn>
   </v-container>
   <MyFooter/>
 </template>
+
+
 <script setup>
 // import componnents and libraries
 import { ref, computed  } from 'vue'
@@ -205,6 +216,7 @@ const templateBlocks = [
   { label: 'gomb ball', HTML: BodyCtaL },
 ]
 
+
 onMounted(async () => {
   try {
     const response = await axios.post('https://yowayoli.com/api/newsletter/gettemplates')
@@ -214,10 +226,12 @@ onMounted(async () => {
   }
 })
 
+
 // check text for vorbidden charakters
 function containsForbiddenChars(text) {
   return forbiddenChars.some(char => text.includes(char));
 }
+
 
 // load newsletter content
 function loadSelectedTemplate(template) {
@@ -233,6 +247,7 @@ function loadSelectedTemplate(template) {
   templateDialogVisible.value = false
 }
 
+
 // delete template
 async function deleteTemplate(_id) {
   if (!confirm("Biztosan törlöd ezt a sablont?")) return
@@ -245,19 +260,23 @@ async function deleteTemplate(_id) {
   }
 }
 
+
 // Escape special characters in a string for use in a regular expression
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
+
 // convert and purify markdown to html
 const convertedHtml = computed(() => DOMPurify.sanitize(content.value ));
+
 
 // insert block into content
 function insertBlock(block) {
   content.value += `\n\n${block.HTML}`
   structure.value.push({ label: block.label, HTML: block.HTML })
 }
+
 
 // send newsletter
 async function sendNewsletter() {
@@ -282,6 +301,7 @@ async function sendNewsletter() {
   }
 }
 
+
 // clear newsletter content
 function clearNewsletter() {
   if (confirm("Biztosan törlöd a tartalmat?")) {
@@ -291,15 +311,14 @@ function clearNewsletter() {
   }
 }
 
+
 // edit block in inserted structure
 function editBlock(index) {
   editedIndex.value = index
   editedHTML.value = structure.value[index].HTML
-
   // Szűrés szövegekre és linkekre
   editableTexts.value = filterText(editedHTML.value)
   editableLinks.value = filterLink(editedHTML.value)
-
   dialogVisible.value = true
 }
 
@@ -310,13 +329,14 @@ function removeBlock(index) {
   if (confirm(`Biztosan törlöd a(z) "${block.label}" blokkot?`)) {
     // Törlés a structure tömbből
     structure.value.splice(index, 1)
-
-    // Törlés a content.value-ből
-    const htmlToRemove = block.HTML.trim()
-    const regex = new RegExp(`\\n*${escapeRegExp(htmlToRemove)}\\n*`, 'g')
-    content.value = content.value.replace(regex, '').trim()
+   // Frissítés a content.value-ben
+    content.value = ''
+    for (const item of structure.value) {
+      content.value += `\n\n${item.HTML}`
+    }
   }
 }
+
 
 // save edited block
 function saveEditedBlock() {
@@ -346,11 +366,13 @@ function saveEditedBlock() {
   // Frissítés a structure tömbben
   structure.value[index].HTML = html
   // Frissítés a content.value-ben
-  const oldHTML = editedHTML.value.trim()
-  const regex = new RegExp(`\\n*${escapeRegExp(oldHTML)}\\n*`, 'g')
-  content.value = content.value.replace(regex, `\n\n${html}`).trim()
+  content.value = ''
+  for (const item of structure.value) {
+    content.value += `\n\n${item.HTML}`
+  }
   dialogVisible.value = false
 }
+
 
 // Filter functions to extract text and links from HTML
 function filterText(html) {
@@ -359,26 +381,24 @@ function filterText(html) {
     .filter(text => text.length > 0);
 }
 
+
 // Filter function to extract links from HTML
 function filterLink(html) {
   return [...html.matchAll(/https:\/\/[^"]+/g)].map(match => match[0]);
 }
 
+
 // picture upload function
 const uploadImage = async (index) => {
   if (!imageFile.value) return;
-
   const formDataImg = new FormData();
   formDataImg.append('image', imageFile.value);
-
   try {
     const response = await axios.post('https://yowayoli.com/api/upload', formDataImg, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
-
     const uploadedFileName = response.data?.filename || imageFile.value.name;
     const imageUrl = `https://yowayoli.com/api/uploads/${uploadedFileName}`;
-
     editableLinks.value[index] = imageUrl;
     alert('✅ Kép sikeresen feltöltve és linkbe illesztve.');
   } catch (error) {

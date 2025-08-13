@@ -20,7 +20,7 @@
           {{ menuButtonUsers[selectedLanguage] }}
         </a>
         <a v-if="userStore.role === 'admin'"
-          href="/abos"
+          href="/newsletter"
           class="w3-bar-item w3-button">
           {{ menuButtonAbos[selectedLanguage] }}
         </a>
