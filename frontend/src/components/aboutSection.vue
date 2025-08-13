@@ -19,10 +19,10 @@
                     rows="10" 
                     cols="40">
                 </textarea> 
-                <v-button v-if="userStore.role === 'admin'"
+                <v-btn v-if="userStore.role === 'admin'"
                     class="w3-button w3-black w3-margin-top"
                     @click="saveAboutText2">{{aboutSave[selectedLanguage]}}
-                </v-button>
+                </v-btn>
             </div>
         </div>
     </div>

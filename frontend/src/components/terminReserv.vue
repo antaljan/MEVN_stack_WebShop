@@ -1,20 +1,18 @@
 <template>
-  <div class="w3-content w3-container " id="schedule">
-    <v-sheet
-      class="d-flex"
-      height="54"
-      tile
-    >
+  <v-app>
+  <div class="w3-content w3-container" id="schedule">
+    <v-sheet class="d-flex" height="54" tile>
       <v-select
         v-model="type"
         :items="types"
-        class="ma-2"
-        density="compact"
-        label="View Mode"
+        item-text="text"
+        item-value="value"
+        label="Nézet"
         variant="outlined"
         hide-details
-      ></v-select>
+      />
     </v-sheet>
+
     <v-sheet>
       <v-calendar
         ref="calendar"
@@ -22,64 +20,101 @@
         :events="events"
         :view-mode="type"
         :weekdays="weekday"
-      ></v-calendar>
+        @click:event="handleSlotClick"
+      />
+      <v-btn @click="console.log(events)">Események kiírása</v-btn>
+
     </v-sheet>
   </div>
+  </v-app>
 </template>
-<script>
-  import { useDate } from 'vuetify'
 
-  export default {
-    data: () => ({
-  type: 'month',
-  types: [
-    { text: 'Hónap', value: 'month' },
-    { text: 'Hét', value: 'week' },
-    { text: 'Nap', value: 'day' }
-  ],
-  weekday: [1, 2, 3, 4, 5, 6, 0], // hétfőtől vasárnapig
-  value: [new Date()],
-  events: [],
-})
-,
-    mounted () {
-      const adapter = useDate()
-      this.getEvents({ start: adapter.startOfDay(adapter.startOfMonth(new Date())), end: adapter.endOfDay(adapter.endOfMonth(new Date())) })
-    },
-    methods: {
-      getEvents ({ start, end }) {
-        const events = []
+<script setup>
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+const type = ref('month')
+const types = [
+  { text: 'Hónap', value: 'month' },
+  { text: 'Hét', value: 'week' },
+  { text: 'Nap', value: 'day' }
+]
+const weekday = [1, 2, 3, 4, 5, 6, 0]
+const value = ref([new Date()])
+const events = ref([])
+const userName = ref('Teszt Felhasználó') // Teszteléshez
+const userEmail = ref('teszt@example.com')
 
-        const min = start
-        const max = end
-        const days = (max.getTime() - min.getTime()) / 86400000
-        const eventCount = this.rnd(days, days + 20)
+// 🕘 Időpontok generálása
+function generateTimeSlots(date) {
+  const slots = []
+  const baseDate = new Date(date)
+  baseDate.setHours(9, 0, 0, 0)
+  for (let i = 0; i < 8; i++) {
+    const start = new Date(baseDate.getTime() + i * 3600000)
+    const end = new Date(start.getTime() + 3600000)
+    slots.push({
+      title: `Foglalható időpont (${start.getHours()}:00)`,
+      start,
+      end,
+      color: 'green',
+      allDay: false,
+      extendedProps: {
+        available: true
+      }
+  })
+  }
+  events.value = slots
+  console.log("idöponmt generalva:",events.value)
+}
 
-        for (let i = 0; i < eventCount; i++) {
-          const allDay = this.rnd(0, 3) === 0
-          const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-          const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-          const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-          const second = new Date(first.getTime() + secondTimestamp)
+// 📩 Foglalás mentése
+async function bookSlot(slot) {
+  try {
+    await axios.post('/api/bookings', {
+      name: userName.value,
+      email: userEmail.value,
+      start: slot.start,
+      end: slot.end
+    })
+    // 🔄 Vizuális frissítés
+    slot.extendedProps.available = false
+    slot.color = 'grey'
+    slot.title = 'Lefoglalt időpont'
+    alert(`Foglalás sikeres: ${slot.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`)
+  } catch (error) {
+    console.error('Foglalás sikertelen:', error)
+    alert('Hiba történt a foglalás során.')
+  }
+}
 
-          events.push({
-            title: this.titles[this.rnd(0, this.titles.length - 1)],
-            start: first,
-            end: second,
-            color: this.colors[this.rnd(0, this.colors.length - 1)],
-            allDay: !allDay,
-          })
-        }
+// 🖱️ Kattintás kezelése
+function handleSlotClick(event) {
+  console.log("Kattintott esemény:", event)
 
-        this.events = events
-      },
-      getEventColor (event) {
-        return event.color
-      },
-      rnd (a, b) {
-        return Math.floor((b - a + 1) * Math.random()) + a
-      },
-    },
+  if (!event || !event.start) {
+    alert('Ez az esemény nem foglalható.')
+    return
   }
 
+  const original = events.value.find(e => e.start.getTime() === new Date(event.start).getTime())
+
+  if (!original) {
+    alert('Nem található az időpont.')
+    return
+  }
+
+  if (original.extendedProps?.available) {
+    bookSlot(original)
+  } else {
+    alert('Ez az időpont már foglalt.')
+  }
+}
+
+
+
+onMounted(() => {
+  generateTimeSlots(new Date())
+})
+
 </script>
+
