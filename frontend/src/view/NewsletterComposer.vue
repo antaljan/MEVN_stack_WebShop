@@ -145,6 +145,15 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- back button -->
+    <v-btn
+      class="w3-button w3-hover-black w3-round-large w3-margin-top-24"
+      color="primary"
+      :to="'/newsletter'"
+    >
+      <v-icon left>mdi-arrow-left</v-icon>
+      Vissza a hírlevél követéshez
+    </v-btn>
   </v-container>
   <MyFooter/>
 </template>
