@@ -75,7 +75,7 @@ onMounted(async () => {
       title: event.title,
       start: event.start,
       end: event.end,
-      classe: event.available ? 'available' : 'unavailable',
+      status: event.available ? 'available' : 'unavailable',
       user: event.user ? event.user : 'N/A'
     }))
   })
@@ -117,8 +117,8 @@ async function saveSlot() {
         title: newSlot.title,
         start: newSlot.start,
         end: newSlot.end,
-        classe: 'available',
-        user: 'N/A'
+        status: 'available',
+        user: null
       })
     })
 }

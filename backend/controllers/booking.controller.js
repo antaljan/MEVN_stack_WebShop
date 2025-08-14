@@ -8,11 +8,13 @@ require('dotenv').config();
 
 // creane slots in the calendar
 exports.createSlot = async (req, res) => {
-  const { title, start, end, classe, user } = req.body;
+  const { title, start, end, status, user } = req.body;
   console.log('registring new slot to calendar');
+  console.log('status:',status);
+  console.log('user:',user);
   try {
     const collection = getDb().collection('booking');
-    const result = await collection.insertOne({ title, start, end, classe, user });
+    const result = await collection.insertOne({ title, start, end, status, user });
     console.log('register successful');
     res.status(201).json({ ok: true, insertedId: result.insertedId });
   } catch (error) {
@@ -55,7 +57,7 @@ exports.deleteSlot = async (req, res) => {
 // update slot in calendar
 exports.updateSlot = async (req, res) => {
     const slotId = req.params.id;
-    const { title, start, end, classe, user } = req.body;
+    const { title, start, end, status, user } = req.body;
     try {
         const collection = getDb().collection('booking');
         const result = await collection.updateOne(
