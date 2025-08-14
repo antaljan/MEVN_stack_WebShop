@@ -1,14 +1,15 @@
 <!-- components/BookingCalendar.vue -->
 <template>
-  <v-contener>
+  <v-app>
+  <v-container class="w3-container">
+    <h2>Foglalható időpontok</h2>
   <vue-cal
     :events="events"
-    :disable-views="['years', 'week']"
     default-view="day"
     :time="true"
     :on-event-click="onEventClick"
     :on-cell-click="onCellClick"
-    style="height: 400px;"
+    style="height: 500px;"
   />
   <div class="w3-center">
     <v-btn
@@ -51,7 +52,8 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-</v-contener>
+  </v-container>
+</v-app>
 </template>
 
 <script setup>
@@ -75,9 +77,10 @@ onMounted(async () => {
       title: event.title,
       start: event.start,
       end: event.end,
-      status: event.available ? 'available' : 'unavailable',
+      class: event.available ? 'available' : 'unavailable',
       user: event.user ? event.user : 'N/A'
     }))
+    console.log('Események betöltve:', events.value)
   })
   .catch(err => console.error('Hiba az események betöltésekor:', err))
 })
@@ -117,10 +120,21 @@ async function saveSlot() {
         title: newSlot.title,
         start: newSlot.start,
         end: newSlot.end,
-        status: 'available',
+        class: "available",
         user: null
       })
     })
 }
 
 </script>
+
+<style scoped>
+.vuecal__event.available {
+  background-color: #4caf50; /* zöld */
+  color: white;
+}
+.vuecal__event.booked {
+  background-color: #f44336; /* piros */
+  color: white;
+}
+</style>
