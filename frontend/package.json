@@ -19,6 +19,7 @@
     "pinia-plugin-persistedstate": "^4.4.1",
     "roboto-fontface": "*",
     "vue": "^3.2.13",
+    "vue-cal": "^4.10.2",
     "vue-router": "^4.5.1",
     "vue3-toastify": "^0.2.8",
     "vuetify": "^3.0.0-beta.0",
