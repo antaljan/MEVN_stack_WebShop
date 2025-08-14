@@ -13,25 +13,8 @@ exports.createSlot = async (req, res) => {
   try {
     const collection = getDb().collection('booking');
     const result = await collection.insertOne({ title, start, end, classe, user });
-    if (result.acknowledged) {
-      console.log('register successful');
-      try {
-        await emailService.sendEmail(
-          user.email,
-          'Időpont foglalás',
-          `Kedves ${user.firstname}, köszönöm, hogy megtisztelt bizalmával és lefoglalta egy időpontot. A foglalás részletei: ${title} - ${start} - ${end}.`
-        );
-        console.log('email sent about booking');
-        res.status(201).json({ ok: true, insertedId: result.insertedId });
-      } catch (mailError) {
-        await collection.deleteOne({ _id: result.insertedId });
-        console.log('email sending failure');
-        res.status(500).send(`Slot creation failed due to email error: ${mailError.message}`);
-      }
-    } else {
-      console.log('database registration failure no answer');
-      res.status(500).json({ ok: false, error: 'Slot booking failed.' });
-    }
+    console.log('register successful');
+    res.status(201).json({ ok: true, insertedId: result.insertedId });
   } catch (error) {
     console.log('database registration failure:', error);
     res.status(500).json({ ok: false, error: error.message });
@@ -42,8 +25,10 @@ exports.createSlot = async (req, res) => {
 exports.getAllSlots = async (req, res) => {
   try {
     const events = await getDb().collection('booking').find({}).toArray();
+    console.log('Fetched all slots from the calendar');
     res.status(200).json(events);
   } catch (error) {
+    console.log('Error fetching slots:', error);
     res.status(500).send(error.message);
   }
 };
