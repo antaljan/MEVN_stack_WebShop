@@ -2,14 +2,13 @@
     <!-- Container (Methode Section) -->
     <div class="w3-content w3-container " id="story">
         <h3 class="w3-center">{{methodeName[selectedLanguage]}}</h3>
-        <div 
+        <div
             class="w3-center w3-padding-16"
             v-html="methodeText">
         </div>
     </div>
 </template>
 <script setup>
-
 // language change
 import { ref, reactive } from 'vue';
 const selectedLanguage = ref(document.documentElement.lang || 'hu');

@@ -2,7 +2,7 @@
     <!-- Container (story Section) -->
     <div class="w3-content w3-container " id="story">
         <h3 class="w3-center">{{storyName[selectedLanguage]}}</h3>
-        <div 
+        <div
             class="w3-center w3-padding-16"
             v-html="storyText">
         </div>
