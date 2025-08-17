@@ -2,9 +2,8 @@
   <MyHeader/>
   <heroSection/>
   <aboutSection/>
-  <storySection/>
-  <methodeSection/>
-  <blogSection/>
+  <StorySection/>
+  <MethodeSection/>
   <contactSection/>
   <blogSection/>
   <MyFooter/>
@@ -17,8 +16,6 @@
   import blogSection from '../components/blogSection.vue';
   import MyFooter from "../components/MyFooter.vue";
   import MyHeader from "../components/MyHeader.vue";
-  import storySection from "../components/storySection.vue";
-  import methodeSection from "../components/methodeSection.vue";
+  import StorySection from "../components/StorySection.vue";
+  import MethodeSection from "../components/MethodeSection.vue";
 </script>
-
-

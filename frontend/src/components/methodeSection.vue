@@ -2,16 +2,13 @@
     <!-- Container (Methode Section) -->
     <div class="w3-content w3-container " id="story">
         <h3 class="w3-center">{{methodeName[selectedLanguage]}}</h3>
-        <div class="w3-row w3-center">
-            class="w3-col m6 w3-padding-small"
+        <div 
+            class="w3-center w3-padding-16"
             v-html="methodeText">
         </div>
     </div>
 </template>
 <script setup>
-// Import userStore for user role and name
-//import { useUserStore } from '@/services/userStore'
-//const userStore = useUserStore()
 
 // language change
 import { ref, reactive } from 'vue';
