@@ -8,7 +8,6 @@
   <blogSection/>
   <MyFooter/>
 </template>
-
 <script setup>
   import heroSection from '../components/HeroSection.vue';
   import aboutSection from '../components/aboutSection.vue';

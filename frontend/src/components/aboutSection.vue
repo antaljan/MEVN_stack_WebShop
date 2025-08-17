@@ -17,7 +17,6 @@
     </div>
 </template>
 <script setup>
-
 // language change
 import { ref, reactive } from 'vue';
 const selectedLanguage = ref(document.documentElement.lang || 'hu');
