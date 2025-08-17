@@ -2,9 +2,11 @@
   <MyHeader/>
   <heroSection/>
   <aboutSection/>
+  <storySection/>
+  <methodeSection/>
   <blogSection/>
-  <CalendarSertion/>
   <contactSection/>
+  <blogSection/>
   <MyFooter/>
 </template>
 
@@ -15,7 +17,8 @@
   import blogSection from '../components/blogSection.vue';
   import MyFooter from "../components/MyFooter.vue";
   import MyHeader from "../components/MyHeader.vue";
-  import CalendarSertion from '../components/terminReserv.vue';
+  import storySection from "../components/storySection.vue";
+  import methodeSection from "../components/methodeSection.vue";
 </script>
 
 
