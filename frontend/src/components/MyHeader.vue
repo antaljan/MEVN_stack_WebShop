@@ -7,8 +7,10 @@
       <div id="navMenu" class="w3-bar-block w3-white w3-hide" @change="changeLanguage">
         <a href="/landing/#home" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonHome[selectedLanguage]}}</a>
         <a href="/landing/#about" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonAbout[selectedLanguage]}}</a>
-        <a href="/landing/#blog" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonBlog[selectedLanguage]}}</a>
+        <a href="/landing/#story" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonStory[selectedLanguage]}}</a>
+        <a href="/landing/#methode" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonMethode[selectedLanguage]}}</a>
         <a href="/landing/#contact" class="w3-bar-item w3-button" @click="toggleFunction">{{ menuButtonContact[selectedLanguage] }}</a>
+        <a href="/landing/#blog" class="w3-bar-item w3-button" @click="toggleFunction"> {{menuButtonBlog[selectedLanguage]}}</a>
         <a v-if="userStore.role === 'admin'"
           href="/newblog"
           class="w3-bar-item w3-button">
@@ -160,6 +162,16 @@ api.interceptors.request.use(config => {
     en: 'ABOUT',
     hu: 'RÓLAM',
     de: 'ÜBER MICH'
+  });
+  const menuButtonStory = reactive({
+    en: 'MY STORY',
+    hu: 'TÖRTÉNETEM',
+    de: 'MENE GESCHICHTE'
+  });
+  const menuButtonMethode = reactive({
+    en: 'METHOD',
+    hu: 'MÓDSZER',
+    de: 'METHODE'
   });
   const menuButtonBlog = reactive({
     en: 'BLOG',
