@@ -20,6 +20,7 @@ const postRoutes = require('./routes/post.routes');
 const emailRoutes = require('./routes/email.routes');
 const uploadRoutes = require('./routes/upload.routes');
 const bookingRoutes = require('./routes/booking.routes');
+const trackingRoutes = require('./routes/tracking')
 
 // Middleware, services, controllers
 const emailService = require('./services/email.service');
@@ -55,6 +56,7 @@ app.use('/user', userRoutes);
 app.use('/posts', postRoutes);
 app.use('/email', emailRoutes);
 app.use('/booking', bookingRoutes);
+app.use('/track', trackingRoutes)
 app.use('/upload', uploadRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(logger);

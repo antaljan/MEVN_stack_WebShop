@@ -5,7 +5,8 @@ const { saveNewsletter } = require('../models/newsletter.model');
 function fillTemplate(content, data) {
   return content
     .replace(/{{firstname}}/g, data.firstname)
-    .replace(/{{email}}/g, data.email);
+    .replace(/{{email}}/g, data.email)
+    .replace(/{{sendingNr}}/g, data._id)
 }
 
 // subscribe for newsletter --> save subscriber in mongodb
