@@ -8,6 +8,7 @@
 
 <!-- Container (Contact Section) -->
 <div class="w3-content w3-container w3-padding-64" id="contact">
+  <h2 class="w3-center">{{contactTitle[selectedLanguage]}}</h2>
   <div class="w3-row w3-padding-32 w3-section">
       <form @submit.prevent="handleSendEmail">
         <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
@@ -68,11 +69,16 @@ const gdprReading3 = reactive({
   hu: '.',
   de: 'gelesen und akzeptiere sie.'
 });
-    const parallaxContact = reactive({
-        en: 'CONTACT',
-        hu: 'KAPCSOLAT',
-        de: 'KONTAKT'
-    });
+const parallaxContact = reactive({
+    en: 'CONTACT',
+    hu: 'KAPCSOLAT',
+    de: 'KONTAKT'
+});
+const contactTitle = reactive({
+    en: 'Now you can do two things: close the page and keep searching... or write to me and find out what we can achieve together.',
+    hu: 'Most két dolgot tehetsz: bezárod az oldalt és tovább keresgélsz… vagy írsz nekem és kiderül, hogy mit tudnánk együtt elérni.',
+    de: 'Jetzt kannst du zwei Dinge tun: die Seite schließen und weiter suchen... oder mir schreiben und herausfinden, was wir gemeinsam erreichen können.'
+});
 
 const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
