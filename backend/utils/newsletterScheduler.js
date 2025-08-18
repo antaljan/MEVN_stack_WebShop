@@ -27,7 +27,8 @@ function startNewsletterScheduler() {
                 const content = newsletterController.fillTemplate(rawcontent, {
                     firstname: subscriber.firstname,
                     name: subscriber.name,
-                    email: subscriber.email
+                    email: subscriber.email,
+                    _id: newsletter._id + '_' + subscriber._id,
                 });
                 console.log(`The subscriber: "${subscriber.email}" will get the newsletter:"${newsletter.subject}".`);
                 try{
