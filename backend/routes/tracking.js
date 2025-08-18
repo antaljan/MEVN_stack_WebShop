@@ -9,7 +9,7 @@ router.get('/open/:emailId',async (req, res) => {
 
   // Itt logoljuk az eseményt (később adatbázisba mentjük)
   console.log(`Email opened: ${emailId} at ${timestamp} from ${userAgent}`)
-    await db.collection('emailEvents').updateOne(
+    await getDb().collection('emailEvents').updateOne(
     { emailId },
     { $set: { openedAt: timestamp } },
     { upsert: true }
@@ -35,7 +35,7 @@ router.get('/click/:emailId',async  (req, res) => {
 
   // Itt logoljuk az eseményt (később adatbázisba mentjük)
   console.log(`Email clicked: ${emailId} → ${targetUrl} at ${timestamp}`)
-  await db.collection('emailEvents').updateOne(
+  await getDb().collection('emailEvents').updateOne(
     { emailId },
     { $push: { clicks: { url: targetUrl, timestamp } } },
     { upsert: true }
