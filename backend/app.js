@@ -51,6 +51,7 @@ if (!gmxUser || !gmxPass) {
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.set('trust proxy', true);
 app.use('/newsletter', newsletterRoutes);
 app.use('/user', userRoutes);
 app.use('/posts', postRoutes);
