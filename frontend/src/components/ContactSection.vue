@@ -8,7 +8,7 @@
 
 <!-- Container (Contact Section) -->
 <div class="w3-content w3-container w3-padding-64" id="contact">
-  <h2 class="w3-center">{{contactTitle[selectedLanguage]}}</h2>
+  <h3 class="w3-center">{{contactTitle[selectedLanguage]}}</h3>
   <div class="w3-row w3-padding-32 w3-section">
       <form @submit.prevent="handleSendEmail">
         <div class="w3-row-padding" style="margin:0 -16px 8px -16px">

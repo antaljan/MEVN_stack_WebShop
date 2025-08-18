@@ -1,6 +1,8 @@
 <template>
   <div class="blog-section" id="blog">
-    <h2>{{ blogSectionCaption[selectedLanguage] }}</h2>
+    <div class="w3-content">
+      <h3 class="w3-center">{{ blogSectionCaption[selectedLanguage] }}</h3>
+    </div>
     <v-carousel
       hide-delimiter-background
       height="400"

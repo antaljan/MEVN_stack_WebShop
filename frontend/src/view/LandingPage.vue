@@ -19,12 +19,6 @@
     <v-icon class="w3-padding-large" color="green">mdi-compass</v-icon>
     <v-divider :thickness="3" class="border-opacity-75" color="success"></v-divider>
   </div>
-  <customerFBSection/>
-  <div class="divider-with-icon">
-    <v-divider :thickness="3" class="border-opacity-75" color="success"></v-divider>
-    <v-icon class="w3-padding-large" color="green">mdi-compass</v-icon>
-    <v-divider :thickness="3" class="border-opacity-75" color="success"></v-divider>
-  </div>
   <customerFedBack/>
   <contactSection/>
   <blogSection/>
@@ -39,7 +33,6 @@
   import MyHeader from "../components/MyHeader.vue";
   import storySection from "../components/storySection.vue";
   import methodeSection from "../components/methodeSection.vue";
-  import customerFBSection from "../components/customerFBSection.vue";
   import customerFedBack from "../components/customerFeedback.vue";
 </script>
 <style scoped>
