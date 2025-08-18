@@ -46,7 +46,7 @@ onMounted(() => {
 // 🗣️ Fordítások
 const translations = {
   title: {
-    hu: 'Véleménye',
+    hu: 'Vélemények',
     de: 'Kundenstimmen',
     en: 'Testimonials'
   }
