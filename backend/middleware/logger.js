@@ -2,12 +2,12 @@ const { client } = require('../db/mongo');
 
 async function logger(req, res, next) {
   const logData = {
-    ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
-    method: req.method,
-    url: req.originalUrl,
-    userAgent: req.headers['user-agent'],
-    timestamp: new Date().toISOString()
-  };
+  ip: req.ip,
+  method: req.method,
+  url: req.originalUrl,
+  userAgent: req.headers['user-agent'],
+  timestamp: new Date().toISOString()
+};
 
   try {
     const db = client.db('yowayoli');
