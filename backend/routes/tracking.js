@@ -1,13 +1,19 @@
 const express = require('express')
 const router = express.Router()
+const { getDb } = require('../db/mongo');
 
-router.get('/open/:emailId', (req, res) => {
+router.get('/open/:emailId',async (req, res) => {
   const emailId = req.params.emailId
   const userAgent = req.headers['user-agent']
   const timestamp = new Date()
 
   // Itt logoljuk az eseményt (később adatbázisba mentjük)
   console.log(`Email opened: ${emailId} at ${timestamp} from ${userAgent}`)
+    await db.collection('emailEvents').updateOne(
+    { emailId },
+    { $set: { openedAt: timestamp } },
+    { upsert: true }
+    );
 
   // Átlátszó pixel visszaküldése
   const pixel = Buffer.from(
@@ -18,7 +24,7 @@ router.get('/open/:emailId', (req, res) => {
   res.send(pixel)
 })
 
-router.get('/click/:emailId', (req, res) => {
+router.get('/click/:emailId',async  (req, res) => {
   const emailId = req.params.emailId
   const targetUrl = req.query.url
   const timestamp = new Date()
@@ -29,6 +35,11 @@ router.get('/click/:emailId', (req, res) => {
 
   // Itt logoljuk az eseményt (később adatbázisba mentjük)
   console.log(`Email clicked: ${emailId} → ${targetUrl} at ${timestamp}`)
+  await db.collection('emailEvents').updateOne(
+    { emailId },
+    { $push: { clicks: { url: targetUrl, timestamp } } },
+    { upsert: true }
+  );
 
   // Továbbirányítás a céloldalra
   res.redirect(targetUrl)
