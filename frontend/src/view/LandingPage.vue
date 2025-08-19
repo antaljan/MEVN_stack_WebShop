@@ -2,23 +2,11 @@
   <MyHeader/>
   <heroSection/>
   <aboutSection/>
-  <div class="divider-with-icon">
-    <v-divider :thickness="3" class="border-opacity-75" color="success"></v-divider>
-    <v-icon class="w3-padding-large" color="green">mdi-compass</v-icon>
-    <v-divider :thickness="3" class="border-opacity-75" color="success"></v-divider>
-  </div>
+  <sectionSeparator/>
   <storySection/>
-  <div class="divider-with-icon">
-    <v-divider :thickness="3" class="border-opacity-75" color="success"></v-divider>
-    <v-icon class="w3-padding-large" color="green">mdi-compass</v-icon>
-    <v-divider :thickness="3" class="border-opacity-75" color="success"></v-divider>
-  </div>
+  <sectionSeparator/>
   <methodeSection/>
-  <div class="divider-with-icon">
-    <v-divider :thickness="3" class="border-opacity-75" color="success"></v-divider>
-    <v-icon class="w3-padding-large" color="green">mdi-compass</v-icon>
-    <v-divider :thickness="3" class="border-opacity-75" color="success"></v-divider>
-  </div>
+  <sectionSeparator/>
   <customerFedBack/>
   <contactSection/>
   <blogSection/>
@@ -34,6 +22,7 @@
   import storySection from "../components/storySection.vue";
   import methodeSection from "../components/methodeSection.vue";
   import customerFedBack from "../components/customerFeedback.vue";
+  import sectionSeparator from '@/components/sectionSeparator.vue';
 </script>
 <style scoped>
 .divider-with-icon {
