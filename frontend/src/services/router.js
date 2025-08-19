@@ -7,7 +7,6 @@ import newblog from '../view/blogWrite.vue'
 import usersMan from '../view/usersManagement.vue'
 import NewsletterComposer from '@/view/NewsletterComposer.vue'
 import NewsletterTracking from '@/view/NewsletterTracking.vue'
-import CampaignSummary from '@/components/CampaignSummary.vue'
 
 const routes = [
     {
@@ -94,21 +93,6 @@ const routes = [
     path: '/newsletterComposer',
     name: 'newsletterComposer',
     component: NewsletterComposer,
-    beforeEnter: (to, from, next) => {
-        const token = localStorage.getItem('jwt');
-        const userData = JSON.parse(localStorage.getItem('user'));
-        if (!token || !userData || userData.role !== 'admin') {
-            alert('No authentication or insufficient permissions');
-            next('/landing');
-        } else {
-            next();
-        }
-    }
-    },
-    {
-    path: '/campaingnsumm',
-    name: 'CampaignSummary',
-    component: CampaignSummary,
     beforeEnter: (to, from, next) => {
         const token = localStorage.getItem('jwt');
         const userData = JSON.parse(localStorage.getItem('user'));

@@ -3,12 +3,14 @@
     <v-app>
     <v-container>
     <v-card  class="mx-auto">
+        <div class="w3-centered">
+            <h2>Hírlevél menedzsment</h2>
+        </div>
         <div class="w3-text-small w3-text-left w3-padding-left-24 w3-padding-top-16">
-            <span class="w3-padding-left-24">Aktuálisan {{ subscriberCount }}-an iratkoztak fel a hírlevelekre</span>
-            <br/>
-            <span class="w3-padding-left-24">, {{ nLettersCount }} hírlevél készült,</span>
-            <br/>
-            <span class="w3-padding-left-24">, {{ templatesCount }} hírlevél sablon áll rendelkezésre.</span>
+            <div>Hírlevelek száma: {{ summary.totalNewsletters }}</div>
+            <div>Feliratkozók száma: {{ subscriberCount }}</div>
+            <div>Megnyitások: {{ summary.totalOpened }}</div>
+            <div>Kattintások: {{ summary.totalClicks }}</div>        
         </div>
         <!-- switch for changing of list-->
         <div class="w3-center">
@@ -73,20 +75,21 @@
             <div class="font-weight-bold ms-1 mb-2">Mai nap</div>
             <v-timeline align="start" density="compact">
                 <v-timeline-item
-                    v-for="letter in scheduledNewsletters"
-                    :key="letter.sendDate"
-                    :dot-color="!letter.sent ? 'red' : 'green'"
+                    v-for="campaign in campaigns"
+                    :key="campaign.id"
+                    :dot-color="'green'"
                     size="x-small"
                 >
                     <div class="font-weight-normal">
-                        <strong>{{ letter.sendDate }}</strong> - {{ letter.subject }}
-                        <v-icon :color="!letter.sent ? 'red' : 'green'" size="small" class="ms-2">
-                            {{ !letter.sent ? 'mdi-close-circle' : 'mdi-check-circle' }}
-                        </v-icon>
+                        <strong>{{ campaign.subject }}</strong> - {{ campaign.sendDate }}
+                        <br/>
+                        Megnyitási arány: {{ campaign.openRate }}%
+                        <br/>
+                        Kattintási arány: {{ campaign.clickRate }}%
+                        <br/>
+                        Legnépszerűbb link: {{ campaign.topLink || 'Nincs adat' }}
                     </div>
-                    <div v-for="subscriber in letter.subscribers" :key="subscriber.email" class="mb-1">
-                    <div>{{ subscriber.email }}</div>
-                    </div>
+                    
                 </v-timeline-item>
             </v-timeline>
         </v-card-text>
@@ -201,7 +204,31 @@
     const dateInput = ref(today)
     const templatesCount = ref(0);
     const showCheckboxes = ref(false); 
-    
+    const summary = ref({
+        totalNewsletters: 0,
+        totalSubscribers: 0,
+        totalOpened: 0,
+        totalClicks: 0
+    })
+    const campaigns = ref([])
+
+    // load data from backend
+    onMounted(async () => {
+        const token = localStorage.getItem('jwt') // vagy Pinia store-ból
+        const headers = {
+            Authorization: `Bearer ${token}`
+        }
+        try {
+            const [summaryRes, campaignsRes] = await Promise.all([
+                axios.get('https://antaligyongyi.hu/api/dashboard/summary', { headers }),
+                axios.get('https://antaligyongyi.hu/api/dashboard/campaigns', { headers })
+            ])
+            summary.value = summaryRes.data
+            campaigns.value = campaignsRes.data
+        } catch (err) {
+            console.error('Hiba az adatok lekérésekor:', err)
+        }
+    })
 
     // reques subscribers and newsletters from backend
     onMounted(async () => {
