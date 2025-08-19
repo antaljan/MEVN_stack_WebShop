@@ -8,7 +8,12 @@
 
 <!-- Container (Contact Section) -->
 <div class="w3-content w3-container w3-padding-64" id="contact">
-  <h3 class="w3-center">{{contactTitle[selectedLanguage]}}</h3>
+    <h3 class="w3-align-left">{{contactTitle0[selectedLanguage]}}</h3>
+    <ul>
+      <li><h3 >{{contactTitle1[selectedLanguage]}}</h3></li>
+      <li><h3 >{{contactTitle2[selectedLanguage]}}</h3></li>
+    </ul>
+  
   <div class="w3-row w3-padding-32 w3-section">
       <form @submit.prevent="handleSendEmail">
         <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
@@ -74,10 +79,20 @@ const parallaxContact = reactive({
     hu: 'KAPCSOLAT',
     de: 'KONTAKT'
 });
-const contactTitle = reactive({
-    en: 'Now you can do two things: close the page and keep searching... or write to me and find out what we can achieve together.',
-    hu: 'Most két dolgot tehetsz: bezárod az oldalt és tovább keresgélsz… vagy írsz nekem és kiderül, hogy mit tudnánk együtt elérni.',
-    de: 'Jetzt kannst du zwei Dinge tun: die Seite schließen und weiter suchen... oder mir schreiben und herausfinden, was wir gemeinsam erreichen können.'
+const contactTitle0 = reactive({
+    en: 'Now you can do two things:',
+    hu: 'Most két dolgot tehetsz:',
+    de: 'Jetzt kannst du zwei Dinge tun:'
+});
+const contactTitle1 = reactive({
+    en: 'close the page and keep searching... ',
+    hu: 'bezárod az oldalt és tovább keresgélsz… ',
+    de: 'die Seite schließen und weiter suchen... '
+});
+const contactTitle2 = reactive({
+    en: 'or write to me and find out what we can achieve together.',
+    hu: 'vagy írsz nekem és kiderül, hogy mit tudnánk együtt elérni.',
+    de: 'oder mir schreiben und herausfinden, was wir gemeinsam erreichen können.'
 });
 
 const observer = new MutationObserver((mutations) => {
