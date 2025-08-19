@@ -152,7 +152,7 @@
 
     // 📦 Felhasználók lekérése
     const fetchUsers = () => {
-        axios.post('https://yowayoli.com/api/user/get')
+        axios.post('https://antaligyongyi.hu/api/user/get')
             .then(response => {
             users.value = response.data;
         })
@@ -188,7 +188,7 @@
     // ❌ Törlés
     const deleteUser = (userId) => {
         if (confirm("Biztosan törlöd ezt a felhasználót?")) {
-            axios.post('https://yowayoli.com/api/user/delete', { id: userId })
+            axios.post('https://antaligyongyi.hu/api/user/delete', { id: userId })
             .then(() => {
                 fetchUsers();
             })
@@ -210,8 +210,8 @@
             adress: adress.value,
         };
         const url = selectedUserId.value
-            ? 'https://yowayoli.com/api/user/update'
-            : 'https://yowayoli.com/api/user/create';
+            ? 'https://antaligyongyi.hu/api/user/update'
+            : 'https://antaligyongyi.hu/api/user/create';
         const payload = selectedUserId.value
             ? { id: selectedUserId.value, ...userData }
             : userData;
@@ -238,7 +238,7 @@
             email: email.value,
             password: password.value,
         };
-        const url = 'https://yowayoli.com/api/user/update'
+        const url = 'https://antaligyongyi.hu/api/user/update'
         const payload = { id: selectedUserId.value, ...userData }
         axios.post(url, payload)
             .then(() => {

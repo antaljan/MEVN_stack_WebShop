@@ -219,7 +219,7 @@ const templateBlocks = [
 
 onMounted(async () => {
   try {
-    const response = await axios.post('https://yowayoli.com/api/newsletter/gettemplates')
+    const response = await axios.post('https://antaligyongyi.hu/api/newsletter/gettemplates')
     templates.value = response.data.allNewsletters
   } catch (error) {
     console.error('Nem sikerült lekérni a sablonokat:', error)
@@ -252,7 +252,7 @@ function loadSelectedTemplate(template) {
 async function deleteTemplate(_id) {
   if (!confirm("Biztosan törlöd ezt a sablont?")) return
   try {
-    await axios.post('https://yowayoli.com/api/newsletter/deletetemplate', { _id })
+    await axios.post('https://antaligyongyi.hu/api/newsletter/deletetemplate', { _id })
     templates.value = templates.value.filter(t => t._id !== _id)
   } catch (error) {
     alert('❌ Nem sikerült törölni a sablont.')
@@ -293,7 +293,7 @@ async function sendNewsletter() {
       sendDate: today,
       structure: structure.value
     }
-  await axios.post('https://yowayoli.com/api/newsletter/save', payload)
+  await axios.post('https://antaligyongyi.hu/api/newsletter/save', payload)
   alert('✅ Hírlevél sablon mentve!')
   } catch (err) {
     console.error(err)
@@ -394,11 +394,11 @@ const uploadImage = async (index) => {
   const formDataImg = new FormData();
   formDataImg.append('image', imageFile.value);
   try {
-    const response = await axios.post('https://yowayoli.com/api/upload', formDataImg, {
+    const response = await axios.post('https://antaligyongyi.hu/api/upload', formDataImg, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
     const uploadedFileName = response.data?.filename || imageFile.value.name;
-    const imageUrl = `https://yowayoli.com/api/uploads/${uploadedFileName}`;
+    const imageUrl = `https://antaligyongyi.hu/api/uploads/${uploadedFileName}`;
     editableLinks.value[index] = imageUrl;
     alert('✅ Kép sikeresen feltöltve és linkbe illesztve.');
   } catch (error) {

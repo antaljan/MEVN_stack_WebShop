@@ -69,7 +69,7 @@ const formattedDate = computed(() => {
 // Function to fetch the blog post by ID
 onMounted(async () => {
   try {
-    const response = await axios.get(`https://yowayoli.com/api/posts/${postId}`);
+    const response = await axios.get(`https://antaligyongyi.hu/api/posts/${postId}`);
     post.value = response.data;
   } catch (error) {
     post.value = null;
@@ -112,7 +112,7 @@ const deletePost = async (post) => {
   if (!confirmDelete) return;
 
   try {
-    await axios.delete(`https://yowayoli.com/api/posts/${post._id}`);
+    await axios.delete(`https://antaligyongyi.hu/api/posts/${post._id}`);
     alert("Bejegyzés sikeresen törölve.");
     window.location.href = "/landing/#blog"; // navigálás vissza a bloghoz
   } catch (error) {

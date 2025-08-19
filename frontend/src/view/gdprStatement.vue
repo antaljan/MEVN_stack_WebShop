@@ -29,7 +29,7 @@
     const gdprHtml = ref('');
     const loadGdprHtml = async () => {
         try {
-            const response = await fetch(`https://yowayoli.com/api/uploads/gdprStatement_${selectedLanguage.value}.html`);
+            const response = await fetch(`https://antaligyongyi.hu/api/uploads/gdprStatement_${selectedLanguage.value}.html`);
             const htmlText = await response.text();
             gdprHtml.value = htmlText;
         } catch (error) {

@@ -120,7 +120,7 @@ async function handleSendEmail() {
         }
         /* Second image (Portfolio) */
         .bgimg-2 {
-            background-image: url("https://yowayoli.com/parallax2.jpg");
+            background-image: url("https://antaligyongyi.hu/parallax2.jpg");
             min-height: 344px;
         }
                 /* Turn off parallax scrolling for tablets and phones */

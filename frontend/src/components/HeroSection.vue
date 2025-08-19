@@ -48,7 +48,7 @@ const selectedLanguage = ref(document.documentElement.lang || 'hu');
         }
         /* First image (Logo. Full height) */
         .bgimg-1 {
-            background-image: url('https://yowayoli.com/forestbridge.jpg');
+            background-image: url('https://antaligyongyi.hu/forestbridge.jpg');
             min-height: 344px;
             max-height: 100%;
         }
