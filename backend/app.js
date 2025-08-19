@@ -59,7 +59,7 @@ app.use('/posts', postRoutes);
 app.use('/email', emailRoutes);
 app.use('/booking', bookingRoutes);
 app.use('/track', trackingRoutes)
-app.use('/api/dashboard', dashboardRoutes);
+app.use('/dashboard', dashboardRoutes);
 app.use('/upload', uploadRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(logger);
