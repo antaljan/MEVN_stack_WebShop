@@ -8,7 +8,7 @@ const authenticateToken = require('../middleware/auth');
 router.get('/summary',authenticateToken, async (req, res) => {
     try {
         const db = getDb();
-        const totalNewsletters = await db.collection('scheduledNewsletters').countDocuments();
+        const totalNewsletters = await db.collection('schedulednewsletters').countDocuments();
         const totalSubscribers = await db.collection('scheduledNewsletters').aggregate([
             { $unwind: '$subscribers' },
             { $count: 'count' }
@@ -34,7 +34,7 @@ router.get('/summary',authenticateToken, async (req, res) => {
 router.get('/campaigns',authenticateToken, async (req, res) => {
     try {
         const db = getDb();
-        const campaigns = await db.collection('scheduledNewsletters').find().toArray();
+        const campaigns = await db.collection('schedulednewsletters').find().toArray();
         const results = await Promise.all(campaigns.map(async campaign => {
             const newsletterId = campaign._id.toString();
             const subscriberCount = campaign.subscribers.length;
