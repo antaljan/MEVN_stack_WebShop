@@ -86,7 +86,7 @@ import { onMounted } from 'vue';
 onMounted(async () => {
   if (!postId) return;
   try {
-    const response = await axios.get(`https://yowayoli.com/api/posts/${postId}`);
+    const response = await axios.get(`https://antaligyongyi.hu/api/posts/${postId}`);
     post.value = response.data;
     previewUrl.value = response.data.image;
   } catch (error) {
@@ -117,7 +117,7 @@ async function submitPost() {
     formDataImg.append('image', imageFile.value);
     console.log("FormData tartalma:", formDataImg.get('image'));
     try {
-      const response = await axios.post('https://yowayoli.com/api/upload', formDataImg, {
+      const response = await axios.post('https://antaligyongyi.hu/api/upload', formDataImg, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       console.log("Szerver válasza:", response.data);
@@ -139,9 +139,9 @@ async function submitPost() {
   try {
 
     if (postId) {
-      post.value.image = 'https://yowayoli.com/api/uploads/' + uploadedFileName;
+      post.value.image = 'https://antaligyongyi.hu/api/uploads/' + uploadedFileName;
       post.value.language = document.documentElement.lang;
-      await axios.put(`https://yowayoli.com/api/posts/${postId}`, post.value);
+      await axios.put(`https://antaligyongyi.hu/api/posts/${postId}`, post.value);
     } else {
       post.value = {
         language: document.documentElement.lang,
@@ -150,9 +150,9 @@ async function submitPost() {
         author: post.value.author,
         date: post.value.date,
         content: post.value.content,
-        image: 'https://yowayoli.com/api/uploads/' + uploadedFileName
+        image: 'https://antaligyongyi.hu/api/uploads/' + uploadedFileName
     };
-      await axios.post('https://yowayoli.com/api/posts/new', post.value);
+      await axios.post('https://antaligyongyi.hu/api/posts/new', post.value);
     }
 
     alert('Blogeintrag erfolgreich erstellt!');

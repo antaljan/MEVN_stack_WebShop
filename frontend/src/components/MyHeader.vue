@@ -115,7 +115,7 @@ const router = useRouter()
 const userStore = useUserStore()
 // Axios instance for API requests
 const api = axios.create({
-  baseURL: 'https://yowayoli.com/api'
+  baseURL: 'https://antaligyongyi.hu/api'
 })
 // jwt token interceptor
 api.interceptors.request.use(config => {
@@ -255,7 +255,7 @@ api.interceptors.request.use(config => {
     } else if (isLogin.value) {
       // Login
       try {
-        const response = await axios.post('https://yowayoli.com/api/user/login', {
+        const response = await axios.post('https://antaligyongyi.hu/api/user/login', {
           email: email.value,
           psw: password.value
         });
@@ -275,7 +275,7 @@ api.interceptors.request.use(config => {
     } else {
       // Registration
       try {
-        await axios.post('https://yowayoli.com/api/user/create', {
+        await axios.post('https://antaligyongyi.hu/api/user/create', {
           firstname: firstname.value,
           name: name.value,
           email: email.value,

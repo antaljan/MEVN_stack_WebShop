@@ -70,7 +70,7 @@ const events = ref([])
 
 // loading events from API
 onMounted(async () => {
-  fetch('https://yowayoli.com/api/booking/all')
+  fetch('https://antaligyongyi.hu/api/booking/all')
   .then(res => res.json())
   .then(data => {
     events.value = data.map(event => ({
@@ -107,7 +107,7 @@ async function saveSlot() {
     end: endDate.toISOString(),
     available: true
   }
-  fetch('https://yowayoli.com/api/booking/new', {
+  fetch('https://antaligyongyi.hu/api/booking/new', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(newSlot)

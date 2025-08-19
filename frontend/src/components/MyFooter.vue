@@ -145,7 +145,7 @@ import axios from 'axios';
 async function submit() {
   if (form.value && await form.value.validate()) {
     try {
-        await axios.post('https://yowayoli.com/api/newsletter/subscribe', {
+        await axios.post('https://antaligyongyi.hu/api/newsletter/subscribe', {
           firstname: firstname.value,
           name: name.value,
           email: email.value,

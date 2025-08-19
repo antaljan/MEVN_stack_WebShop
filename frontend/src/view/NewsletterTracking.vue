@@ -207,7 +207,7 @@
     onMounted(async () => {
         // get subscribers
         try {
-            const response = await axios.post('https://yowayoli.com/api/newsletter/subscribers');
+            const response = await axios.post('https://antaligyongyi.hu/api/newsletter/subscribers');
             abonements.value = response.data.subscribers;
             subscriberCount.value = abonements.value.length;
         } catch (error) {
@@ -215,7 +215,7 @@
         }
         // get scheduled newsletters
         try {
-            const response = await axios.post('https://yowayoli.com/api/newsletter/getsceduled');
+            const response = await axios.post('https://antaligyongyi.hu/api/newsletter/getsceduled');
             scheduledNewsletters.value = response.data.scheduledNewsletters;
             nLettersCount.value = scheduledNewsletters.value.length;
         } catch (error) {
@@ -223,7 +223,7 @@
         }
         // get newsletter tempalates
         try {
-            const response = await axios.post('https://yowayoli.com/api/newsletter/gettemplates');
+            const response = await axios.post('https://antaligyongyi.hu/api/newsletter/gettemplates');
             templates.value = response.data.allNewsletters.map(template => ({
                 id: template._id,
                 subject: template.subject
@@ -255,7 +255,7 @@
         }
         try {
             const sendDate = new Date(dateInput.value).toISOString();
-            await axios.post('https://yowayoli.com/api/newsletter/send', {
+            await axios.post('https://antaligyongyi.hu/api/newsletter/send', {
                 subject : subject.value,
                 templateId: selectedTemplate.value,
                 subscribers : selectedSubscribers.value,
