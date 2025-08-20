@@ -2,11 +2,12 @@
     <MyHeader/>
     <v-app>
     <v-container>
-    <v-card  class="mx-auto">
+        <v-card class="mx-auto">
+        <div class="w3-content">
         <div class="w3-centered">
             <h2>Hírlevél menedzsment</h2>
         </div>
-        <div class="w3-text-small w3-text-left w3-padding-left-24 w3-padding-top-16">
+        <div class="w3-text-small w3-text-left w3-padding-left-36 w3-padding-top-16">
             <div>Hírlevelek száma: {{ summary.totalNewsletters }}</div>
             <div>Feliratkozók száma: {{ subscriberCount }}</div>
             <div>Megnyitások: {{ summary.totalOpened }}</div>
@@ -23,7 +24,6 @@
                         v-model="showList"
                         inset
                         color="primary"
-                        @change="handleSwitchChange"
                         hide-details
                     />
                 </v-col>
@@ -31,6 +31,7 @@
                     <p class="mb-0">Feliratkozók</p>
                 </v-col>
             </v-row>
+        </div>
         </div>
         <!-- button for schedule newsletter and templates -->
         <v-card-actions class="w3-padding-top-16" v-if="!showList">
@@ -67,7 +68,7 @@
                 @click="editSubscriberGroup"
             >
                 <v-icon left>mdi-email-newsletter</v-icon>
-                A feliratkozó csoportok szerkesztése
+                Csoportok szerkesztése
             </v-btn>
         </v-card-actions>
         <!-- list/table of subscibers -->
@@ -83,7 +84,7 @@
                 ]"
                 :items="abonements"
                 class="elevation-1"
-                :items-per-page="5"
+                :items-per-page="10"
             >
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.actions="{ item }">
@@ -280,17 +281,6 @@
             console.error('Failure by loading of scheduled newsletters:', error);
         }
     });
-
-    // handle switch change
-    function handleSwitchChange() {
-        if (showList.value) {
-        // Hírlevelek listája
-        console.log('Hírlevelek listája jelenik meg');
-        } else {
-        // Feliratkozók listája
-        console.log('Hírlevelek listája jelenik meg');
-        }
-    }
 
     // function submit
     async function submit() {
