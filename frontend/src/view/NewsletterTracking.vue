@@ -51,47 +51,67 @@
                 Sablon
             </v-btn>
         </v-card-actions>
+        <!-- button for new subscriber and edit subscriber group -->
+        <v-card-actions class="w3-padding-top-16" v-else>
+            <v-btn
+                color="primary"
+                class="w3-button w3-hover-black w3-round-large w3-margin-left-24"
+                @click="newSubsriber"
+            >
+                <v-icon left>mdi-email</v-icon>
+                új feliratkozó
+            </v-btn>
+            <v-btn
+                color="primary"
+                class="w3-button w3-hover-black w3-round-large w3-margin-left-24"
+                @click="editSubscriberGroup"
+            >
+                <v-icon left>mdi-email-newsletter</v-icon>
+                A feliratkozó csoportok szerkesztése
+            </v-btn>
+        </v-card-actions>
         <!-- list/table of subscibers -->
         <v-card-text v-if="showList">
             <div class="font-weight-bold ms-1 mb-2">Feliratkozók listája</div>
             <v-data-table
                 :headers="[
-                    { text: 'Email', value: 'email' },
-                    { text: 'Csoport', value: 'group' },
-                    { text: 'Regisztráció dátuma', value: 'registrationDate' }
+                    { title: 'vezeték név', value: 'name' },
+                    { title: 'kereszt név', value: 'firstname' },
+                    { title: 'Email', value: 'email' },
+                    { title: 'Csoport', value: 'group' },
+                    { title: 'Műveletek', value: 'actions', sortable: false }
                 ]"
                 :items="abonements"
                 class="elevation-1"
                 :items-per-page="5"
             >
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
-                <template v-slot:item.group="{ item }">
-                    <span>{{ item.group || 'Nincs megadva' }}</span>
+                <template v-slot:item.actions="{ item }">
+                    <v-icon small class="mr-2" @click="editSubscriber(item)">
+                        mdi-pencil
+                    </v-icon>
+                    <v-icon small color="red" @click="deleteSubscriber(item._id)">
+                        mdi-delete
+                    </v-icon>
                 </template>
             </v-data-table>
         </v-card-text>
         <!-- chronology list of newsletters -->
         <v-card-text class="w3-padding-top-24" v-else>
-            <div class="font-weight-bold ms-1 mb-2">Mai nap</div>
-            <v-timeline align="start" density="compact">
-                <v-timeline-item
-                    v-for="campaign in campaigns"
-                    :key="campaign.id"
-                    :dot-color="'green'"
-                    size="x-small"
+            <div class="font-weight-bold ms-1 mb-2">Hírlevelek:</div>
+                <v-data-table
+                    :headers="[
+                        { title: 'Cím', value: 'subject' },
+                        { title: 'Dátum', value: 'sendDate' },
+                        { title: 'Megnyitási arány', value: 'openRate' },
+                        { title: 'Kattintási arány', value: 'clickRate' },
+                        { title: 'Legnépszerűbb link', value: 'topLink' }
+                    ]"
+                    :items="campaigns"
+                    class="elevation-1"
+                    :items-per-page="10"
                 >
-                    <div class="font-weight-normal">
-                        <strong>{{ campaign.subject }}</strong> - {{ campaign.sendDate }}
-                        <br/>
-                        Megnyitási arány: {{ campaign.openRate }}%
-                        <br/>
-                        Kattintási arány: {{ campaign.clickRate }}%
-                        <br/>
-                        Legnépszerűbb link: {{ campaign.topLink || 'Nincs adat' }}
-                    </div>
-                    
-                </v-timeline-item>
-            </v-timeline>
+                </v-data-table>
         </v-card-text>
     </v-card>
     <!--dialog for sending newsletter-->
@@ -261,7 +281,6 @@
         }
     });
 
-
     // handle switch change
     function handleSwitchChange() {
         if (showList.value) {
@@ -272,7 +291,6 @@
         console.log('Hírlevelek listája jelenik meg');
         }
     }
-
 
     // function submit
     async function submit() {
@@ -298,18 +316,35 @@
         }
     }
 
-
-    //filter for checkbox
+    // filter for checkbox
     const filteredAbonements = computed(() => {
         return selectedGroup.value === 'mind'
             ? abonements.value
             : abonements.value.filter(abo => abo.group === selectedGroup.value)
     })
 
-
     // toggle checkbox
     function toggleCheckbox() {
         showCheckboxes.value = !showCheckboxes.value;
     }
 
+    // edit subscriber
+    function editSubscriber() {
+        alert('edit subscriber')
+    }
+
+    // delelte subscriber
+    function deleteSubscriber() {
+        alert('delete subscriber')
+    }
+
+    // new subscriber
+    function newSubsriber() {
+        alert('new subscriber')
+    }
+
+    // edit subscriber group
+    function editSubscriberGroup() {
+        alert('edit subscriber group')
+    }
 </script>
