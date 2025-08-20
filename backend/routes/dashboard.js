@@ -56,7 +56,7 @@ router.get('/campaigns',authenticateToken, async (req, res) => {
             ]).toArray();
             return {
                 subject: campaign.subject,
-                sendDate: campaign.sendDate,
+                sendDate: new Date(campaign.sendDate).toISOString().split('T')[0],
                 openRate: ((openedCount / subscriberCount) * 100).toFixed(1),
                 clickRate: ((clickCount[0]?.count || 0) / subscriberCount * 100).toFixed(1),
                 topLink: topClick[0]?._id || 'Nincs kattintás'
