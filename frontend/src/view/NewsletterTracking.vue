@@ -3,35 +3,36 @@
     <v-app>
     <v-container>
         <v-card class="mx-auto">
+        <!-- Header with the initial initial statistic-->
         <div class="w3-content">
-        <div class="w3-centered">
-            <h2>Hírlevél menedzsment</h2>
-        </div>
-        <div class="w3-text-small w3-text-left w3-padding-left-36 w3-padding-top-16">
-            <div>Hírlevelek száma: {{ summary.totalNewsletters }}</div>
-            <div>Feliratkozók száma: {{ subscriberCount }}</div>
-            <div>Megnyitások: {{ summary.totalOpened }}</div>
-            <div>Kattintások: {{ summary.totalClicks }}</div>        
-        </div>
-        <!-- switch for changing of list-->
-        <div class="w3-center">
-            <v-row class="justify-center align-center" no-gutters>
-                <v-col cols="auto" class="px-2">
-                    <p class="mb-0">Hírlevelek</p>
-                </v-col>
-                <v-col cols="auto" class="px-2">
-                    <v-switch
-                        v-model="showList"
-                        inset
-                        color="primary"
-                        hide-details
-                    />
-                </v-col>
-                <v-col cols="auto" class="px-2">
-                    <p class="mb-0">Feliratkozók</p>
-                </v-col>
-            </v-row>
-        </div>
+            <div class="w3-centered">
+                <h2>Hírlevél menedzsment</h2>
+            </div>
+            <div class="w3-text-small w3-text-left w3-padding-left-36 w3-padding-top-16">
+                <div>Hírlevelek száma: {{ summary.totalNewsletters }}</div>
+                <div>Feliratkozók száma: {{ summary.totalSubscribers }}</div>
+                <div>Megnyitások: {{ summary.totalOpened }}</div>
+                <div>Kattintások: {{ summary.totalClicks }}</div>        
+            </div>
+            <!-- switch for changing of list-->
+            <div class="w3-center">
+                <v-row class="justify-center align-center" no-gutters>
+                    <v-col cols="auto" class="px-2">
+                        <p class="mb-0">Hírlevelek</p>
+                    </v-col>
+                    <v-col cols="auto" class="px-2">
+                        <v-switch
+                            v-model="showList"
+                            inset
+                            color="primary"
+                            hide-details
+                        />
+                    </v-col>
+                    <v-col cols="auto" class="px-2">
+                        <p class="mb-0">Feliratkozók</p>
+                    </v-col>
+                </v-row>
+            </div>
         </div>
         <!-- button for schedule newsletter and templates -->
         <v-card-actions class="w3-padding-top-16" v-if="!showList">
@@ -88,7 +89,7 @@
             >
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.actions="{ item }">
-                    <v-icon small class="mr-2" @click="editSubscriber(item)">
+                    <v-icon small class="mr-2" @click="openEditDialog(item)">
                         mdi-pencil
                     </v-icon>
                     <v-icon small color="red" @click="deleteSubscriber(item._id)">
@@ -198,6 +199,44 @@
         </v-card-actions>
     </v-card>
     </v-dialog>
+    <!-- dialog for editing subscriber -->
+    <v-dialog v-model="dialogUpdateSubscriber" max-width="400px">
+        <v-card>
+            <v-card-title class="headline">Feliratkozó szerkesztése</v-card-title>
+            <v-card-text>
+                <v-form ref="form">
+                <v-text-field
+                    v-model="item.firstname"
+                    label="kereszt név"
+                    :rules="[v => !!v || 'Firstname is must']"
+                    required
+                ></v-text-field>
+                <v-text-field
+                    v-model="item.name"
+                    label="vezeték név"
+                    :rules="[v => !!v || 'name is must']"
+                    required
+                ></v-text-field>
+                <v-text-field
+                    v-model="item.email"
+                    label="email"
+                    :rules="[v => /.+@.+\..+/.test(v) || 'correct E-Mail is required']"
+                    required
+                ></v-text-field>
+                <v-text-field
+                    v-model="item.group"
+                    label="csoport"
+                    :rules="[v => !!v || 'group is must']"
+                    required
+                ></v-text-field>
+                </v-form>
+            </v-card-text>
+            <v-card-actions>
+                <v-btn color="green" text @click="editSubscriber(item)">Küldés</v-btn>
+                <v-btn color="grey" text @click="dialogUpdateSubscriber = false">Mégsem</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
     </v-container>
     </v-app>
     <MyFooter/>
@@ -216,6 +255,7 @@
     const subscriberCount = ref(0);
     const nLettersCount = ref(0);
     const dialog = ref(false);
+    const dialogUpdateSubscriber = ref(false);
     const selectedTemplate= ref('');
     const templates=ref('');
     const subscriberGruop = ['mind','ujonc', 'tesztelő', 'régi', '...'];
@@ -224,7 +264,8 @@
     const today = new Date().toISOString().split('T')[0]
     const dateInput = ref(today)
     const templatesCount = ref(0);
-    const showCheckboxes = ref(false); 
+    const showCheckboxes = ref(false);
+    const item = ref({});
     const summary = ref({
         totalNewsletters: 0,
         totalSubscribers: 0,
@@ -235,7 +276,7 @@
 
     // load data from backend
     onMounted(async () => {
-        const token = localStorage.getItem('jwt') // vagy Pinia store-ból
+        const token = localStorage.getItem('jwt')
         const headers = {
             Authorization: `Bearer ${token}`
         }
@@ -319,8 +360,12 @@
     }
 
     // edit subscriber
-    function editSubscriber() {
-        alert('edit subscriber')
+    async function editSubscriber(subscriber) {
+        try {
+            await  axios.put('https://antaligyongyi.hu/api/newsletter/subscriber', { subscriber })
+        } catch (err) {
+            console.error('Hiba az adatok mentésekor:', err)
+        }
     }
 
     // delelte subscriber
@@ -334,7 +379,12 @@
     }
 
     // edit subscriber group
-    function editSubscriberGroup() {
-        alert('edit subscriber group')
+    async function editSubscriberGroup( ) {
+                alert('edit subscribers group')
+    }
+
+    function openEditDialog(subscriber) {
+        this.item = { ...subscriber };
+        this.dialogUpdateSubscriber = true;
     }
 </script>

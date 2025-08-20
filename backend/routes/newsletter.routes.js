@@ -6,6 +6,9 @@ const { save } = require('../controllers/newsletter.controller');
 // subscribe
 router.post('/subscribe', newsletterController.subscribe);
 
+// update subscriber
+router.put('/subscriber', newsletterController.updateOneSubscriber);
+
 // get subscribers
 router.post('/subscribers', newsletterController.getSubscribers);
 

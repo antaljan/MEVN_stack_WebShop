@@ -24,6 +24,18 @@ async function subscribe(req, res) {
   }
 }
 
+// update subscriber
+async function updateOneSubscriber(req, res) {
+  const { _id, firstname, name, email, group } = req.body;
+  try {
+    await newsletterModel.updateSubscriber({ _id, firstname, name, email, group });
+    res.status(201).json({ ok: true});
+  } catch (error) {
+    console.error('error:', error);
+    res.status(500).json({ ok: false, error: error.message });
+  }
+}
+
 // get all subscribers from mongodb
 async function getSubscribers(req, res) {
   console.log('Frontend try to get all subscribers.');
@@ -163,6 +175,7 @@ async function deleteTemplate(req, res) {
 
 module.exports = {
   subscribe,
+  updateOneSubscriber,
   fillTemplate,
   getSubscribers,
   unsubscribe,

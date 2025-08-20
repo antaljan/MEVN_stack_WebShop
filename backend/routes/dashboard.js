@@ -9,10 +9,7 @@ router.get('/summary',authenticateToken, async (req, res) => {
     try {
         const db = getDb();
         const totalNewsletters = await db.collection('schedulednewsletters').countDocuments();
-        const totalSubscribers = await db.collection('scheduledNewsletters').aggregate([
-            { $unwind: '$subscribers' },
-            { $count: 'count' }
-        ]).toArray();
+        const totalSubscribers = await db.collection('aboliste').countDocuments();
         const totalOpened = await db.collection('emailEvents').countDocuments({ openedAt: { $exists: true } });
         const totalClicks = await db.collection('emailEvents').aggregate([
             { $unwind: '$clicks' },
@@ -20,7 +17,7 @@ router.get('/summary',authenticateToken, async (req, res) => {
         ]).toArray();
         res.json({
             totalNewsletters,
-            totalSubscribers: totalSubscribers[0]?.count || 0,
+            totalSubscribers,
             totalOpened,
             totalClicks: totalClicks[0]?.count || 0
         });

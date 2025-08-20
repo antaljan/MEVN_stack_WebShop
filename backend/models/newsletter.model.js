@@ -11,9 +11,22 @@ function init() {
   console.log('📬 Newsletter collection initialized');
 }
 
-
 function addSubscriber({ firstname, name, email }) {
   return collection.insertOne({ firstname, name, email, group:"ujjonc" });
+}
+
+function updateSubscriber({ _id, firstname, name, email, group }) {
+  return collection.updateOne(
+    { _id: new ObjectId(_id) },
+    {
+      $set: {
+        firstname,
+        name,
+        email,
+        group
+      }
+    }
+  );
 }
 
 function deleteSubscriberByEmail(email) {
@@ -49,6 +62,7 @@ async function deleteNewsletter(id) {
 module.exports = {
   init,
   addSubscriber,
+  updateSubscriber,
   deleteSubscriberByEmail,
   saveNewsletter,
   getNewsletter,
