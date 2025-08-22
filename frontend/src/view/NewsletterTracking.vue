@@ -397,8 +397,12 @@
                 alert('edit subscribers group')
     }
 
-    function openEditDialog(item) {
-        subscriber.value = { ...item }; // másolat, hogy ne módosítsd direktben
+    const openEditDialog = (item) => {
+        subscriber.value._id = item._id;
+        subscriber.value.firstname = item.firstname;
+        subscriber.value.name = item.name;
+        subscriber.value.email = item.email;
+        subscriber.value.group = item.group;
         dialogUpdateSubscriber.value = true;
     }
 
