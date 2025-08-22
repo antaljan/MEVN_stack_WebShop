@@ -206,25 +206,25 @@
             <v-card-text>
                 <v-form ref="form">
                 <v-text-field
-                    v-model="item.firstname"
+                    v-model="subscriber.firstname"
                     label="kereszt név"
                     :rules="[v => !!v || 'Firstname is must']"
                     required
                 ></v-text-field>
                 <v-text-field
-                    v-model="item.name"
+                    v-model="subscriber.name"
                     label="vezeték név"
                     :rules="[v => !!v || 'name is must']"
                     required
                 ></v-text-field>
                 <v-text-field
-                    v-model="item.email"
+                    v-model="subscriber.email"
                     label="email"
                     :rules="[v => /.+@.+\..+/.test(v) || 'correct E-Mail is required']"
                     required
                 ></v-text-field>
                 <v-text-field
-                    v-model="item.group"
+                    v-model="subscriber.group"
                     label="csoport"
                     :rules="[v => !!v || 'group is must']"
                     required
@@ -232,7 +232,7 @@
                 </v-form>
             </v-card-text>
             <v-card-actions>
-                <v-btn color="green" text @click="editSubscriber(item)">Küldés</v-btn>
+                <v-btn color="green" text @click="editSubscriber(subscriber)">Mentés</v-btn>
                 <v-btn color="grey" text @click="dialogUpdateSubscriber = false">Mégsem</v-btn>
             </v-card-actions>
         </v-card>
@@ -265,7 +265,13 @@
     const dateInput = ref(today)
     const templatesCount = ref(0);
     const showCheckboxes = ref(false);
-    const item = ref({});
+    const subscriber = ref({
+        _id: '',
+        firstname: '',
+        name: '',
+        email: '',
+        group: ''
+        });
     const summary = ref({
         totalNewsletters: 0,
         totalSubscribers: 0,
@@ -273,28 +279,9 @@
         totalClicks: 0
     })
     const campaigns = ref([])
-
-    // load data from backend
-    onMounted(async () => {
-        const token = localStorage.getItem('jwt')
-        const headers = {
-            Authorization: `Bearer ${token}`
-        }
-        try {
-            const [summaryRes, campaignsRes] = await Promise.all([
-                axios.get('https://antaligyongyi.hu/api/dashboard/summary', { headers }),
-                axios.get('https://antaligyongyi.hu/api/dashboard/campaigns', { headers })
-            ])
-            summary.value = summaryRes.data
-            campaigns.value = campaignsRes.data
-        } catch (err) {
-            console.error('Hiba az adatok lekérésekor:', err)
-        }
-    })
-
-    // reques subscribers and newsletters from backend
-    onMounted(async () => {
-        // get subscribers
+    
+    // get subscribers
+    async function getSubscribers(){
         try {
             const response = await axios.post('https://antaligyongyi.hu/api/newsletter/subscribers');
             abonements.value = response.data.subscribers;
@@ -302,7 +289,10 @@
         } catch (error) {
             console.error('Failure by loading of Abonements:', error);
         }
-        // get scheduled newsletters
+    }
+        
+    // get scheduled newsletters
+    async function  getScheduledNewsletters(){
         try {
             const response = await axios.post('https://antaligyongyi.hu/api/newsletter/getsceduled');
             scheduledNewsletters.value = response.data.scheduledNewsletters;
@@ -321,7 +311,27 @@
         } catch (error) {
             console.error('Failure by loading of scheduled newsletters:', error);
         }
-    });
+    }
+    
+    // load data from backend
+    onMounted(async () => {
+        const token = localStorage.getItem('jwt')
+        const headers = {
+            Authorization: `Bearer ${token}`
+        }
+        try {
+            const [summaryRes, campaignsRes] = await Promise.all([
+                axios.get('https://antaligyongyi.hu/api/dashboard/summary', { headers }),
+                axios.get('https://antaligyongyi.hu/api/dashboard/campaigns', { headers })
+            ])
+            summary.value = summaryRes.data
+            campaigns.value = campaignsRes.data
+        } catch (err) {
+            console.error('Hiba az adatok lekérésekor:', err)
+        }
+        getSubscribers();
+        getScheduledNewsletters();
+    })
 
     // function submit
     async function submit() {
@@ -363,8 +373,10 @@
     async function editSubscriber(subscriber) {
         console.log("try sending the subscriber to backend",subscriber)
         try {
-            const result = await  axios.put('https://antaligyongyi.hu/api/newsletter/subscriber', { subscriber })
+            const result = await  axios.put('https://antaligyongyi.hu/api/newsletter/subscriber', subscriber.value )
             console.log("data sended wit result:",result)
+            getSubscribers()
+            dialogUpdateSubscriber.value = false;
         } catch (err) {
             console.error('Hiba az adatok mentésekor:', err)
         }
@@ -385,9 +397,9 @@
                 alert('edit subscribers group')
     }
 
-function openEditDialog(subscriber) {
-  item.value = { ...subscriber };
-  dialogUpdateSubscriber.value = true;
-}
+    function openEditDialog(item) {
+        subscriber.value = { ...item }; // másolat, hogy ne módosítsd direktben
+        dialogUpdateSubscriber.value = true;
+    }
 
 </script>
