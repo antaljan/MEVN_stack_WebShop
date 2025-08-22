@@ -361,8 +361,10 @@
 
     // edit subscriber
     async function editSubscriber(subscriber) {
+        console.log("try sending the subscriber to backend",subscriber)
         try {
-            await  axios.put('https://antaligyongyi.hu/api/newsletter/subscriber', { subscriber })
+            const result = await  axios.put('https://antaligyongyi.hu/api/newsletter/subscriber', { subscriber })
+            console.log("data sended wit result:",result)
         } catch (err) {
             console.error('Hiba az adatok mentésekor:', err)
         }
@@ -383,8 +385,9 @@
                 alert('edit subscribers group')
     }
 
-    function openEditDialog(subscriber) {
-        this.item = { ...subscriber };
-        this.dialogUpdateSubscriber = true;
-    }
+function openEditDialog(subscriber) {
+  item.value = { ...subscriber };
+  dialogUpdateSubscriber.value = true;
+}
+
 </script>
