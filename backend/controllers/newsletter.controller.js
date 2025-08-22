@@ -27,6 +27,7 @@ async function subscribe(req, res) {
 // update subscriber
 async function updateOneSubscriber(req, res) {
   const { _id, firstname, name, email, group } = req.body;
+  console.log("frontend try to update subscriber:",email);
   try {
     await newsletterModel.updateSubscriber({ _id, firstname, name, email, group });
     res.status(201).json({ ok: true});
