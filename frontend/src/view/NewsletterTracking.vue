@@ -373,7 +373,7 @@
     async function editSubscriber(subscriber) {
         console.log("try sending the subscriber to backend",subscriber)
         try {
-            const result = await  axios.put('https://antaligyongyi.hu/api/newsletter/subscriber', subscriber.value )
+            const result = await  axios.put('https://antaligyongyi.hu/api/newsletter/subscriber', subscriber )
             console.log("data sended wit result:",result)
             getSubscribers()
             dialogUpdateSubscriber.value = false;
