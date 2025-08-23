@@ -216,22 +216,29 @@ const templateBlocks = [
   { label: 'gomb ball', HTML: BodyCtaL },
 ]
 
-
 onMounted(async () => {
   try {
-    const response = await axios.post('https://antaligyongyi.hu/api/newsletter/gettemplates')
+    const token = localStorage.getItem('jwt');
+        if (!token) {
+            console.warn('Nincs token, nem lehet lekérni a felhasználókat.');
+            return;
+        }
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        };
+    const response = await axios.post('https://antaligyongyi.hu/api/newsletter/gettemplates', config)
     templates.value = response.data.allNewsletters
   } catch (error) {
     console.error('Nem sikerült lekérni a sablonokat:', error)
   }
 })
 
-
 // check text for vorbidden charakters
 function containsForbiddenChars(text) {
   return forbiddenChars.some(char => text.includes(char));
 }
-
 
 // load newsletter content
 function loadSelectedTemplate(template) {
@@ -247,12 +254,21 @@ function loadSelectedTemplate(template) {
   templateDialogVisible.value = false
 }
 
-
 // delete template
 async function deleteTemplate(_id) {
   if (!confirm("Biztosan törlöd ezt a sablont?")) return
   try {
-    await axios.post('https://antaligyongyi.hu/api/newsletter/deletetemplate', { _id })
+    const token = localStorage.getItem('jwt');
+        if (!token) {
+            console.warn('Nincs token, nem lehet lekérni a felhasználókat.');
+            return;
+        }
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        };
+    await axios.post('https://antaligyongyi.hu/api/newsletter/deletetemplate', { _id }, config)
     templates.value = templates.value.filter(t => t._id !== _id)
   } catch (error) {
     alert('❌ Nem sikerült törölni a sablont.')
@@ -260,23 +276,19 @@ async function deleteTemplate(_id) {
   }
 }
 
-
 // Escape special characters in a string for use in a regular expression
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
-
 // convert and purify markdown to html
 const convertedHtml = computed(() => DOMPurify.sanitize(content.value ));
-
 
 // insert block into content
 function insertBlock(block) {
   content.value += `\n\n${block.HTML}`
   structure.value.push({ label: block.label, HTML: block.HTML })
 }
-
 
 // send newsletter
 async function sendNewsletter() {
@@ -293,14 +305,23 @@ async function sendNewsletter() {
       sendDate: today,
       structure: structure.value
     }
-  await axios.post('https://antaligyongyi.hu/api/newsletter/save', payload)
-  alert('✅ Hírlevél sablon mentve!')
+    const token = localStorage.getItem('jwt');
+    if (!token) {
+      console.warn('Nincs token, nem lehet lekérni a felhasználókat.');
+      return;
+    }
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+    await axios.post('https://antaligyongyi.hu/api/newsletter/save', payload, config)
+    alert('✅ Hírlevél sablon mentve!')
   } catch (err) {
     console.error(err)
     alert('❌ Hiba történt a mentés során.')
   }
 }
-
 
 // clear newsletter content
 function clearNewsletter() {
@@ -311,7 +332,6 @@ function clearNewsletter() {
   }
 }
 
-
 // edit block in inserted structure
 function editBlock(index) {
   editedIndex.value = index
@@ -321,7 +341,6 @@ function editBlock(index) {
   editableLinks.value = filterLink(editedHTML.value)
   dialogVisible.value = true
 }
-
 
 // remove block from structure
 function removeBlock(index) {
@@ -336,7 +355,6 @@ function removeBlock(index) {
     }
   }
 }
-
 
 // save edited block
 function saveEditedBlock() {
@@ -373,7 +391,6 @@ function saveEditedBlock() {
   dialogVisible.value = false
 }
 
-
 // Filter functions to extract text and links from HTML
 function filterText(html) {
   return [...html.matchAll(/>([^<]+)</g)]
@@ -381,12 +398,10 @@ function filterText(html) {
     .filter(text => text.length > 0);
 }
 
-
 // Filter function to extract links from HTML
 function filterLink(html) {
   return [...html.matchAll(/https:\/\/[^"]+/g)].map(match => match[0]);
 }
-
 
 // picture upload function
 const uploadImage = async (index) => {
@@ -405,7 +420,6 @@ const uploadImage = async (index) => {
     alert('❌ Hiba a kép feltöltésekor: ' + error);
   }
 };
-
 
 </script>
 
