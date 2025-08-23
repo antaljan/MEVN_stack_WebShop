@@ -155,16 +155,24 @@ async function gettemplates(req, res) {
 // get one newsletter template
 async function getonetemplate(req, res) {
   const { _id } = req.body;
-  console.log('Frontend try to get one newsletter template for id:',_id);
+  console.log('Frontend try to get one newsletter template for id:', _id);
+  if (!_id || typeof _id !== 'string') {
+    console.log('Érvénytelen vagy hiányzó _id');
+    return res.status(400).json({ ok: false, error: 'Érvénytelen vagy hiányzó _id' });
+  }
   try {
     const oneNewsletter = await newsletterModel.getOneNewsletter(_id);
-    console.log('successfull',);
+    if (!oneNewsletter) {
+      return res.status(404).json({ ok: false, error: 'Nem található ilyen hírlevél sablon' });
+    }
+    console.log('Sikeres lekérdezés');
     res.status(200).json({ ok: true, oneNewsletter });
   } catch (error) {
-    console.log('error:',error);
+    console.error('Hiba történt:', error);
     res.status(500).json({ ok: false, error: error.message });
   }
 }
+
 
 // delete newsletter template
 async function deleteTemplate(req, res) {
