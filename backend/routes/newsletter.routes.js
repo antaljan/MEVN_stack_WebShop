@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const newsletterController = require('../controllers/newsletter.controller');
 const { save } = require('../controllers/newsletter.controller');
+const authenticateToken = require('../middleware/auth');
+
 
 // subscribe
 router.post('/subscribe', newsletterController.subscribe);
