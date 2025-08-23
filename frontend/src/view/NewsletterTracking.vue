@@ -304,7 +304,17 @@
     // get subscribers
     async function getSubscribers(){
         try {
-            const response = await axios.post('https://antaligyongyi.hu/api/newsletter/subscribers');
+            const token = localStorage.getItem('jwt');
+            if (!token) {
+                console.warn('Nincs token, nem lehet lekérni a felhasználókat.');
+                return;
+            }
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            };
+            const response = await axios.post('https://antaligyongyi.hu/api/newsletter/subscribers', config);
             abonements.value = response.data.subscribers;
             subscriberCount.value = abonements.value.length;
         } catch (error) {
@@ -315,7 +325,17 @@
     // get scheduled newsletters
     async function  getScheduledNewsletters(){
         try {
-            const response = await axios.post('https://antaligyongyi.hu/api/newsletter/getsceduled');
+            const token = localStorage.getItem('jwt');
+            if (!token) {
+                console.warn('Nincs token, nem lehet lekérni a felhasználókat.');
+                return;
+            }
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            };
+            const response = await axios.post('https://antaligyongyi.hu/api/newsletter/getsceduled', config);
             scheduledNewsletters.value = response.data.scheduledNewsletters;
             nLettersCount.value = scheduledNewsletters.value.length;
         } catch (error) {
@@ -323,7 +343,17 @@
         }
         // get newsletter tempalates
         try {
-            const response = await axios.post('https://antaligyongyi.hu/api/newsletter/gettemplates');
+            const token = localStorage.getItem('jwt');
+            if (!token) {
+                console.warn('Nincs token, nem lehet lekérni a felhasználókat.');
+                return;
+            }
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            };
+            const response = await axios.post('https://antaligyongyi.hu/api/newsletter/gettemplates', config);
             templates.value = response.data.allNewsletters.map(template => ({
                 id: template._id,
                 subject: template.subject
@@ -362,13 +392,23 @@
         }
         try {
             const sendDate = new Date(dateInput.value).toISOString();
+            const token = localStorage.getItem('jwt');
+            if (!token) {
+                console.warn('Nincs token, nem lehet lekérni a felhasználókat.');
+                return;
+            }
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            };
             await axios.post('https://antaligyongyi.hu/api/newsletter/send', {
                 subject : subject.value,
                 templateId: selectedTemplate.value,
                 subscribers : selectedSubscribers.value,
                 sendDate :  sendDate,
                 sent : false
-            });
+            }, config);
             alert('A hírlevél sikeresen elküldve!');
             dialog.value = false;
             return { success: true };
@@ -394,7 +434,17 @@
     async function editSubscriber(subscriber) {
         console.log("try sending the subscriber to backend",subscriber)
         try {
-            const result = await  axios.put('https://antaligyongyi.hu/api/newsletter/subscriber', subscriber )
+            const token = localStorage.getItem('jwt');
+            if (!token) {
+                console.warn('Nincs token, nem lehet lekérni a felhasználókat.');
+                return;
+            }
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            };
+            const result = await  axios.put('https://antaligyongyi.hu/api/newsletter/subscriber', subscriber, config)
             console.log("data sended wit result:",result)
             getSubscribers()
             dialogUpdateSubscriber.value = false;
@@ -441,9 +491,19 @@
         }
         // 2. Lekérdezés a backendből
         try {
+            const token = localStorage.getItem('jwt');
+            if (!token) {
+                console.warn('Nincs token, nem lehet lekérni a felhasználókat.');
+                return;
+            }
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            };
             const response = await axios.post('https://antaligyongyi.hu/api/newsletter/getonetemplate', {
                 _id: match.templateId
-            });
+            }, config);
             if (response.data.ok) {
                 selectedTemplate.value = response.data.oneNewsletter;
                 previewDialog.value = true;

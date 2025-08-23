@@ -147,7 +147,7 @@ async function submitPost() {
         content: post.value.content,
         image: 'https://antaligyongyi.hu/api/uploads/' + uploadedFileName
       };
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('jwt');
       if (!token) {
         alert('Nincs érvényes token. Jelentkezz be újra!');
         return;

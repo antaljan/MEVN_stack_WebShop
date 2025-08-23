@@ -110,7 +110,7 @@ onMounted(() => {
 const deletePost = async (post) => {
   const confirmDelete = confirm(`Biztosan törölni szeretnéd ezt a bejegyzést: "${post.title}"?`);
   if (!confirmDelete) return;
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('jwt');
   const config = { headers: { Authorization: `Bearer ${token}`}};
   try {
     await axios.delete(`https://antaligyongyi.hu/api/posts/${post._id}`, config);
