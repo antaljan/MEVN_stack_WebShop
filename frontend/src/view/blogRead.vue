@@ -110,9 +110,10 @@ onMounted(() => {
 const deletePost = async (post) => {
   const confirmDelete = confirm(`Biztosan törölni szeretnéd ezt a bejegyzést: "${post.title}"?`);
   if (!confirmDelete) return;
-
+  const token = localStorage.getItem('token');
+  const config = { headers: { Authorization: `Bearer ${token}`}};
   try {
-    await axios.delete(`https://antaligyongyi.hu/api/posts/${post._id}`);
+    await axios.delete(`https://antaligyongyi.hu/api/posts/${post._id}`, config);
     alert("Bejegyzés sikeresen törölve.");
     window.location.href = "/landing/#blog"; // navigálás vissza a bloghoz
   } catch (error) {

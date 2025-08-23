@@ -81,34 +81,10 @@ const deletePost = async (req, res) => {
   }
 };
 
-const saveAbout = async (req, res) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ error: 'Access denied' });
-  }
-
-  const { aboutText2, textlanguage } = req.body;
-  if (!aboutText2) {
-    return res.status(400).json({ error: 'aboutText2 is required' });
-  }
-
-  try {
-    const dirPath = path.join(__dirname, '../uploads');
-    if (!fs.existsSync(dirPath)) {
-      fs.mkdirSync(dirPath);
-    }
-    const filePath = path.join(dirPath, `aboutText2_${textlanguage}.html`);
-    fs.writeFileSync(filePath, aboutText2);
-    res.status(200).json({ success: true, message: 'Text gespeichert' });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-};
-
 module.exports = {
   createPost,
   getAllPosts,
   getPostById,
   updatePost,
   deletePost,
-  saveAbout
 };

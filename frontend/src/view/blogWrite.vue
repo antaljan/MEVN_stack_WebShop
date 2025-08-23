@@ -69,8 +69,6 @@ import MyHeader from "../components/MyHeader.vue";
 import { useRoute } from 'vue-router';
 const route = useRoute();
 const postId = route.params.id;
-
-
 const post = ref({
   language: "",
   title: "",
@@ -115,29 +113,26 @@ async function submitPost() {
   if (imageFile.value) {
     const formDataImg = new FormData();
     formDataImg.append('image', imageFile.value);
-    console.log("FormData tartalma:", formDataImg.get('image'));
     try {
       const response = await axios.post('https://antaligyongyi.hu/api/upload', formDataImg, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      console.log("Szerver válasza:", response.data);
       uploadedFileName = response.data && response.data.filename ? response.data.filename : imageFile.value.name;
       post.value.image = uploadedFileName;
       console.log('image is uploaded on name: ' + uploadedFileName);
-      alert('Blog Post is successful saved.');
+      alert('A Blog Post sikeresen mentve lett.');
     } catch (error) {
-      alert('Failure by uploading of image: ' + error);
+      alert('Hiba a mentés során: ' + error);
       return;
     }
   }
   // validating the imput fields
   if (!post.value.title || !post.value.author || !post.value.date || !post .value.content) {
-    alert('Bitte füllen Sie alle erforderlichen Felder aus.');
+    alert('Kérlek töltsd ki az összes mezőt!');
     return;
   }
   // send post to backend
   try {
-
     if (postId) {
       post.value.image = 'https://antaligyongyi.hu/api/uploads/' + uploadedFileName;
       post.value.language = document.documentElement.lang;
@@ -151,11 +146,16 @@ async function submitPost() {
         date: post.value.date,
         content: post.value.content,
         image: 'https://antaligyongyi.hu/api/uploads/' + uploadedFileName
-    };
-      await axios.post('https://antaligyongyi.hu/api/posts/new', post.value);
+      };
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Nincs érvényes token. Jelentkezz be újra!');
+        return;
+      }
+      const config = {headers: {Authorization: `Bearer ${token}`}};
+      await axios.post('https://antaligyongyi.hu/api/posts/new', post.value, config);
     }
-
-    alert('Blogeintrag erfolgreich erstellt!');
+    alert('A Blog bejegyzés sikeresen elkészült!');
     return { success: true };
   } catch (error) {
     return { success: false, error };

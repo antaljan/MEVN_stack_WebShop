@@ -445,7 +445,6 @@
                 _id: match.templateId
             });
             if (response.data.ok) {
-                console.log("get back from backend:",response);
                 selectedTemplate.value = response.data.oneNewsletter;
                 previewDialog.value = true;
             } else {
