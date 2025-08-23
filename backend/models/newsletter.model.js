@@ -52,7 +52,9 @@ async function getNewsletter() {
 
 async function getOneNewsletter(_id) {
   const db = getDb();
-  return await db.collection('newsletters').findOne({ _id: _id });
+  result = await db.collection('newsletters').findOne({ _id: _id });
+  console.log("funded:",result);
+  return result;
 };
 
 async function deleteNewsletter(id) {
