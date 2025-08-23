@@ -246,19 +246,9 @@
     <!-- dialog for preview the selected newsletter -->
     <v-dialog v-model="previewDialog" max-width="800px">
         <v-card>
-            <v-card-title class="text-h6">
-                Előnézet: {{ selectedCampaign?.subject }}
-            </v-card-title>
+            <v-card-title>{{ selectedTemplate.subject }}</v-card-title>
             <v-card-text>
-                <!-- Itt jönne a hírlevél sablon tartalma -->
-                <div v-if="selectedCampaign">
-                    <p><strong>Dátum:</strong> {{ selectedCampaign.sendDate }}</p>
-                    <p><strong>Megnyitási arány:</strong> {{ selectedCampaign.openRate }}%</p>
-                    <p><strong>Kattintási arány:</strong> {{ selectedCampaign.clickRate }}%</p>
-                    <p><strong>Legnépszerűbb link:</strong> {{ selectedCampaign.topLink }}</p>
-                    <hr>
-                <div v-html="selectedCampaign.previewHtml"></div> <!-- HTML sablon -->
-                </div>
+                <div v-html="selectedTemplate.rawcontent"></div>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
