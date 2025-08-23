@@ -152,6 +152,20 @@ async function gettemplates(req, res) {
   }
 }
 
+// get one newsletter template
+async function getonetemplate(req, res) {
+  const { _id } = req.body;
+  console.log('Frontend try to get one newsletter template for id:',_id);
+  try {
+    const oneNewsletter = await newsletterModel.getOneNewsletter(_id);
+    console.log('successfull',);
+    res.status(200).json({ ok: true, oneNewsletter });
+  } catch (error) {
+    console.log('error:',error);
+    res.status(500).json({ ok: false, error: error.message });
+  }
+}
+
 // delete newsletter template
 async function deleteTemplate(req, res) {
   console.log('Frontend try to delete newsletter template.',req.body);
@@ -184,5 +198,6 @@ module.exports = {
   schednewsletters,
   save,
   gettemplates,
-  deleteTemplate
+  deleteTemplate,
+  getonetemplate
 };

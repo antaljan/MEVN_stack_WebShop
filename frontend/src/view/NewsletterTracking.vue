@@ -113,6 +113,12 @@
                     class="elevation-1"
                     :items-per-page="10"
                 >
+                <!-- eslint-disable-next-line vue/valid-v-slot -->
+                <template v-slot:item.subject="{ item }">
+                    <a href="#" @click.prevent="openPreview(item)" class="text-primary text-decoration-none">
+                        {{ item.subject }}
+                    </a>
+                </template>
                 </v-data-table>
         </v-card-text>
     </v-card>
@@ -237,6 +243,29 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+    <!-- dialog for preview the selected newsletter -->
+    <v-dialog v-model="previewDialog" max-width="800px">
+        <v-card>
+            <v-card-title class="text-h6">
+                Előnézet: {{ selectedCampaign?.subject }}
+            </v-card-title>
+            <v-card-text>
+                <!-- Itt jönne a hírlevél sablon tartalma -->
+                <div v-if="selectedCampaign">
+                    <p><strong>Dátum:</strong> {{ selectedCampaign.sendDate }}</p>
+                    <p><strong>Megnyitási arány:</strong> {{ selectedCampaign.openRate }}%</p>
+                    <p><strong>Kattintási arány:</strong> {{ selectedCampaign.clickRate }}%</p>
+                    <p><strong>Legnépszerűbb link:</strong> {{ selectedCampaign.topLink }}</p>
+                    <hr>
+                <div v-html="selectedCampaign.previewHtml"></div> <!-- HTML sablon -->
+                </div>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn text @click="previewDialog = false">Bezárás</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
     </v-container>
     </v-app>
     <MyFooter/>
@@ -279,6 +308,8 @@
         totalClicks: 0
     })
     const campaigns = ref([])
+    const previewDialog = ref(false);
+    const selectedCampaign = ref (null);
     
     // get subscribers
     async function getSubscribers(){
@@ -397,6 +428,7 @@
                 alert('edit subscribers group')
     }
 
+    // opening the subscriber edit dialog
     const openEditDialog = (item) => {
         subscriber.value._id = item._id;
         subscriber.value.firstname = item.firstname;
@@ -404,6 +436,12 @@
         subscriber.value.email = item.email;
         subscriber.value.group = item.group;
         dialogUpdateSubscriber.value = true;
+    }
+
+    // open an a modal for preview the newsletter
+    const openPreview = (item) => {
+        selectedCampaign.value = item;
+        previewDialog.value = true;
     }
 
 </script>
