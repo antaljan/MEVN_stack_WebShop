@@ -90,7 +90,7 @@ async function unsubscribe(req, res) {
 async function send(req, res) {
   console.log('Frontend try to scedule newsletter sending.');
   const { subject, templateId, subscribers, sendDate, sent } = req.body;
-
+  console.log('Received body:', req.body);
   if (!subject) {
     console.log('subject is required.');
     return res.status(400).json({ ok: false, error: 'subject is required.' });
