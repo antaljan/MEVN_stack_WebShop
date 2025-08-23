@@ -439,9 +439,29 @@
     }
 
     // open an a modal for preview the newsletter
-    const openPreview = (item) => {
+    async function openPreview (item) {
         selectedCampaign.value = item;
-        previewDialog.value = true;
+          // 1. Keresés a scheduledNewsletters-ben
+        const match = scheduledNewsletters.value.find(
+            item => item.subject === selectedCampaign.value.subject
+        );
+        if (!match || !match.templateId) {
+            console.error('Nem található megfelelő sablon az adott subject alapján.');
+            return;
+        }
+        // 2. Lekérdezés a backendből
+        try {
+            const response = await axios.post('https://antaligyongyi.hu/api/newsletter/getonetemplate', {
+                _id: match.templateId
+            });
+            if (response.data.ok) {
+                selectedTemplate.value = response.data.oneNewsletter;
+                previewDialog.value = true;
+            } else {
+                console.error('Hiba a sablon lekérdezésekor:', response.data.error);
+            }
+        } catch (error) {
+            console.error('Backend hiba:', error);
+        }
     }
-
 </script>
