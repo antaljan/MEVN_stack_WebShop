@@ -228,7 +228,7 @@ onMounted(async () => {
                 Authorization: `Bearer ${token}`
             }
         };
-    const response = await axios.post('https://antaligyongyi.hu/api/newsletter/gettemplates', config)
+    const response = await axios.post('https://antaligyongyi.hu/api/newsletter/gettemplates', {}, config)
     templates.value = response.data.allNewsletters
   } catch (error) {
     console.error('Nem sikerült lekérni a sablonokat:', error)

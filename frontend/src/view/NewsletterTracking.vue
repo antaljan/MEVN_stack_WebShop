@@ -314,7 +314,7 @@
                     Authorization: `Bearer ${token}`
                 }
             };
-            const response = await axios.post('https://antaligyongyi.hu/api/newsletter/subscribers', {}, config);
+            const response = await axios.post('https://antaligyongyi.hu/api/newsletter/subscribers', { }, config);
             abonements.value = response.data.subscribers;
             subscriberCount.value = abonements.value.length;
         } catch (error) {
@@ -335,7 +335,7 @@
                     Authorization: `Bearer ${token}`
                 }
             };
-            const response = await axios.post('https://antaligyongyi.hu/api/newsletter/getsceduled', {}, config);
+            const response = await axios.post('https://antaligyongyi.hu/api/newsletter/getsceduled', { }, config);
             scheduledNewsletters.value = response.data.scheduledNewsletters;
             nLettersCount.value = scheduledNewsletters.value.length;
         } catch (error) {
@@ -353,7 +353,7 @@
                     Authorization: `Bearer ${token}`
                 }
             };
-            const response = await axios.post('https://antaligyongyi.hu/api/newsletter/gettemplates', {}, config);
+            const response = await axios.post('https://antaligyongyi.hu/api/newsletter/gettemplates', { }, config);
             templates.value = response.data.allNewsletters.map(template => ({
                 id: template._id,
                 subject: template.subject
