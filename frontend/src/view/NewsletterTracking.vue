@@ -246,7 +246,7 @@
     <!-- dialog for preview the selected newsletter -->
     <v-dialog v-model="previewDialog" max-width="800px">
         <v-card>
-            <v-card-title>{{ selectedTemplate.subject }}</v-card-title>
+            <v-card-title>{{ selectedCampaign.subject }}</v-card-title>
             <v-card-text>
                 <div v-html="selectedTemplate.rawcontent"></div>
             </v-card-text>
@@ -445,6 +445,7 @@
                 _id: match.templateId
             });
             if (response.data.ok) {
+                console.log("get back from backend:",response);
                 selectedTemplate.value = response.data.oneNewsletter;
                 previewDialog.value = true;
             } else {
