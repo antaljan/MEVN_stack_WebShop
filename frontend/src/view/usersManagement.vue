@@ -152,8 +152,13 @@
 
     // 📦 Felhasználók lekérése
     const fetchUsers = () => {
-        axios.post('https://antaligyongyi.hu/api/user/get')
-            .then(response => {
+        const token = localStorage.getItem('token');
+        axios.post('https://antaligyongyi.hu/api/user/get', {}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        .then(response => {
             users.value = response.data;
         })
         .catch(error => {
@@ -187,8 +192,11 @@
 
     // ❌ Törlés
     const deleteUser = (userId) => {
+        const token = localStorage.getItem('token');
         if (confirm("Biztosan törlöd ezt a felhasználót?")) {
-            axios.post('https://antaligyongyi.hu/api/user/delete', { id: userId })
+            axios.post('https://antaligyongyi.hu/api/user/delete', { id: userId },
+                { headers: { Authorization: `Bearer ${token}`}}
+            )
             .then(() => {
                 fetchUsers();
             })
@@ -200,22 +208,27 @@
 
     // ✅ Mentés / Frissítés
     const submit = () => {
-        if (form.value?.validate()) {
-            const userData = {
+        if (!form.value?.validate()) {
+            alert('Kérlek töltsd ki az összes kötelező mezőt!');
+            return;
+        }
+        const userData = {
             firstname: firstname.value,
             name: name.value,
             email: email.value,
-            phone: phone.value,
-            rolle: rolle.value,
-            adress: adress.value,
+            password: password.value,
         };
+        const token = localStorage.getItem('token');
+        const config = selectedUserId.value
+            ? { headers: { Authorization: `Bearer ${token}`}}
+            : null;
         const url = selectedUserId.value
             ? 'https://antaligyongyi.hu/api/user/update'
             : 'https://antaligyongyi.hu/api/user/create';
         const payload = selectedUserId.value
             ? { id: selectedUserId.value, ...userData }
             : userData;
-        axios.post(url, payload)
+        axios.post(url, payload, config)
             .then(() => {
                 dialog.value = false;
                 fetchUsers();
@@ -223,35 +236,32 @@
             .catch(error => {
                 console.error('Error saving user:', error);
             });
-        } else {
-            alert('Kérlek töltsd ki az összes kötelező mezőt!');
-            return false;
-        }
     };
 
     // password reset
-    const pswSubmit= () => {
-        if (form.value?.validate()) {
-            const userData = {
+    const pswSubmit = () => {
+        if (!form.value?.validate()) {
+            alert('Kérlek töltsd ki az összes kötelező mezőt!');
+            return;
+        }
+        const token = localStorage.getItem('token');
+        const userData = {
             firstname: firstname.value,
             name: name.value,
             email: email.value,
             password: password.value,
         };
-        const url = 'https://antaligyongyi.hu/api/user/update'
-        const payload = { id: selectedUserId.value, ...userData }
-        axios.post(url, payload)
-            .then(() => {
-                dialog.value = false;
-                fetchUsers();
-            })
-            .catch(error => {
-                console.error('Error saving user:', error);
-            });
-        } else {
-            alert('Kérlek töltsd ki az összes kötelező mezőt!');
-            return false;
-        }
+        const url = 'https://antaligyongyi.hu/api/user/update';
+        const payload = { id: selectedUserId.value, ...userData };
+        const config = { headers: {Authorization: `Bearer ${token}`}};
+        axios.post(url, payload, config)
+        .then(() => {
+            dialog.value = false;
+            fetchUsers();
+        })
+        .catch(error => {
+            console.error('Error saving user:', error);
+        });
     };
 
 </script>

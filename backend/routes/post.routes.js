@@ -6,11 +6,10 @@ const authenticateToken = require('../middleware/auth');
 const multer = require('multer');
 const upload = require('../middleware/upload');
 
-router.post('/new', postController.createPost);
+router.post('/new',authenticateToken, postController.createPost);
 router.get('/', postController.getAllPosts);
 router.get('/:id', postController.getPostById);
-router.delete('/:id', postController.deletePost);
-router.post('/saveabout', authenticateToken, postController.saveAbout);
+router.delete('/:id', authenticateToken, postController.deletePost);
 router.put('/:id', uploadMiddleware, postController.updatePost);
 
 module.exports = router;
