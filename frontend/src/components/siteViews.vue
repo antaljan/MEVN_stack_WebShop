@@ -3,6 +3,7 @@
     <v-container class="w3-container">
         <h1>A Weboldal statisztikája</h1>
         <!-- daily logs -->
+        <h3>napi megnyitások</h3>
         <v-table>
             <thead>
                 <tr>
@@ -18,14 +19,18 @@
             </tbody>
         </v-table>
         <!-- top IP addresses -->
+        <h3>top 10 IP cím</h3>
         <v-list>
-            <v-list-item v-for="ip in oftenIps" :key="ip._id">
-                <v-list-item-title>{{ ip._id }}</v-list-item-title>
-                <v-list-item-subtitle>{{ ip.count }} kérés</v-list-item-subtitle>
+            <v-list-item
+                v-for="ip in oftenIps" 
+                :key="ip._id"
+                :title="ip._id"
+                :subtitle="ip.count">
             </v-list-item>
         </v-list>
         <!--  -->
-
+        <p v-if="dailyLogs.length === 0">Nincs napi log adat.</p>
+        <p v-if="oftenIps.length === 0">Nincs IP statisztika.</p>
     </v-container>
     <MyFooter/>
 </template>
@@ -53,11 +58,12 @@
                     Authorization: `Bearer ${token}`
                 }
             };
-            const response = await axios.get('https://antaligyongyi.hu/api/logs/summary', { }, config);
+            const response = await axios.get('https://antaligyongyi.hu/api/logs/summary', config);
             dailyLogs.value = response.data.dailyLogs;
             oftenIps.value = response.data.oftenIps;
             oftenUrls.value = response.data.oftenUrls;
             oftenMethods.value = response.data.oftenMethods;
+            console.log('Statisztikák:', response.data);
         } catch (error) {
             console.error('Failure by loading of scheduled newsletters:', error);
         }

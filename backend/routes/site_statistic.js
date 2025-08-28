@@ -5,6 +5,7 @@ const authenticateToken = require('../middleware/auth');
 
 // Summarised statistics
 router.get('/summary',authenticateToken, async (req, res) => {
+    console.log("frontend try get the site statistiks");
     try {
         const db = getDb();
         const dailyLogs = await db.collection('apiLogs').aggregate([{
@@ -40,6 +41,7 @@ router.get('/summary',authenticateToken, async (req, res) => {
                 count: { $sum: 1 }
             }}
         ]).toArray();
+        console.log("the get is succsesfully");
         res.json({
             dailyLogs,
             oftenIps,
