@@ -7,7 +7,7 @@ import newblog from '../view/blogWrite.vue'
 import usersMan from '../view/usersManagement.vue'
 import NewsletterComposer from '@/view/NewsletterComposer.vue'
 import NewsletterTracking from '@/view/NewsletterTracking.vue'
-import siteViews from '@/component/siteViews.vue'
+import siteViews from '@/components/siteViews.vue'
 
 const routes = [
     {
