@@ -4,7 +4,7 @@ const { getDb } = require('../db/mongo');
 const authenticateToken = require('../middleware/auth');
 
 
-// 📊 Összesített statisztikák
+// Summarised newsletter statistics
 router.get('/summary',authenticateToken, async (req, res) => {
     try {
         const db = getDb();
@@ -27,7 +27,7 @@ router.get('/summary',authenticateToken, async (req, res) => {
     }
 });
 
-// 📋 Kampány részletező
+// Campaing statistic
 router.get('/campaigns',authenticateToken, async (req, res) => {
     try {
         const db = getDb();

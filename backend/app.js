@@ -22,6 +22,7 @@ const uploadRoutes = require('./routes/upload.routes');
 const bookingRoutes = require('./routes/booking.routes');
 const trackingRoutes = require('./routes/tracking')
 const dashboardRoutes = require('./routes/dashboard');
+const site_statistic = require('./routes/site_statistic');
 
 // Middleware, services, controllers
 const emailService = require('./services/email.service');
@@ -60,7 +61,8 @@ app.use('/email', emailRoutes);
 app.use('/booking', bookingRoutes);
 app.use('/track', trackingRoutes)
 app.use('/dashboard', dashboardRoutes);
-app.use('/upload', uploadRoutes);
+app.use('/logs', dashboardRoutes);
+app.use('/upload', site_statistic);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(logger);
 
