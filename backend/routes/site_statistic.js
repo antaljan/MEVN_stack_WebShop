@@ -11,7 +11,10 @@ router.get('/summary',authenticateToken, async (req, res) => {
         const dailyLogs = await db.collection('apiLogs').aggregate([{
             $group: {
                 _id: {
-                    $dateToString: { format: "%Y-%m-%d", date: "$logData.timestamp" }
+                    $dateToString: {
+                        format: "%Y-%m-%d",
+                        date: { $toDate: "$logData.timestamp" }
+                    }
                 },
                 count: { $sum: 1 }
             }
