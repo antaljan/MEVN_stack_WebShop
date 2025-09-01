@@ -26,6 +26,16 @@
           class="w3-bar-item w3-button">
           {{ menuButtonAbos[selectedLanguage] }}
         </a>
+        <a v-if="userStore.role === 'admin'"
+          href="/logs"
+          class="w3-bar-item w3-button">
+          {{ menuButtonLogs[selectedLanguage] }}
+        </a>
+        <a v-if="userStore.role === 'admin'"
+          href="/productOverView"
+          class="w3-bar-item w3-button">
+          {{ menuButtonProdOverV[selectedLanguage] }}
+        </a>
       </div>
       <!-- Login button and popup dialog -->
       <v-container class="w3-bar-item w3-button w3-right">
@@ -177,6 +187,16 @@ api.interceptors.request.use(config => {
     en: 'BLOG',
     hu: 'BLOG',
     de: 'BLOG'
+  });
+  const menuButtonLogs = reactive({
+    en: 'Seit statistic',
+    hu: 'Honlap Statisztika',
+    de: 'Webseiten Statistik'
+  });
+  const menuButtonProdOverV = reactive({
+    en: 'Products',
+    hu: 'Termékek',
+    de: 'Produkten'
   });
   const menuButtonContact = reactive({
     en: 'CONTACT',
