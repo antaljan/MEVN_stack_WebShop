@@ -4,6 +4,7 @@ const emailService = require('../services/email.service');
 
 router.post('/send', async (req, res) => {
     const { to, subject, message } = req.body;
+    console.log(`Received email send request to: ${to} with subject: ${subject} and message: ${message}`);
     try {
         await emailService.sendEmail(to, subject, message);
         res.status(200).send('E-Mail gesendet!');
