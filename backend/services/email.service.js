@@ -43,6 +43,8 @@ async function sendEmail(to, subject, message) {
     text: message
   };
   console.log('trying to send email for:', to);
+  console.log('with subject:', subject);
+  console.log('and message:', message);
   try {
     await transporter.sendMail(mailOptions);
     console.log(`Text email sent to ${to}`);
