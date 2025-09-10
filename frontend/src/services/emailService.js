@@ -5,7 +5,7 @@ import axios from 'axios';
 
 export async function sendEmail({ email, subject, message }) {
     const to = email;
-    console.log(`Sending email to: ${to} with subject: ${subject} and message: ${text}`);
+    console.log(`Sending email to: ${to} with subject: ${subject} and message: ${message}`);
     try {
         await axios.post('https://yowayoli.com/api/email/send', {
             to,
