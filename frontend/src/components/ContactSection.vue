@@ -114,7 +114,7 @@ const message = ref('');
 
 async function handleSendEmail() {
   const result = await sendEmail({
-    email: 'antali.gyongyi@gmail.com',
+    email: 'antalijanos76@gmail.com',
     subject: 'kapcsolatfelvetel a honlaprol',
     message: 'felado:' + email.value + 'targy:' + subject.value + ' üzenet:' + message.value
   });
