@@ -36,6 +36,11 @@
           class="w3-bar-item w3-button">
           {{ menuButtonProdOverV[selectedLanguage] }}
         </a>
+        <a v-if="userStore.role === 'admin'"
+          href="/booking"
+          class="w3-bar-item w3-button">
+          {{ menuButtonBooking[selectedLanguage] }}
+        </a>
       </div>
       <!-- Login button and popup dialog -->
       <v-container class="w3-bar-item w3-button w3-right">
@@ -197,6 +202,11 @@ api.interceptors.request.use(config => {
     en: 'Products',
     hu: 'Termékek',
     de: 'Produkten'
+  });
+  const menuButtonBooking = reactive({
+    en: 'Termin Booking',
+    hu: 'Időpont Foglalás',
+    de: 'Termin Buchung'
   });
   const menuButtonContact = reactive({
     en: 'CONTACT',
