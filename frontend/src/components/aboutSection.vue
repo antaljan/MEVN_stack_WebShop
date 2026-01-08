@@ -5,7 +5,7 @@
         <!-- LEFT SIDE: IMAGE -->
         <div class="w3-col m6 w3-center w3-padding-small">
             <img
-                :src="content.image"
+                :src="`https://antaligyongyi.hu/api${content.image}`"
                 class="w3-round w3-image w3-padding-top-24"
                 alt="About image"
                 width="500"
