@@ -24,8 +24,17 @@ router.put('/:section/:language', authenticateToken, async (req, res) => {
   const { section, language } = req.params;
   const body = req.body;
 
-  // _id, section, language ne menjenek a $set-be
+  // Remove fields that must not be updated
   const { _id, section: bodySection, language: bodyLanguage, ...data } = body;
+
+  // Normalize image path
+  if (data.image) {
+    data.image = data.image.replace("https://antaligyongyi.hu", "");
+    data.image = data.image.replace("/api", ""); // fontos!
+    if (data.image.includes("?")) {
+      data.image = data.image.split("?")[0];
+    }
+  }
 
   try {
     await updateSection(section, language, data);
