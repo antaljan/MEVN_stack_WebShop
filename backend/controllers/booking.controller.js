@@ -48,7 +48,7 @@ exports.deleteSlot = async (req, res) => {
     const slotId = req.params.id;
     try {
         const collection = getDb().collection('booking');
-        const result = await collection.deleteOne({ _id: ObjectId(slotId) });
+        const result = await collection.deleteOne({ _id: new ObjectId(slotId) });
         if (result.deletedCount === 1) {
         console.log('Slot deleted successfully');
         res.status(200).json({ ok: true, message: 'Slot deleted successfully.' });
@@ -65,11 +65,11 @@ exports.deleteSlot = async (req, res) => {
 // update slot in calendar
 exports.updateSlot = async (req, res) => {
     const slotId = req.params.id;
-const { title, start, end, slotClass, user } = req.body;
+    const { title, start, end, slotClass, user } = req.body;
     try {
         const collection = getDb().collection('booking');
         const result = await collection.updateOne(
-            { _id: ObjectId(slotId) },
+            { _id: new ObjectId(slotId) },
             { $set: { title, start, end, slotClass, user } }
         );
         if (result.modifiedCount === 1) {
