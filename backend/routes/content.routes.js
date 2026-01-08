@@ -22,7 +22,10 @@ router.get('/:section/:language', async (req, res) => {
 // UPDATE content (admin only)
 router.put('/:section/:language', authenticateToken, async (req, res) => {
   const { section, language } = req.params;
-  const data = req.body;
+  const body = req.body;
+
+  // _id, section, language ne menjenek a $set-be
+  const { _id, section: bodySection, language: bodyLanguage, ...data } = body;
 
   try {
     await updateSection(section, language, data);
