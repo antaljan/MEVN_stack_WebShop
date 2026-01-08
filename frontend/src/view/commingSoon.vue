@@ -58,13 +58,13 @@ const password = ref('');
 async function submit() {
     // Login
     try {
-      const response = await axios.post('https://yowayoli.com/api/user/login', {
+      const response = await axios.post('https://antaligyongyi.hu/api/user/login', {
         email: email.value,
         psw: password.value
       });
       if (response.data.success) {
         dialog.value = false;
-        window.location.href = 'https://yowayoli.com/landing';
+        window.location.href = 'https://antaligyongyi.hu/landing';
       } else {
         alert('Login fehlgeschlagen! Bitte überprüfen Sie Ihre Anmeldedaten.');
         return { success: false };

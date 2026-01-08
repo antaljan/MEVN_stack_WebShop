@@ -1,140 +1,184 @@
-<!-- components/BookingCalendar.vue -->
 <template>
-  <v-app>
-  <v-container class="w3-container">
-    <h2>Foglalható időpontok</h2>
-  <vue-cal
-    :events="events"
-    default-view="day"
-    :time="true"
-    :on-event-click="onEventClick"
-    :on-cell-click="onCellClick"
-    style="height: 500px;"
-  />
-  <div class="w3-center">
-    <v-btn
-      color="primary"
-      @click="admindialog = true"
-      class="w3-btn"
-    >időpont hozzáadása</v-btn>
-  </div>
-  <v-dialog v-model="userdialog" max-width="500">
+  <v-container class="form-container" max-width="600">
+    <v-form @submit.prevent>
+      <v-card elevation="2" class="pa-4">
+        <v-card-title>Időpont foglalás</v-card-title>
+        <v-card-text>
+          <v-text-field
+            label="Név"
+            v-model="name"
+            required
+          ></v-text-field>
+          <v-menu
+            v-model="menu"
+            :close-on-content-click="false"
+            transition="scale-transition"
+            offset-y
+            max-width="290px"
+            min-width="290px"
+          >
+            <template v-slot:activator="{ props }">
+              <v-text-field
+              v-model="selectedDate"
+              label="Kérem válasszon dátumot"
+              readonly
+              v-bind="props"
+              ></v-text-field>
+            </template>
+          <v-date-picker
+            v-model="selectedDate"
+            :allowed-dates="verfuegbareDaten"
+            @input="menu = false"
+            locale="de"
+          ></v-date-picker>
+        </v-menu>
+
+          <div v-if="gefilterteTermine.length">
+            <h3 class="mt-4">Elérhető időpontok:</h3>
+            <v-list>
+              <v-list-item v-for="termin in gefilterteTermine" :key="termin.id">
+                <v-list-item-title>
+                  {{ termin.datum }} um {{ termin.zeit }} -
+                  <strong :class="termin.status">{{ termin.status }}</strong>
+                </v-list-item-title>
+                <v-list-item-action v-if="termin.status === 'frei'">
+                  <v-btn icon @click="bucheTermin(termin.id)">
+                    <v-icon>mdi-calendar-plus</v-icon>
+                  </v-btn>
+                </v-list-item-action>
+              </v-list-item>
+            </v-list>
+          </div>
+
+          <div v-if="confirmation" class="mt-4">
+            <v-alert type="success" border="start" elevation="2">
+              <p>Köszönöm szépen <strong>{{ name }}</strong>! Az Időpontot sikeresen lefoglalta.</p>
+              <p><strong>Dátum:</strong> {{ confirmation.datum }}</p>
+              <p><strong>Időpont:</strong> {{ confirmation.zeit }}</p>
+            </v-alert>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-form>
+    <v-btn color="primary" class="mt-4" @click="admindialog = true">
+      Új időpont hozzáadása
+    </v-btn>
+
+<v-dialog v-model="admindialog" max-width="500">
   <v-card>
-    <v-card-title>Időpont foglalása</v-card-title>
+    <v-card-title>Neuen Termin erstellen</v-card-title>
     <v-card-text>
-      Kiválasztott időpont: {{ selectedTime }}
+      <v-text-field label="Titel" v-model="title" />
+      <v-text-field label="Startzeit (z.B. 2025-09-22T10:00)" v-model="start" />
+      <v-text-field label="Dauer (Minuten)" v-model="duration" type="number" />
     </v-card-text>
     <v-card-actions>
-      <v-btn color="primary" @click="confirmBooking">Foglalás</v-btn>
-      <v-btn text @click="userdialog = false">Mégse</v-btn>
+      <v-spacer />
+      <v-btn color="green" @click="saveSlot">Speichern</v-btn>
+      <v-btn color="red" @click="admindialog = false">Abbrechen</v-btn>
     </v-card-actions>
   </v-card>
 </v-dialog>
-<v-dialog v-model="admindialog" max-width="500">
-    <v-card>
-      <v-card-title>Új foglalható időpont</v-card-title>
-      <v-card-text>
-        <v-text-field v-model="title" label="Slot címe" />
-        <v-text-field
-          v-model="start"
-          label="Kezdési időpont"
-          type="datetime-local"
-        />
-        <v-text-field
-          v-model="duration"
-          label="Időtartam (perc)"
-          type="number"
-        />
-      </v-card-text>
-      <v-card-actions>
-        <v-btn color="primary" @click="saveSlot">Mentés</v-btn>
-        <v-btn text @click="admindialog = false">Mégse</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+
   </v-container>
-</v-app>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import VueCal from 'vue-cal'
-import 'vue-cal/dist/vuecal.css'
-import { onMounted } from 'vue'
-const userdialog = ref(false)
-const admindialog = ref(false)
-const title = ref('')
-const start = ref('')
-const duration = ref(60)
-const events = ref([])
+import { ref, computed, onMounted } from 'vue';
 
-// loading events from API
+const name = ref('');
+const selectedDate = ref('');
+const menu = ref(false);
+const confirmation = ref(null);
+const termine = ref([]);
+
+const admindialog = ref(false);
+const title = ref('');
+const start = ref('');
+const duration = ref(60); // Minuten
+
 onMounted(async () => {
-  fetch('https://antaligyongyi.hu/api/booking/all')
-  .then(res => res.json())
-  .then(data => {
-    events.value = data.map(event => ({
-      title: event.title,
-      start: event.start,
-      end: event.end,
-      class: event.available ? 'available' : 'unavailable',
-      user: event.user ? event.user : 'N/A'
-    }))
-    console.log('Események betöltve:', events.value)
-  })
-  .catch(err => console.error('Hiba az események betöltésekor:', err))
-})
+  await ladeTermine();
+});
 
-// handling click on event
-function onEventClick(event) {
-  alert(`Ez az időpont már foglalt: ${event.title}`)
-}
-
-// handling click on cell
-function onCellClick(cell) {
-  const selectedTime = cell.start
-  // Itt lehet API hívás a foglaláshoz
-  alert(`Kiválasztott időpont: ${selectedTime}`)
-}
-
-// save new slot
-async function saveSlot() {
-  const startDate = new Date(start.value)
-  const endDate = new Date(startDate.getTime() + duration.value * 60000)
-  const newSlot = {
-    title: title.value,
-    start: startDate.toISOString(),
-    end: endDate.toISOString(),
-    available: true
+async function ladeTermine() {
+  try {
+    const res = await fetch('https://antaligyongyi.hu/api/booking/all');
+    const data = await res.json();
+    termine.value = data.map(event => ({
+      id: event.id,
+      datum: event.start.split('T')[0],
+      zeit: event.start.split('T')[1]?.substring(0, 5),
+      status: event.slotClass === 'available' ? 'frei' : 'gebucht',
+      user: event.user || 'N/A'
+    }));
+    console.log('Termine geladen:', termine.value);
+  } catch (err) {
+    console.error('Fehler beim Laden der Termine:', err);
   }
-  fetch('https://antaligyongyi.hu/api/booking/new', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(newSlot)
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log('Szlot mentve:', data)
-      admindialog.value = false
-      events.value.push({
-        title: newSlot.title,
-        start: newSlot.start,
-        end: newSlot.end,
-        class: "available",
-        user: null
-      })
-    })
+}
+
+const gefilterteTermine = computed(() => {
+  if (!selectedDate.value) return [];
+  const isoDate = new Date(selectedDate.value).toISOString().split("T")[0];
+  return termine.value.filter(t => t.datum === isoDate);
+});
+
+const verfuegbareDaten = (date) => {
+  const isoDate = new Date(date).toISOString().split("T")[0];
+  return termine.value.some(t => t.status === "frei" && t.datum === isoDate);
+};
+
+function bucheTermin(id) {
+  const termin = termine.value.find(t => t.id === id);
+  if (name.value && termin && termin.status === 'frei') {
+    termin.status = 'gebucht';
+    speichereTermin(termin);
+    confirmation.value = { datum: termin.datum, zeit: termin.zeit };
+  } else {
+    alert('Kérem töltse ki az összes mezőt.');
+  }
+}
+
+function speichereTermin(termin) {
+  console.log("Gebuchter Termin:", JSON.stringify(termin, null, 2));
+}
+
+async function saveSlot() {
+  try {
+    const startDate = new Date(start.value);
+    const endDate = new Date(startDate.getTime() + duration.value * 60000);
+    const newSlot = {
+      title: title.value,
+      start: startDate.toISOString(),
+      end: endDate.toISOString(),
+      slotClass: 'available',
+      user: null
+    };
+
+    const res = await fetch('https://antaligyongyi.hu/api/booking/new', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newSlot)
+    });
+
+    const data = await res.json();
+    console.log('Slot gespeichert:', data);
+    admindialog.value = false;
+    await ladeTermine(); // neu laden
+  } catch (err) {
+    console.error('Fehler beim Speichern des Slots:', err);
+  }
 }
 
 </script>
 
+
 <style scoped>
-.vuecal__event.available {
-  background-color: #4caf50; /* zöld */
-  color: white;
+.frei {
+  color: green;
 }
-.vuecal__event.booked {
-  background-color: #f44336; /* piros */
-  color: white;
+.gebucht {
+  color: red;
 }
 </style>

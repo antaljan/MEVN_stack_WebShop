@@ -9,6 +9,8 @@ import NewsletterComposer from '@/view/NewsletterComposer.vue'
 import NewsletterTracking from '@/view/NewsletterTracking.vue'
 import siteViews from '@/components/siteViews.vue'
 import productOverView from  '@/components/productOverview.vue'
+import booking from  '@/components/terminReserv.vue'
+
 
 const routes = [
     {
@@ -125,6 +127,21 @@ const routes = [
     path: '/productOverView',
     name: 'productOverView',
     component: productOverView,
+    beforeEnter: (to, from, next) => {
+        const token = localStorage.getItem('jwt');
+        const userData = JSON.parse(localStorage.getItem('user'));
+        if (!token || !userData || userData.role !== 'admin') {
+            alert('No authentication or insufficient permissions');
+            next('/landing');
+        } else {
+            next();
+        }
+    }
+    },
+    {
+    path: '/booking',
+    name: 'booking',
+    component: booking,
     beforeEnter: (to, from, next) => {
         const token = localStorage.getItem('jwt');
         const userData = JSON.parse(localStorage.getItem('user'));

@@ -8,13 +8,24 @@ require('dotenv').config();
 
 // creane slots in the calendar
 exports.createSlot = async (req, res) => {
-const { title, start, end, class: slotClass, user } = req.body;
-  console.log('registring new slot to calendar');
-  console.log('class:',slotClass);
-  console.log('user:',user);
+  const { title, start, end, slotClass, user } = req.body;
+  console.log('registering new slot to calendar');
+  console.log('slotClass:', slotClass);
+  console.log('user:', user);
+  const defaultUser = {
+    email: "n/a",
+    name: "n/a",
+    firstname: "n/a"
+  };
   try {
     const collection = getDb().collection('booking');
-    const result = await collection.insertOne({ title, start, end, slotClass, user });
+    const result = await collection.insertOne({
+      title,
+      start,
+      end,
+      slotClass,
+      user: user ?? defaultUser
+    });
     console.log('register successful');
     res.status(201).json({ ok: true, insertedId: result.insertedId });
   } catch (error) {
@@ -22,6 +33,7 @@ const { title, start, end, class: slotClass, user } = req.body;
     res.status(500).json({ ok: false, error: error.message });
   }
 };
+
 
 // Get all slots from the calendar
 exports.getAllSlots = async (req, res) => {
