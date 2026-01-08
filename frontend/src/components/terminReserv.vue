@@ -152,7 +152,8 @@ async function saveSlot() {
       title: title.value,
       start: startDate.toISOString(),
       end: endDate.toISOString(),
-      available: true
+      slotClass: 'available',
+      user: null
     };
 
     const res = await fetch('https://antaligyongyi.hu/api/booking/new', {
