@@ -1,12 +1,9 @@
 const { ObjectId } = require('mongodb');
-const jwt = require('jsonwebtoken');
-const emailService = require('../services/email.service');
 const { getDb } = require('../db/mongo');
-const bcrypt = require('bcrypt');
 const { error } = require('console');
 require('dotenv').config();
 
-// creane slots in the calendar
+// create slots in the calendar
 exports.createSlot = async (req, res) => {
   const { title, start, end, slotClass, user } = req.body;
   console.log('registering new slot to calendar');
@@ -33,7 +30,6 @@ exports.createSlot = async (req, res) => {
     res.status(500).json({ ok: false, error: error.message });
   }
 };
-
 
 // Get all slots from the calendar
 exports.getAllSlots = async (req, res) => {
@@ -69,12 +65,12 @@ exports.deleteSlot = async (req, res) => {
 // update slot in calendar
 exports.updateSlot = async (req, res) => {
     const slotId = req.params.id;
-const { title, start, end, class: slotClass, user } = req.body;
+const { title, start, end, slotClass, user } = req.body;
     try {
         const collection = getDb().collection('booking');
         const result = await collection.updateOne(
             { _id: ObjectId(slotId) },
-            { $set: { title, start, end, class: slotClass, user } }
+            { $set: { title, start, end, slotClass, user } }
         );
         if (result.modifiedCount === 1) {
             console.log('Slot updated successfully');

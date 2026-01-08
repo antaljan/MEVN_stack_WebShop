@@ -120,13 +120,11 @@ async function ladeTermine() {
 
 const gefilterteTermine = computed(() => {
   if (!selectedDate.value) return [];
-  const isoDate = new Date(selectedDate.value).toISOString().split("T")[0];
-  return termine.value.filter(t => t.datum === isoDate);
+  return termine.value.filter(t => t.datum === selectedDate.value);
 });
 
 const verfuegbareDaten = (date) => {
-  const isoDate = new Date(date).toISOString().split("T")[0];
-  return termine.value.some(t => t.status === "frei" && t.datum === isoDate);
+  return termine.value.some(t => t.status === "frei" && t.datum === date);
 };
 
 function bucheTermin(id) {
