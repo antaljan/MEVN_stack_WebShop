@@ -108,8 +108,15 @@ function handleFileChange(event) {
 
 // send post
 async function submitPost() {
-  // image upload
-  let uploadedFileName = '';
+  // 1. Validálás az elején (ne próbáljunk tölteni, ha hiányos a forma)
+  if (!post.value.title || !post.value.author || !post.value.date || !post.value.content) {
+    alert('Kérlek töltsd ki az összes kötelező mezőt!');
+    return;
+  }
+
+  let finalImagePath = post.value.image; // Meglévő kép megtartása alapértelmezetten
+
+  // 2. Kép feltöltése, ha van új fájl
   if (imageFile.value) {
     const formDataImg = new FormData();
     formDataImg.append('image', imageFile.value);
@@ -117,48 +124,45 @@ async function submitPost() {
       const response = await axios.post('https://antaligyongyi.hu/api/upload', formDataImg, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      uploadedFileName = response.data && response.data.filename ? response.data.filename : imageFile.value.name;
-      post.value.image = uploadedFileName;
-      console.log('image is uploaded on name: ' + uploadedFileName);
-      alert('A Blog Post sikeresen mentve lett.');
+      // A backendtől kapott nevet használjuk
+      const uploadedFileName = response.data && response.data.filename ? response.data.filename : imageFile.value.name;
+      finalImagePath = 'https://antaligyongyi.hu/api/uploads/' + uploadedFileName;
+      console.log('Kép feltöltve:', finalImagePath);
     } catch (error) {
-      alert('Hiba a mentés során: ' + error);
+      console.error("Kép feltöltési hiba:", error);
+      alert('Hiba a kép mentése során. Ellenőrizd az internetkapcsolatot!');
       return;
     }
   }
-  // validating the imput fields
-  if (!post.value.title || !post.value.author || !post.value.date || !post .value.content) {
-    alert('Kérlek töltsd ki az összes mezőt!');
-    return;
-  }
-  // send post to backend
+
+  // 3. Adatok előkészítése küldésre
+  const payload = {
+    ...post.value,
+    image: finalImagePath,
+    language: document.documentElement.lang || 'hu'
+  };
+
+  // 4. Mentés (PUT vagy POST)
   try {
+    const token = localStorage.getItem('jwt');
+    const config = { headers: { Authorization: `Bearer ${token}` } };
+
     if (postId) {
-      post.value.image = 'https://antaligyongyi.hu/api/uploads/' + uploadedFileName;
-      post.value.language = document.documentElement.lang;
-      await axios.put(`https://antaligyongyi.hu/api/posts/${postId}`, post.value);
+      // Szerkesztés
+      await axios.put(`https://antaligyongyi.hu/api/posts/${postId}`, payload, config);
     } else {
-      post.value = {
-        language: document.documentElement.lang,
-        title: post.value.title,
-        subtitle: post.value.subtitle,
-        author: post.value.author,
-        date: post.value.date,
-        content: post.value.content,
-        image: 'https://antaligyongyi.hu/api/uploads/' + uploadedFileName
-      };
-      const token = localStorage.getItem('jwt');
+      // Új létrehozása
       if (!token) {
         alert('Nincs érvényes token. Jelentkezz be újra!');
         return;
       }
-      const config = {headers: {Authorization: `Bearer ${token}`}};
-      await axios.post('https://antaligyongyi.hu/api/posts/new', post.value, config);
+      await axios.post('https://antaligyongyi.hu/api/posts/new', payload, config);
     }
-    alert('A Blog bejegyzés sikeresen elkészült!');
-    return { success: true };
+    
+    alert('A Blog bejegyzés sikeresen mentve!');
   } catch (error) {
-    return { success: false, error };
+    console.error("Mentési hiba:", error);
+    alert('Hiba történt a mentés során. (Szerver hiba vagy hálózati hiba)');
   }
 }
 

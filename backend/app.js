@@ -23,6 +23,8 @@ const bookingRoutes = require('./routes/booking.routes');
 const trackingRoutes = require('./routes/tracking')
 const dashboardRoutes = require('./routes/dashboard');
 const site_statistic = require('./routes/site_statistic');
+const contentRoutes = require('./routes/content.routes');
+const contentUploadRoutes = require('./routes/contentUpload.routes');
 
 // Middleware, services, controllers
 const emailService = require('./services/email.service');
@@ -54,6 +56,9 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.set('trust proxy', true);
+app.use(logger);
+
+// Use imported routes
 app.use('/newsletter', newsletterRoutes);
 app.use('/user', userRoutes);
 app.use('/posts', postRoutes);
@@ -64,7 +69,8 @@ app.use('/dashboard', dashboardRoutes);
 app.use('/logs', site_statistic);
 app.use('/upload', uploadRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use(logger);
+app.use('/content', contentRoutes);
+app.use('/content-upload', contentUploadRoutes);
 
 // Példa védett végpontra
 app.post('/some-protected-endpoint', authenticateToken, (req, res) => {
