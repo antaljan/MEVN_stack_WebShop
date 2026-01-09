@@ -7,7 +7,7 @@
   <sectionSeparator/>
   <GenericTextSection sectionKey="methode" />
   <sectionSeparator/>
-  <customerFedBack/>
+  <GenericFeedbackSection />
   <GenericHeroSection sectionKey="contact" />
   <GenericContactSection sectionKey="contact" />
   <sectionSeparator/>
@@ -22,7 +22,7 @@
   import MyFooter from "../components/MyFooter.vue";
   import MyHeader from "../components/MyHeader.vue";
   import GenericTextSection from '@/components/GenericTextSection.vue';
-  import customerFedBack from "../components/customerFeedback.vue";
+  import GenericFeedbackSection from '@/components/GenericFeedbackSection.vue'
   import sectionSeparator from '@/components/sectionSeparator.vue';
 </script>
 <style scoped>
