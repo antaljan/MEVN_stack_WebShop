@@ -1,11 +1,4 @@
 <template>
-<!-- Second Parallax Image with Portfolio Text -->
-    <div class="bgimg-2 w3-display-container w3-opacity-min">
-        <div class="w3-display-middle">
-            <span class="w3-xxlarge w3-text-white w3-wide">{{parallaxContact[selectedLanguage]}}</span>
-        </div>
-    </div>
-
 <!-- Container (Contact Section) -->
 <div class="w3-content w3-container w3-padding-64" id="contact">
     <h3 class="w3-align-left">{{contactTitle0[selectedLanguage]}}</h3>
@@ -73,11 +66,6 @@ const gdprReading3 = reactive({
   en: '.',
   hu: '.',
   de: 'gelesen und akzeptiere sie.'
-});
-const parallaxContact = reactive({
-    en: 'CONTACT',
-    hu: 'KAPCSOLAT',
-    de: 'KONTAKT'
 });
 const contactTitle0 = reactive({
     en: 'Now you can do two things:',

@@ -1,6 +1,6 @@
 <template>
   <MyHeader/>
-  <heroSection/>
+  <GenericHeroSection sectionKey="hero" />
   <GenericImageTextSection sectionKey="about" />
   <sectionSeparator/>
   <GenericTextSection sectionKey="story" />
@@ -8,14 +8,16 @@
   <GenericTextSection sectionKey="methode" />
   <sectionSeparator/>
   <customerFedBack/>
-  <contactSection/>
+  <GenericHeroSection sectionKey="contact" />
+  <GenericContactSection sectionKey="contact" />
+  <sectionSeparator/>
   <blogSection/>
   <MyFooter/>
 </template>
 <script setup>
-  import heroSection from '../components/HeroSection.vue';
+  import GenericHeroSection from '@/components/GenericHeroSection.vue';
   import GenericImageTextSection from '@/components/GenericImageTextSection.vue';
-  import contactSection from '../components/ContactSection.vue';
+  import GenericContactSection from '@/components/GenericContactSection.vue';
   import blogSection from '../components/blogSection.vue';
   import MyFooter from "../components/MyFooter.vue";
   import MyHeader from "../components/MyHeader.vue";
