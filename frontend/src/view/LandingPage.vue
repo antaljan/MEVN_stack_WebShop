@@ -1,27 +1,28 @@
 <template>
   <MyHeader/>
-  <heroSection/>
-  <aboutSection/>
+  <GenericHeroSection sectionKey="hero" />
+  <GenericImageTextSection sectionKey="about" />
   <sectionSeparator/>
-  <storySection/>
+  <GenericTextSection sectionKey="story" />
   <sectionSeparator/>
-  <methodeSection/>
+  <GenericTextSection sectionKey="methode" />
   <sectionSeparator/>
-  <customerFedBack/>
-  <contactSection/>
+  <GenericFeedbackSection />
+  <GenericHeroSection sectionKey="contact" />
+  <GenericContactSection sectionKey="contact" />
+  <sectionSeparator/>
   <blogSection/>
   <MyFooter/>
 </template>
 <script setup>
-  import heroSection from '../components/HeroSection.vue';
-  import aboutSection from '../components/aboutSection.vue';
-  import contactSection from '../components/ContactSection.vue';
+  import GenericHeroSection from '@/components/GenericHeroSection.vue';
+  import GenericImageTextSection from '@/components/GenericImageTextSection.vue';
+  import GenericContactSection from '@/components/GenericContactSection.vue';
   import blogSection from '../components/blogSection.vue';
   import MyFooter from "../components/MyFooter.vue";
   import MyHeader from "../components/MyHeader.vue";
-  import storySection from "../components/storySection.vue";
-  import methodeSection from "../components/methodeSection.vue";
-  import customerFedBack from "../components/customerFeedback.vue";
+  import GenericTextSection from '@/components/GenericTextSection.vue';
+  import GenericFeedbackSection from '@/components/GenericFeedbackSection.vue'
   import sectionSeparator from '@/components/sectionSeparator.vue';
 </script>
 <style scoped>
