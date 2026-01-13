@@ -2,6 +2,8 @@ const { ObjectId } = require('mongodb');
 const path = require('path');
 const fs = require('fs');
 const { getDb } = require('../db/mongo');
+const sanitizeHtml = require('sanitize-html');
+
 
 const sanitizeContent = (html) => {
   return sanitizeHtml(html, {
