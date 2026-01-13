@@ -25,6 +25,7 @@ const dashboardRoutes = require('./routes/dashboard');
 const site_statistic = require('./routes/site_statistic');
 const contentRoutes = require('./routes/content.routes');
 const contentUploadRoutes = require('./routes/contentUpload.routes');
+const feedbackRoutes = require('./routes/feedback.routes');
 
 // Middleware, services, controllers
 const emailService = require('./services/email.service');
@@ -71,6 +72,7 @@ app.use('/upload', uploadRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/content', contentRoutes);
 app.use('/content-upload', contentUploadRoutes);
+app.use('/feedbacks', feedbackRoutes);
 
 // Példa védett végpontra
 app.post('/some-protected-endpoint', authenticateToken, (req, res) => {

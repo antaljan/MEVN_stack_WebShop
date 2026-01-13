@@ -102,12 +102,14 @@
               </v-btn>
               <v-btn color="grey" text @click="dialog = false">Abbrechen</v-btn>
             </v-card-actions>
+            <!-- registration banned out
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn text @click="toggleForm">
                 {{ loggedIn ? '' : (isLogin ? 'No account? Just registring' : 'alreadi registred? just login') }}
               </v-btn>
             </v-card-actions>
+            -->
           </v-card>
         </v-dialog>
       </v-container>
@@ -269,9 +271,10 @@ api.interceptors.request.use(config => {
     de: 'Ich akzeptiere die Datenschutzbestimmungen'
   });
   // toggleFunction login
+  /*
   function toggleForm() {
     isLogin.value = !isLogin.value;
-  }
+  }*/
   async function submit() {
     // check if form is valid
     if (loggedIn.value) {
