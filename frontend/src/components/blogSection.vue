@@ -41,7 +41,7 @@
                 <v-icon small class="ml-4 mr-1">mdi-calendar</v-icon> {{ formatDate(post.date || post.createdAt) }}
               </v-card-subtitle>
               <v-card-text>
-                {{ getFirstWords(post.content, 5) }}...<br/>
+                {{ getPreview(post.content) }}...<br/>
                 <a href="#" @click.prevent="navigateToPost(post)">
                   {{ blogSectionOpen[selectedLanguage] }}
                 </a>
@@ -117,10 +117,13 @@ function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString();
 }
 // trimm the post text for preview
-function getFirstWords(text, n) {
+function getPreview(text) {
   if (!text) return '';
-  return text.split(' ').slice(0, n).join(' ');
+  const plain = text.replace(/<[^>]+>/g, ' ');
+  const words = plain.split(/\s+/).filter(Boolean);
+  return words.slice(0, 30).join(' ') + (words.length > 30 ? '...' : '');
 }
+
 onMounted(() => {
   fetchPosts();
 });
