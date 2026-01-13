@@ -94,7 +94,7 @@ onMounted(() => {
 // Fetch posts from the API
 async function fetchPosts() {
   try {
-    const response = await axios.get(`https://antaligyongyi.hu/api/posts`);
+    const response = await axios.get(`https://antaligyongyi.hu/api/posts?language=${selectedLanguage}`);
     if (Array.isArray(response.data)) {
       posts.value = response.data;
     }
