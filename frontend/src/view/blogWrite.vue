@@ -17,38 +17,42 @@
           <v-col cols="12" md="8">
             <v-text-field
               v-model="post.title"
-              label="Titel"
+              label="Cím"
               required
               outlined
               dense
             ></v-text-field>
             <v-text-field
               v-model="post.subtitle"
-              label="Untertitel"
+              label="Alcím"
               outlined
               dense
             ></v-text-field>
             <v-text-field
               v-model="post.author"
-              label="Autor"
+              label="Szerző"
               required
               outlined
               dense
             ></v-text-field>
             <v-text-field
               v-model="post.date"
-              label="Datum"
+              label="Dátum"
               type="date"
               outlined
               dense
             ></v-text-field>
-            <v-textarea
+            <label class="mb-2 d-block">Tartalom</label>
+            <QuillEditor
               v-model="post.content"
-              label="Inhalt"
-              required
-              outlined
-              rows="6"
-            ></v-textarea>
+              theme="snow"
+              :toolbar="[
+                ['bold', 'italic', 'underline'],
+                [{ list: 'ordered' }, { list: 'bullet' }],
+                ['link'],
+                ['clean']
+              ]"
+            />
             <v-card-actions>
               <v-btn color="primary" type="submit">{{savePost[selectedLanguage]}}</v-btn>
               <v-btn color="primary" :to="'/landing'">{{backToLanding[selectedLanguage]}}</v-btn>
@@ -67,6 +71,9 @@ import axios from 'axios';
 import MyFooter from "../components/MyFooter.vue";
 import MyHeader from "../components/MyHeader.vue";
 import { useRoute } from 'vue-router';
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
+
 const route = useRoute();
 const postId = route.params.id;
 const post = ref({

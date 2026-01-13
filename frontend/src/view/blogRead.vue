@@ -22,7 +22,7 @@
             <v-icon small class="ml-4 mr-1">mdi-calendar</v-icon> {{ formattedDate }}
           </v-card-subtitle>
           <v-card-text>
-            {{ post.content }}
+            <div v-html="post.content" class="blog-content"></div>
           </v-card-text>
           <v-card-actions>
             <v-btn :to="'/landing/#blog'" color="primary" text>
@@ -133,4 +133,15 @@ const deletePost = async (post) => {
   object-fit: cover;
   border-radius: 4px 4px 0 0;
 }
+.blog-content p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.blog-content ul,
+.blog-content ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
 </style>
