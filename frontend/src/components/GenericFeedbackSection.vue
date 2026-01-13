@@ -9,7 +9,7 @@
 
     <!-- Carousel -->
     <v-carousel
-      height="auto"
+      height="350"
       hide-delimiters
       show-arrows="hover"
       cycle
@@ -24,7 +24,7 @@
             <v-card-title class="font-weight-bold">
               {{ group[0].name }}
             </v-card-title>
-            <v-card-text>
+            <v-card-text class="scrollable-text">
               {{ group[0].text[selectedLanguage] }}
             </v-card-text>
           </v-card>
@@ -44,7 +44,7 @@
               <v-card-title class="font-weight-bold">
                 {{ testimonial.name }}
               </v-card-title>
-              <v-card-text>
+              <v-card-text class="scrollable-text">
                 {{ testimonial.text[selectedLanguage] }}
               </v-card-text>
             </v-card>
@@ -110,7 +110,11 @@ const groupedTestimonials = computed(() => {
   display: inline-block;
   animation: pulse 1s infinite;
 }
-
+.scrollable-text {
+  overflow-y: auto;
+  max-height: 300px;
+  padding-right: 8px;
+}
 @keyframes pulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.2); }
