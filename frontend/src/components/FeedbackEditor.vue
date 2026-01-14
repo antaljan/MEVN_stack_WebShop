@@ -53,8 +53,6 @@ import { useUserStore } from "@/services/userStore";
 const userStore = useUserStore();
 const route = useRoute()
 const router = useRouter()
-console.log("TOKEN:", userStore.token)
-console.log("ROLE:", userStore.role)
 
 const form = ref({
   name: '',
@@ -78,7 +76,6 @@ const save = async () => {
   const headers = {
     Authorization: `Bearer ${userStore.token}`
   }
-console.log("FORM:", form.value)
 
   if (isEdit.value) {
     await axios.put(

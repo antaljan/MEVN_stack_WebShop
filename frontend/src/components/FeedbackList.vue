@@ -32,7 +32,9 @@
         </tr>
       </tbody>
     </v-table>
-  </v-container>
+    <v-btn color="primary" class="mb-4" @click="goBack">
+      Vissza a Landing oldalra
+    </v-btn>  </v-container>
 </template>
 
 <script setup>
@@ -50,6 +52,7 @@ const load = async () => {
 
 const goNew = () => router.push('/admin/feedbacks/new')
 const edit = (id) => router.push(`/admin/feedbacks/${id}`)
+const goBack = () => router.push('/landing')
 
 const remove = async (id) => {
   if (!confirm('Biztosan törlöd?')) return
