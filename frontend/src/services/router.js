@@ -10,7 +10,8 @@ import NewsletterTracking from '@/view/NewsletterTracking.vue'
 import siteViews from '@/components/siteViews.vue'
 import productOverView from  '@/components/productOverview.vue'
 import booking from  '@/components/terminReserv.vue'
-
+import FeedbackList from '@/components/FeedbackList.vue'
+import FeedbackEditor from '@/components/FeedbackEditor.vue'
 
 const routes = [
     {
@@ -153,6 +154,51 @@ const routes = [
         }
     }
     },
+    {
+    path: '/admin/feedbacks',
+    name: 'feedbacks',
+    component: FeedbackList,
+        beforeEnter: (to, from, next) => {
+        const token = localStorage.getItem('jwt');
+        const userData = JSON.parse(localStorage.getItem('user'));
+        if (!token || !userData || userData.role !== 'admin') {
+            alert('No authentication or insufficient permissions');
+            next('/landing');
+        } else {
+            next();
+        }
+    }
+    },
+    {
+    path: '/admin/feedbacks/new',
+    name: 'feedback-new',
+    component: FeedbackEditor,
+        beforeEnter: (to, from, next) => {
+        const token = localStorage.getItem('jwt');
+        const userData = JSON.parse(localStorage.getItem('user'));
+        if (!token || !userData || userData.role !== 'admin') {
+            alert('No authentication or insufficient permissions');
+            next('/landing');
+        } else {
+            next();
+        }
+    }
+    },
+    {
+    path: '/admin/feedbacks/:id',
+    name: 'feedback-edit',
+    component: FeedbackEditor,
+        beforeEnter: (to, from, next) => {
+        const token = localStorage.getItem('jwt');
+        const userData = JSON.parse(localStorage.getItem('user'));
+        if (!token || !userData || userData.role !== 'admin') {
+            alert('No authentication or insufficient permissions');
+            next('/landing');
+        } else {
+            next();
+        }
+    }
+}
 ]
 
 const router = createRouter({

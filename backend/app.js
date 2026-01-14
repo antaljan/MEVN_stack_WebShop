@@ -1,48 +1,51 @@
 /**
  * NODE Express application for Backend functionality.
- * for sending emails using Nodemailer and GMX SMTP service.
- * It connects to a MongoDB database and provides an endpoint like CRUD API.
+ * Includes security layers: honeypot, rate limiting, bot detection with email alerts,
+ * GeoIP logger, and all API routes.
  */
 
-// Import necessary modules
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
 const path = require('path');
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const jwt = require('jsonwebtoken');
 
-// Import routes
+// Routes
 const newsletterRoutes = require('./routes/newsletter.routes');
 const userRoutes = require('./routes/user.routes');
 const postRoutes = require('./routes/post.routes');
 const emailRoutes = require('./routes/email.routes');
 const uploadRoutes = require('./routes/upload.routes');
 const bookingRoutes = require('./routes/booking.routes');
-const trackingRoutes = require('./routes/tracking')
+const trackingRoutes = require('./routes/tracking');
 const dashboardRoutes = require('./routes/dashboard');
 const site_statistic = require('./routes/site_statistic');
 const contentRoutes = require('./routes/content.routes');
 const contentUploadRoutes = require('./routes/contentUpload.routes');
 const feedbackRoutes = require('./routes/feedback.routes');
+const logsStatsRoutes = require('./routes/logs.stats.routes');
 
-// Middleware, services, controllers
-const emailService = require('./services/email.service');
+// Middleware
+const authenticateToken = require('./middleware/auth');
+const logger = require('./middleware/logger');          // új GeoIP logger
+const botAlert = require('./middleware/botAlert');      // új bot detektálás + email riasztás
+
+// Services
 const newsletterModel = require('./models/newsletter.model');
 const { connect } = require('./db/mongo');
-const authenticateToken = require('./middleware/auth');
-const logger = require('./middleware/logger');
 
-// 🕒 Importáljuk a cron időzítőt
+// Cron
 const { startNewsletterScheduler } = require('./utils/newsletterScheduler');
 
-// Load environment variables from .env file
+// Rate limiting
+const rateLimit = require('express-rate-limit');
+
+// Env vars
 const uri = process.env.MONGODB_URI;
 const gmxUser = process.env.GMX_USER;
 const gmxPass = process.env.GMX_PASS;
 
-// Ellenőrzés: szükséges környezeti változók
+// Validate env vars
 if (!uri) {
   console.error("Error: MONGODB_URI environment variable is not set.");
   process.exit(1);
@@ -52,20 +55,49 @@ if (!gmxUser || !gmxPass) {
   process.exit(1);
 }
 
-// Create an Express application
+// Express app
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.set('trust proxy', true);
+
+// -------------------------------------------------------------
+// 🛡️ 1) Honey-pot endpoint (bot csapda)
+// -------------------------------------------------------------
+app.get('/admin-secret-login', (req, res) => {
+  console.warn('Honeypot triggered by IP:', req.ip);
+  res.status(404).send('Not found');
+});
+
+// -------------------------------------------------------------
+// 🛡️ 2) Rate limiting (DoS / brute force védelem)
+// -------------------------------------------------------------
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  message: 'Túl sok kérés erről az IP címről.'
+});
+app.use(limiter);
+
+// -------------------------------------------------------------
+// 🛡️ 3) Bot detektálás + email riasztás
+// -------------------------------------------------------------
+app.use(botAlert);
+
+// -------------------------------------------------------------
+// 📊 4) GeoIP logger (statisztika-barát loggolás)
+// -------------------------------------------------------------
 app.use(logger);
 
-// Use imported routes
+// -------------------------------------------------------------
+// 🚀 5) API ROUTES
+// -------------------------------------------------------------
 app.use('/newsletter', newsletterRoutes);
 app.use('/user', userRoutes);
 app.use('/posts', postRoutes);
 app.use('/email', emailRoutes);
 app.use('/booking', bookingRoutes);
-app.use('/track', trackingRoutes)
+app.use('/track', trackingRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/logs', site_statistic);
 app.use('/upload', uploadRoutes);
@@ -73,17 +105,18 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/content', contentRoutes);
 app.use('/content-upload', contentUploadRoutes);
 app.use('/feedbacks', feedbackRoutes);
+app.use('/logs', logsStatsRoutes);
 
-// Példa védett végpontra
+// Protected example
 app.post('/some-protected-endpoint', authenticateToken, (req, res) => {
   res.send('Sikeres hozzáférés védett végponthoz!');
 });
 
-// Start of the server
+// -------------------------------------------------------------
+// 🟢 Start server + Cron
+// -------------------------------------------------------------
 connect().then(() => {
   newsletterModel.init();
-
-  // 🟢 Cron időzítő indítása
   startNewsletterScheduler();
 
   app.listen(3000, '0.0.0.0', () => {

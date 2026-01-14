@@ -25,7 +25,7 @@
               {{ group[0].name }}
             </v-card-title>
             <v-card-text class="scrollable-text">
-              {{ group[0].text[selectedLanguage] }}
+              <div v-html="group[0].content"></div>
             </v-card-text>
           </v-card>
         </div>
@@ -45,7 +45,7 @@
                 {{ testimonial.name }}
               </v-card-title>
               <v-card-text class="scrollable-text">
-                {{ testimonial.text[selectedLanguage] }}
+                <div v-html="testimonial.content"></div>
               </v-card-text>
             </v-card>
           </v-col>
@@ -53,14 +53,24 @@
 
       </v-carousel-item>
     </v-carousel>
-
+    <div v-if="userStore.role === 'admin'" class="w3-padding" >
+      <v-btn color="primary" class="mt-8" @click="goList">
+        Admin Vélemények
+      </v-btn>
+    </div>
   </v-container>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-
+import { ref, onMounted, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
+import { useUserStore } from "@/services/userStore";
+const router = useRouter()
 const testimonials = ref([])
+const userStore = useUserStore();
+
+const goList = () => router.push('/admin/feedbacks')
 
 const selectedLanguage = ref(document.documentElement.lang || 'hu')
 
@@ -75,16 +85,24 @@ const translations = {
 // Detect mobile
 const isMobile = computed(() => window.innerWidth < 600)
 
-// Load testimonials
+// Load testimonials from backend
 const loadTestimonials = async () => {
   try {
-    const response = await fetch(`/customerFeedbacks.json`)
-    testimonials.value = await response.json()
+    const response = await axios.get('https://antaligyongyi.hu/api/feedbacks', {
+      params: {
+        language: selectedLanguage.value,
+        status: 'published'
+      }
+    })
+    testimonials.value = response.data
   } catch (error) {
     console.error('Error loading testimonials:', error)
   }
 }
-onMounted(loadTestimonials)
+
+onMounted(() => {
+  loadTestimonials()
+})
 
 // Grouping logic
 const itemsPerSlide = computed(() => {
@@ -102,6 +120,16 @@ const groupedTestimonials = computed(() => {
     groups.push(testimonials.value.slice(i, i + perSlide))
   }
   return groups
+})
+
+// Language change observer
+const observer = new MutationObserver(() => {
+  selectedLanguage.value = document.documentElement.lang
+})
+observer.observe(document.documentElement, { attributes: true })
+
+watch(selectedLanguage, () => {
+  loadTestimonials()
 })
 </script>
 
