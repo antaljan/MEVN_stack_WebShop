@@ -9,6 +9,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
 const path = require('path');
+const geoip = require('geoip-lite');
+const { sendEmail } = require('./services/email.service');
 
 // Routes
 const newsletterRoutes = require('./routes/newsletter.routes');
@@ -19,7 +21,6 @@ const uploadRoutes = require('./routes/upload.routes');
 const bookingRoutes = require('./routes/booking.routes');
 const trackingRoutes = require('./routes/tracking');
 const dashboardRoutes = require('./routes/dashboard');
-const site_statistic = require('./routes/site_statistic');
 const contentRoutes = require('./routes/content.routes');
 const contentUploadRoutes = require('./routes/contentUpload.routes');
 const feedbackRoutes = require('./routes/feedback.routes');
@@ -66,6 +67,23 @@ app.set('trust proxy', true);
 // -------------------------------------------------------------
 app.get('/admin-secret-login', (req, res) => {
   console.warn('Honeypot triggered by IP:', req.ip);
+  // GeoIP lookup
+      const geo = geoip.lookup(ip);
+  // send Email 
+    const subject = `⚠️ Honeypot triggered by IP: ${req.ip}`;
+    const message = `
+Gyanús bot aktivitást észleltem a szerveren.
+
+IP cím: ${ip}
+Ország: ${geo?.country || 'ismeretlen'}
+Város: ${geo?.city || 'ismeretlen'}
+URL: ${url}
+User-Agent: ${req.headers['user-agent']}
+Időpont: ${new Date().toISOString()}
+
+A fenti IP a honeypot céljára szolgáló végpontra érkezett kérés.
+    `;
+  sendEmail('antalijanos76@gmail.com', subject, message);
   res.status(404).send('Not found');
 });
 
@@ -99,7 +117,6 @@ app.use('/email', emailRoutes);
 app.use('/booking', bookingRoutes);
 app.use('/track', trackingRoutes);
 app.use('/dashboard', dashboardRoutes);
-app.use('/logs', site_statistic);
 app.use('/upload', uploadRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/content', contentRoutes);
