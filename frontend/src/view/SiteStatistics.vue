@@ -63,9 +63,6 @@
 </template>
 
 <script setup>
-  defineOptions({
-    name: "SiteStatistics"
-  })
 import { ref } from 'vue'
 import axios from 'axios'
 import MyHeader from '../components/MyHeader.vue'
