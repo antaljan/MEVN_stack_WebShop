@@ -44,12 +44,12 @@
                 <v-img
                   v-if="post.image"
                   :src="post.image"
-                  height="180px"
+                  height="170px"
                   class="blog-image"
                 ></v-img>
               </div>
 
-              <v-card-title>{{ post.title }}</v-card-title>
+              <v-card-title class="w3-padding-small">{{ post.title }}</v-card-title>
 
               <v-card-subtitle v-if="post.subtitle">
                 <v-icon small class="mr-1">mdi-format-quote-close</v-icon>
@@ -216,6 +216,7 @@ observer.observe(document.documentElement, { attributes: true });
   padding-top: 12px;
   padding-left: 12px;
   padding-right: 12px;
+  padding-bottom: 6px;
 }
 
 .blog-image {
