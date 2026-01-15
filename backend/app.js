@@ -25,6 +25,7 @@ const contentRoutes = require('./routes/content.routes');
 const contentUploadRoutes = require('./routes/contentUpload.routes');
 const feedbackRoutes = require('./routes/feedback.routes');
 const logsStatsRoutes = require('./routes/logs.stats.routes');
+const imagesRouter = require('./routes/images');
 
 // Middleware
 const authenticateToken = require('./middleware/auth');
@@ -37,6 +38,7 @@ const { connect } = require('./db/mongo');
 
 // Cron
 const { startNewsletterScheduler } = require('./utils/newsletterScheduler');
+//const { startcleanupImages } = require('./utils/cleanupImages');
 
 // Rate limiting
 const rateLimit = require('express-rate-limit');
@@ -123,6 +125,8 @@ app.use('/content', contentRoutes);
 app.use('/content-upload', contentUploadRoutes);
 app.use('/feedbacks', feedbackRoutes);
 app.use('/logs', logsStatsRoutes);
+app.use('/api/images', imagesRouter);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Protected example
 app.post('/some-protected-endpoint', authenticateToken, (req, res) => {
