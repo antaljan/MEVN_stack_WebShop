@@ -12,6 +12,7 @@ import booking from  '@/components/terminReserv.vue'
 import FeedbackList from '@/components/FeedbackList.vue'
 import FeedbackEditor from '@/components/FeedbackEditor.vue'
 import SiteStatistics from '@/view/SiteStatistics.vue'
+import ImagesLibrary from '@/view/ImagesLibrary.vue'
 
 const routes = [
     {
@@ -187,6 +188,20 @@ const routes = [
     path: '/admin/statistics',
     name: 'SiteStatistics',
     component: SiteStatistics,
+        beforeEnter: (to, from, next) => {
+        const token = localStorage.getItem('jwt');
+        const userData = JSON.parse(localStorage.getItem('user'));
+        if (!token || !userData || userData.role !== 'admin') {
+            alert('No authentication or insufficient permissions');
+            next('/landing');
+        } else {
+            next();
+        }
+        }
+    },{
+    path: '/admin/ImagesLibrary',
+    name: 'ImagesLibrary',
+    component: ImagesLibrary,
         beforeEnter: (to, from, next) => {
         const token = localStorage.getItem('jwt');
         const userData = JSON.parse(localStorage.getItem('user'));
