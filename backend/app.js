@@ -125,7 +125,7 @@ app.use('/content', contentRoutes);
 app.use('/content-upload', contentUploadRoutes);
 app.use('/feedbacks', feedbackRoutes);
 app.use('/logs', logsStatsRoutes);
-app.use('/api/images', imagesRouter);
+app.use('/images', imagesRouter);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Protected example

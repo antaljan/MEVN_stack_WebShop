@@ -41,6 +41,12 @@
           class="w3-bar-item w3-button">
           {{ menuButtonBooking[selectedLanguage] }}
         </a>
+        <a v-if="userStore.role === 'admin'"
+          href="/admin/ImagesLibrary"
+          class="w3-bar-item w3-button">
+          {{ menuImagesLibrary[selectedLanguage] }}
+        </a>
+
       </div>
       <!-- Login button and popup dialog -->
       <v-container class="w3-bar-item w3-button w3-right">
@@ -270,6 +276,12 @@ api.interceptors.request.use(config => {
     hu: 'Elfogadom az adatvédelmi irányelveket',
     de: 'Ich akzeptiere die Datenschutzbestimmungen'
   });
+  const menuImagesLibrary = reactive({
+    en: 'Images Library',
+    hu: 'Képkönyvtár',
+    de: 'Bildersammlung'
+  });
+
   // toggleFunction login
   /*
   function toggleForm() {
