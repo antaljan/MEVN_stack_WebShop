@@ -42,12 +42,12 @@ import MyHeader from '../components/MyHeader.vue'
 const images = ref([])
 
 async function fetchImages() {
-  const res = await fetch('/api/images')
+  const res = await fetch('https://antaligyongyi.hu/api/images')
   images.value = await res.json()
 }
 
 async function deleteImage(filename) {
-  await fetch(`/api/images/${filename}`, { method: 'DELETE' })
+  await fetch(`https://antaligyongyi.hu/api/images/${filename}`, { method: 'DELETE' })
   fetchImages()
 }
 
