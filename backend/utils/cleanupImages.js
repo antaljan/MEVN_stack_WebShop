@@ -13,10 +13,10 @@ function extractLocalImagesFromHtml(html) {
   const results = [];
 
   // <img src="/uploads/filename.ext">
-  const imgTagRegex = /<img[^>]+src=["']\/uploads\/([^"']+)["']/gi;
+  const imgTagRegex = /<img[^>]+src=["'](?:\/uploads\/|https?:\/\/[^"']+\/uploads\/)([^"']+)["']/gi;
 
   // background-image: url('/uploads/filename.ext')
-  const bgRegex = /url\(["']?\/uploads\/([^"')]+)["']?\)/gi;
+  const bgRegex = /url\(["']?(?:\/uploads\/|https?:\/\/[^"']+\/uploads\/)([^"')]+)["']?\)/gi;
 
   let match;
 

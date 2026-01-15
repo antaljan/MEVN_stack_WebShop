@@ -9,8 +9,10 @@
         cols="12"
         md="3"
       >
-        <v-card>
-          <v-img :src="img.url" height="150" />
+        <v-card
+          :title="img.filename">
+          
+          <v-img :src="`${BASE_URL}${img.filename}`" height="150" />
 
           <v-card-actions>
             <v-btn color="red" @click="deleteImage(img.filename)">
@@ -35,6 +37,8 @@
 import { ref, reactive, onMounted } from 'vue'
 import MyFooter from '../components/MyFooter.vue'
 import MyHeader from '../components/MyHeader.vue'
+const BASE_URL = "https://antaligyongyi.hu/api/uploads/";
+
 
 // -----------------------------
 // Képek kezelése
